@@ -45,11 +45,12 @@ include('views/includes/scripts.php');
             if(empty($_GET['pagina']))
             {
                 $pagina = 1;
+                $desde = 1;
             }else
             {
                 $pagina = $_GET['pagina'];
+                $desde = ($pagina-1) * $por_pagina;
             }
-            $desde = ($pagina-1) * $por_pagina;
             $total_paginas = ceil($total_register/$por_pagina);
             $query = 'SELECT
             a.id,
@@ -64,7 +65,7 @@ include('views/includes/scripts.php');
             FROM proyecto a 
             INNER JOIN contratista b ON b.id = a.contratista_fk
             ORDER BY a.id ASC';
-            $query = $query." LIMIT $desde OFFSET $por_pagina";
+            $query = $query." LIMIT $por_pagina OFFSET $desde";
             $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error());
             $index = 1;
             while ($line = pg_fetch_assoc($result)) {
@@ -125,10 +126,17 @@ include('views/includes/scripts.php');
 <div class="container">
     <div class="row">
         <?php
-            for ($i=1; $i < $total_paginas ; $i++) { 
-                echo '<div class="col-1">
-                <a href="?pagina='.$i.'" class="list-group-item list-group-item-action">'.$i.'</a>
-                </div>';
+            for ($i=1; $i <= $total_paginas ; $i++) { 
+                if ($i==$pagina) {
+                    echo '<div class="col-1">
+                    <a href="?pagina='.$i.'" class="list-group-item list-group-item-action active">'.$i.'</a>
+                    </div>';
+                }
+                else{
+                    echo '<div class="col-1">
+                    <a href="?pagina='.$i.'" class="list-group-item list-group-item-action">'.$i.'</a>
+                    </div>';
+                }
             }
         ?>
     </div>
