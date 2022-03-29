@@ -1,11 +1,3 @@
-<style>
-    .abs-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-        /* Arreglar el enlace de estilos  */
-}
-</style>
 <?php 
 include("../config/db.php"); 
 include("includes/header.php");
@@ -13,14 +5,6 @@ include('includes/styles.php');
 if(isset($_POST['update'])){
     #No habia visto que el post se almacenará con el name del button D:
         $id = $_GET["id"];
-        echo $_POST["no_proyecto"];   
-        echo $_POST["proceso"];
-        echo $_POST["fecha_iniciacion"];
-        echo $_POST["fecha_terminacion"];
-        echo $_POST["fecha_liquidacion"];
-        echo $_POST["supervision"];
-        echo $_POST["nombre"];
-        echo $_POST["nit"];
         $query = "UPDATE proyecto SET no_proyecto='".$_POST['no_proyecto']."', proceso='".$_POST['proceso']."',
         fecha_iniciacion='".$_POST['fecha_iniciacion']."', fecha_terminacion='".$_POST['fecha_terminacion']."',
         fecha_liquidacion='".$_POST['fecha_liquidacion']."', supervision_interventoria='".$_POST['supervision']."'
@@ -30,7 +14,7 @@ if(isset($_POST['update'])){
         {
             die("Query Failed.");
         }
-        header('Location: ../index.php');
+        header('Location:inicio.php');
     }
 if(isset($_GET['id'])) {
     $id = $_GET['id'];
@@ -87,7 +71,7 @@ if(isset($_GET['id'])) {
                             <input type="text" name="nit" class="form-control" autofocus value="<?php echo $line[8];?>">
                         </div>
                         <div class="mb-1 abs-center">
-                            <a href="../index.php" class="btn btn-danger">
+                            <a href="inicio.php" class="btn btn-danger">
                                 CANCELAR
                             </a>
                         </div>

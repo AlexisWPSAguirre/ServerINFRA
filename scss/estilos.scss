@@ -1,1 +1,16 @@
+//////////////////////
+// Patron de colores//
+//////////////////////
+
+
+//////////////////////
+// Var de Bootstrap//
+//////////////////////
+
+$enable-shadows: true;
+$enable-gradients: true; 
 @import "../libs/bootstrap/scss/bootstrap.scss";
+
+.btn-primary{
+    border-bottom: 1px solid rgba(0,0,0,0.27);
+}

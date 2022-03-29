@@ -3,3 +3,5 @@ Automatización para oficina de infraestrucutra en asunto de proyectos, contrato
 Sass
 Bootstrap
 PHP
+JQUERY
+POSTGRES

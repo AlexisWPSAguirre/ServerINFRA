@@ -7,7 +7,7 @@
       if(!$result) {
         die("Query Failed.");
       } 
-      header('Location: ../../index.php');
+      header('Location: ../../views/inicio.php');
       }
       /* $_SESSION['message'] = 'Task Removed Successfully';
       $_SESSION['message_type'] = 'danger';  */

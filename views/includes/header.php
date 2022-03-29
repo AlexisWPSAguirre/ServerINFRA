@@ -9,6 +9,6 @@
 <body>
 <nav class="navbar navbar-dark  bg-dark">
     <div class="container">
-        <a href="index.php" class="navbar-brand">CONTRATOS RELACION</a>
+        <a href="inicio.php" class="navbar-brand">CONTRATOS RELACION</a>
     </div>
 </nav>

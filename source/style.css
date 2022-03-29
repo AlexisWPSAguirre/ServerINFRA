@@ -2,7 +2,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
 
+.abs-bottom {
+    display: flex;
+    vertical-align: bottom;
+    align-items: initial;
 }
 
 p {
