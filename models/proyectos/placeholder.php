@@ -1,5 +1,5 @@
 <?php
-    include ('../../config/db.php')
+    /* include ('../../config/db.php');
     $query = 'SELECT
     a.id,
     a.no_proyecto,
@@ -13,5 +13,5 @@
     FROM proyecto a 
     INNER JOIN contratista b ON b.id = a.contratista_fk
     WHERE a.id = $id';
-    $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error());
+    $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error()); */
 ?>
