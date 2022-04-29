@@ -19,6 +19,15 @@ include('includes/scripts.php');
                 <div class="col">
                     <a href="form_crear.php" class="btn btn-secondary">CREAR</a>
                 </div>
+                <div class="col">
+                    <a href="form_hitos.php" class="btn btn-secondary">HITOS</a>
+                </div>
+                <div class="col">
+                    <a href="form_obras.php" class="btn btn-secondary">OBRAS</a>
+                </div>
+                <div class="col">
+                    <a href="form_coordenadas.php" class="btn btn-secondary">COORDENADAS</a>
+                </div>
         </div>
     </div>
     <div class="row">
@@ -55,6 +64,10 @@ include('includes/scripts.php');
                 $desde = ($pagina-1) * $por_pagina;
             }
             $total_paginas = ceil($total_register/$por_pagina);
+            /* 
+            b.nombre,
+            b.nit
+            INNER JOIN contratista b ON b.id = a.contratista_fk */
             $query = 'SELECT
             a.id,
             a.no_proyecto,
@@ -62,11 +75,8 @@ include('includes/scripts.php');
             a.fecha_iniciacion,
             a.fecha_terminacion,
             a.fecha_liquidacion,
-            a.supervision_interventoria,
-            b.nombre,
-            b.nit
+            a.supervision_interventoria            
             FROM proyecto a 
-            INNER JOIN contratista b ON b.id = a.contratista_fk
             ORDER BY a.id ASC';
             $query = $query." LIMIT $por_pagina OFFSET $desde";
             $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error());
@@ -97,12 +107,12 @@ include('includes/scripts.php');
                 <td>
                     <?php echo $line['supervision_interventoria'] ?>
                 </td>
-                <td>
+             <!--    <td>
                     <?php echo $line['nombre'] ?>
                 </td>
                 <td>
                     <?php echo $line['nit'] ?>
-                </td>
+                </td> -->
                 <td>
                     <a href="form_edit.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">
                         <i class="bi bi-pen"></i>
