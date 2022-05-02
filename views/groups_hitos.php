@@ -16,21 +16,6 @@ include('includes/scripts.php');
                         <button type="submit" class="btn btn-primary"><i class="bi bi-search-heart"></i></button>
                     </div>
                 </form>
-                <div class="col">
-                    <a href="form_crear.php" class="btn btn-secondary">CREAR</a>
-                </div>
-                <div class="col">
-                    <a href="groups_hitos.php" class="btn btn-secondary">HITOS</a>
-                </div>
-                <div class="col">
-                    <a href="form_obras.php" class="btn btn-secondary">OBRAS</a>
-                </div>
-                <div class="col">
-                    <a href="form_coordenadas.php" class="btn btn-secondary">COORDENADAS</a>
-                </div>
-                <div class="col">
-                    <a href="form_contratista.php" class="btn btn-secondary">CONTRATISTAS</a>
-                </div>
         </div>
     </div>
     <div class="row">
@@ -38,26 +23,19 @@ include('includes/scripts.php');
         <table class="table">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>No. Proyecto</th>
-                <th>Proceso</th>
-                <th>Fecha de Iniciación</th>
-                <th>Fecha de Terminación</th>
-                <th>Fecha de Liquidación</th>
-                <th>Supervisor</th>
-                <th>Fecha Modificación</th>
-                <th>NIT</th>
-                <th>
-                </th>
+                <th>Descripcion</th>
+                <th>No. Agrupación</th>
+                <th>Descripción</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
         <?php 
             //Paginador
-            $sql_register = pg_query("SELECT COUNT(*) as total_registros FROM proyecto");
+            /* $sql_register = pg_query("SELECT COUNT(*) as total_registros FROM proyecto");
             $result_register = pg_fetch_assoc($sql_register);
             $total_register = $result_register['total_registros'];
-            $por_pagina = 20;
+            $por_pagina = 5;
             if(empty($_GET['pagina']))
             {
                 $pagina = 1;
@@ -67,60 +45,38 @@ include('includes/scripts.php');
                 $pagina = $_GET['pagina'];
                 $desde = ($pagina-1) * $por_pagina;
             }
-            $total_paginas = ceil($total_register/$por_pagina);
-            /* 
-            b.nombre,
-            b.nit
-            INNER JOIN contratista b ON b.id = a.contratista_fk */
-            $query = 'SELECT
-            a.id,
-            a.no_proyecto,
-            a.proceso,
-            a.fecha_iniciacion,
-            a.fecha_terminacion,
-            a.fecha_liquidacion,
-            a.supervision_interventoria            
-            FROM proyecto a 
-            ORDER BY a.id ASC';
-            $query = $query." LIMIT $por_pagina OFFSET $desde";
+            $total_paginas = ceil($total_register/$por_pagina); */
+            $query = '
+            SELECT count(*),c.group_entrada
+            FROM hitos a
+            INNER JOIN contrato b ON b.id = a.contrato_fk
+            INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
+            GROUP BY c.group_entrada
+            ORDER BY c.group_entrada ASC';
+            /* $query = $query." LIMIT $por_pagina OFFSET $desde"; */
             $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error());
             $index = 1;
             while ($line = pg_fetch_assoc($result)) {
         ?>
             <tr>
                 <td>
+                    <a href="list_hitos.php?group=<?php echo $line['group_entrada'] ?>">
                     <?php
-                        echo $line['id'];
+                        echo $line['count'];
                     ?>
+                    </a>
                 </td>
                 <td>
-                    <?php echo $line['no_proyecto'] ?>
+                    <?php echo $line['group_entrada'] ?>
                 </td>
-                <td>
-                    <?php echo $line['proceso'] ?>
-                </td>
-                <td>
-                    <?php echo $line['fecha_iniciacion'] ?>
-                </td>
-                <td>
-                    <?php echo $line['fecha_terminacion'] ?>
-                </td>
-                <td>
-                    <?php echo $line['fecha_liquidacion'] ?>
-                </td>
-                <td>
-                    <?php echo $line['supervision_interventoria'] ?>
                 </td>
                 <td>
                     
                 </td>
-             <!--    <td>
-                    <?php echo $line['nombre'] ?>
-                </td>
                 <td>
-                    <?php echo $line['nit'] ?>
-                </td> -->
-                <td>
+                    <a href="excel_hitos.php?group=<?php echo $line['group_entrada']?>" class="btn btn-dark mb-1">
+                        <i class="bi bi-pen"></i>
+                    </a>
                     <a href="form_edit.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">
                         <i class="bi bi-pen"></i>
                     </a>
@@ -144,7 +100,7 @@ include('includes/scripts.php');
 </div>
 </tbody>
 <!-- Paginador -->
-<div class="container">
+<!-- <div class="container">
     <div class="row">
         <?php
             for ($i=1; $i <= $total_paginas ; $i++) { 
@@ -161,5 +117,5 @@ include('includes/scripts.php');
             }
         ?>
     </div>
-</div>
+</div> -->
 <?php include('includes/footer.php');?>

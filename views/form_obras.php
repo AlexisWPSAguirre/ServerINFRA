@@ -4,13 +4,15 @@
     include('includes/styles.php');
     
     if(isset($_POST['create'])){
+        if($_POST['codigo_divipola_municipio']==''){
+            $_POST['codigo_divipola_municipio']=0;
+        }
         $query="INSERT INTO obras 
-        (obra_contrato_fk,coordenadas_id,sector,municipio_obra,departamento_obra,codigo_divipola_municipio,unidad_funcional_acuerdo_obra,avance_fisico_ejecutado,
+        (obra_contrato_fk,sector,municipio_obra,departamento_obra,codigo_divipola_municipio,unidad_funcional_acuerdo_obra,avance_fisico_ejecutado,
         cantidad_suspensiones,cantidad_prorrogas,tiempo_suspensiones,tiempo_prorrogas,cantidad_adiciones,valor_total_adiciones,origen_recursos,valor_comprometido,valor_obligado,valor_pagado,
         valor_anticipo,latitud_inicial,latitud_final,longitud_final,estado,cesion,nuevo_contratista,observaciones,link_secop,fecha_inicio,fecha_inicial_terminacion,fecha_final_terminacion,
         valor_inicial,valor_final)
-        VALUES ('".$_POST['no_contrato']."','".$_POST['coordenadas_id']."','".$_POST['sector']."','"
-        .$_POST['municipio_obra']."','".$_POST['departamento_obra']."','".$_POST['codigo_divipola_municipio']."','"
+        VALUES ('".$_POST['no_contrato']."','".$_POST['sector']."','".$_POST['municipio_obra']."','".$_POST['departamento_obra']."','".$_POST['codigo_divipola_municipio']."','"
         .$_POST['unidad_funcional_acuerdo_obra']."','".$_POST['avance_fisico_ejecutado']."','".$_POST['cantidad_suspensiones'].
         "','".$_POST['cantidad_prorrogas']."','".$_POST['tiempo_suspensiones']."','".$_POST['tiempo_prorrogas'].
         "','".$_POST['cantidad_adiciones']."','".$_POST['valor_total_adiciones']."','".$_POST['origen_recursos'].
@@ -21,11 +23,12 @@
         "','".$_POST['fecha_final_terminacion']."','".$_POST['valor_inicial']."','".$_POST['valor_final'].
         "')";
         echo $query;
-        /* $result = pg_query($query); */
+        /* $result = pg_query($query);
         if(!$result)
         {
             die("Query Failed.");
         }
+        */
     }
 ?>
 <div class="container mt-3">
@@ -45,127 +48,127 @@
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Sector</label>
-                        <input type="text" name="sector" class="form-control" required>
+                        <input type="text" name="sector" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Municipio Obra</label>
-                        <input type="text" name="municipio_obra" class="form-control" required>
+                        <input type="text" name="municipio_obra" class="form-control">
                     </div> 
                     <div class="mb-3">  
                         <label for="" class="form-label">Departamento Obra</label>
-                        <input type="text" name="departamento_obra" class="form-control" required>
+                        <input type="text" name="departamento_obra" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Codigo Divipola Municipio</label>
-                        <input type="text" name="codigo_divipola_municipio" class="form-control" required>
+                        <input type="text" name="codigo_divipola_municipio" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Unidad Funcional Acuerdo Obra</label>
-                        <input type="text" name="unidad_funcional_acuerdo_obra" class="form-control" required>
+                        <input type="text" name="unidad_funcional_acuerdo_obra" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Avance Fisico Inicial</label>
-                        <input type="text" name="avance_fisico_inicial" class="form-control" required>
+                        <input type="text" name="avance_fisico_inicial" class="form-control">
                     </div>  
                     <div class="mb-3">  
                         <label for="" class="form-label">Avance Fisico Ejecutado</label>
-                        <input type="text" name="avance_fisico_ejecutado" class="form-control" required>
+                        <input type="text" name="avance_fisico_ejecutado" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Cantidad Suspensiones</label>
-                        <input type="text" name="cantidad_suspensiones" class="form-control" required>
+                        <input type="text" name="cantidad_suspensiones" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Cantidad Prorrogas</label>
-                        <input type="text" name="cantidad_prorrogas" class="form-control" required>
+                        <input type="text" name="cantidad_prorrogas" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Tiempo Suspensiones</label>
-                        <input type="text" name="tiempo_suspensiones" class="form-control" required>
+                        <input type="text" name="tiempo_suspensiones" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Tiempo Prorrogas</label>
-                        <input type="text" name="tiempo_prorrogas" class="form-control" required>
+                        <input type="text" name="tiempo_prorrogas" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Cantidad Adiciones</label>
-                        <input type="text" name="cantidad_adiciones" class="form-control" required>
+                        <input type="text" name="cantidad_adiciones" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Valor Total Adiciones</label>
-                        <input type="text" name="valor_total_adiciones" class="form-control" required>
+                        <input type="text" name="valor_total_adiciones" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Origen Recursos</label>
-                        <input type="text" name="origen_recursos" class="form-control" required>
+                        <input type="text" name="origen_recursos" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Valor Comprometido</label>
-                        <input type="text" name="valor_comprometido" class="form-control" required>
+                        <input type="text" name="valor_comprometido" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Valor Obligado</label>
-                        <input type="text" name="valor_obligado" class="form-control" required>
+                        <input type="text" name="valor_obligado" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Valor Pagado</label>
-                        <input type="text" name="valor_pagado" class="form-control" required>
+                        <input type="text" name="valor_pagado" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Valor Anticipo</label>
-                        <input type="text" name="valor_anticipo" class="form-control" required>
+                        <input type="text" name="valor_anticipo" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Latitud Inicial</label>
-                        <input type="text" name="latitud_inicial" class="form-control" required>
+                        <input type="text" name="latitud_inicial" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Latitud Final</label>
-                        <input type="text" name="latitud_final" class="form-control" required>
+                        <input type="text" name="latitud_final" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Longitud Final</label>
-                        <input type="text" name="longitud_final" class="form-control" required>
+                        <input type="text" name="longitud_final" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Estado</label>
-                        <input type="text" name="estado" class="form-control" required>
+                        <input type="text" name="estado" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Cesion</label>
-                        <input type="text" name="cesion" class="form-control" required>
+                        <input type="text" name="cesion" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Nuevo Contratista</label>
-                        <input type="text" name="nuevo_contratista" class="form-control" required>
+                        <input type="text" name="nuevo_contratista" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Observaciones</label>
-                        <input type="text" name="observaciones" class="form-control" required>
+                        <input type="text" name="observaciones" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Link Secop</label>
-                        <input type="text" name="link_secop" class="form-control" required>
+                        <input type="text" name="link_secop" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Fecha Inicio</label>
-                        <input type="date" name="fecha_inicio" class="form-control" required>
+                        <input type="date" name="fecha_inicio" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Fecha Inicial Terminacion</label>
-                        <input type="text" name="fecha_inicial_terminacion" class="form-control" required>
+                        <input type="text" name="fecha_inicial_terminacion" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Fecha Final Terminacion</label>
-                        <input type="text" name="fecha_final_terminacion" class="form-control" required>
+                        <input type="text" name="fecha_final_terminacion" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Valor Inicial</label>
-                        <input type="text" name="valor_inicial" class="form-control" required>
+                        <input type="text" name="valor_inicial" class="form-control">
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Valor Final</label>
-                        <input type="text" name="valor_final" class="form-control" required>
+                        <input type="text" name="valor_final" class="form-control">
                     </div>
 
                     <div class="mb-1 abs-center">
