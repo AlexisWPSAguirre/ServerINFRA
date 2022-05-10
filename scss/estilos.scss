@@ -7,10 +7,29 @@
 // Var de Bootstrap//
 //////////////////////
 
-$enable-shadows: true;
-$enable-gradients: true; 
 @import "../libs/bootstrap/scss/bootstrap.scss";
-
-.btn-primary{
-    border-bottom: 1px solid rgba(0,0,0,0.27);
+.table{
+	min-width: 1000px !important;
+    width: 100%;
+	thead{
+		th{
+			border: none;
+			padding: 20px 30px;
+			font-size: 14px;
+			border-bottom: 4px solid darken($light,4%);
+		}
+	}
+	tbody{
+		tr{
+			margin-bottom: 10px;
+		}
+		th,td{
+			border: none;
+			padding: 20px 30px;
+			border-bottom: 3px solid darken($light,4%);
+			font-size: 14px;
+		}
+	}
 }
+
+	

@@ -23,7 +23,7 @@ include('includes/scripts.php');
         <table class="table">
         <thead>
             <tr>
-                <th>Descripcion</th>
+                <th>Cantidad</th>
                 <th>No. Agrupación</th>
                 <th>Descripción</th>
                 <th></th>
@@ -48,19 +48,18 @@ include('includes/scripts.php');
             $total_paginas = ceil($total_register/$por_pagina); */
             $query = '
             SELECT count(*),c.group_entrada
-            FROM hitos a
-            INNER JOIN contrato b ON b.id = a.contrato_fk
+            FROM coordenadas a
+            INNER JOIN contrato b ON b.id = a.coo_contrato_fk
             INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
             GROUP BY c.group_entrada
             ORDER BY c.group_entrada ASC';
             /* $query = $query." LIMIT $por_pagina OFFSET $desde"; */
             $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error());
-            $index = 1;
             while ($line = pg_fetch_assoc($result)) {
         ?>
             <tr>
                 <td>
-                    <a href="list_hitos.php?group=<?php echo $line['group_entrada'] ?>">
+                    <a href="list_coordenadas.php?group=<?php echo $line['group_entrada'] ?>">
                     <?php
                         echo $line['count'];
                     ?>
@@ -74,7 +73,7 @@ include('includes/scripts.php');
                     
                 </td>
                 <td>
-                    <a href="excel_hitos.php?group=<?php echo $line['group_entrada']?>" class="btn btn-dark mb-1">
+                    <a href="excel_coordenadas.php?group=<?php echo $line['group_entrada']?>" class="btn btn-dark mb-1">
                     <i class="bi bi-file-earmark-spreadsheet"></i>
                     </a>
                     <!-- 

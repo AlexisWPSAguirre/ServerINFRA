@@ -5,7 +5,6 @@ include('includes/styles.php');
 include('includes/jquery.php');
 include('includes/scripts.php');
 ?>
-
 <div class="container mt-3">
     <div class="car car-body">   
         <div class="row mb-3">
@@ -27,13 +26,10 @@ include('includes/scripts.php');
                     <a href="form_obras.php" class="btn btn-secondary">OBRAS</a>
                 </div>
                 <div class="col">
-                    <a href="groups_coordenadas.php" class="btn btn-secondary">COORDENADAS</a>
+                    <a href="form_coordenadas.php" class="btn btn-secondary">COORDENADAS</a>
                 </div>
                 <div class="col">
                     <a href="form_contratista.php" class="btn btn-secondary">CONTRATISTAS</a>
-                </div>
-                <div class="col">
-                    <a href="list_contratos.php" class="btn btn-secondary">CONTRATOS</a>
                 </div>
         </div>
     </div>
@@ -44,13 +40,13 @@ include('includes/scripts.php');
             <tr>
                 <th>ID</th>
                 <th>No. Proyecto</th>
-                <th>Proceso</th>
-                <th>Fecha de Iniciación</th>
-                <th>Fecha de Terminación</th>
-                <th>Fecha de Liquidación</th>
-                <th>Supervisor</th>
-                <th>Fecha Modificación</th>
-                <th>NIT</th>
+                <th>No. Contrato</th>
+                <th>No. Presupuestal</th>
+                <th>Fecha Presupuestal</th>
+                <th>Fecha de Firma</th>
+                <th>Fecha Aprobación Polizas</th>
+                <th>Fecha Certificado</th>
+                <th>No Certificado</th>
                 <th>
                 </th>
             </tr>
@@ -58,7 +54,8 @@ include('includes/scripts.php');
         <tbody>
         <?php 
             //Paginador
-            $sql_register = pg_query("SELECT COUNT(*) as total_registros FROM proyecto");
+            /* Se debe colocar */
+            $sql_register = pg_query("SELECT COUNT(*) as total_registros FROM contrato");
             $result_register = pg_fetch_assoc($sql_register);
             $total_register = $result_register['total_registros'];
             $por_pagina = 20;
@@ -77,14 +74,18 @@ include('includes/scripts.php');
             b.nit
             INNER JOIN contratista b ON b.id = a.contratista_fk */
             $query = 'SELECT
+            no_contrato,
             a.id,
-            a.no_proyecto,
-            a.proceso,
-            a.fecha_iniciacion,
-            a.fecha_terminacion,
-            a.fecha_liquidacion,
-            a.supervision_interventoria            
-            FROM proyecto a 
+            b.id as proyecto_id,
+            b.no_proyecto as no_proyecto,
+            no_presupuestal,
+            fecha_presupuestal,
+            fecha_firma,
+            f_aprob_polizas,
+            fecha_certificado,
+            no_certificado           
+            FROM contrato a 
+            INNER JOIN proyecto b ON b.id = a.no_proyecto_fk
             ORDER BY a.id ASC';
             $query = $query." LIMIT $por_pagina OFFSET $desde";
             $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error());
@@ -101,34 +102,31 @@ include('includes/scripts.php');
                     <?php echo $line['no_proyecto'] ?>
                 </td>
                 <td>
-                    <?php echo $line['proceso'] ?>
+                    <?php echo $line['no_contrato'] ?>
                 </td>
                 <td>
-                    <?php echo $line['fecha_iniciacion'] ?>
+                    <?php echo $line['no_presupuestal'] ?>
                 </td>
                 <td>
-                    <?php echo $line['fecha_terminacion'] ?>
+                    <?php echo $line['fecha_presupuestal'] ?>
                 </td>
                 <td>
-                    <?php echo $line['fecha_liquidacion'] ?>
+                    <?php echo $line['fecha_firma'] ?>
                 </td>
                 <td>
-                    <?php echo $line['supervision_interventoria'] ?>
+                    <?php echo $line['f_aprob_polizas'] ?>
                 </td>
                 <td>
-                    
-                </td>
-             <!--    <td>
-                    <?php echo $line['nombre'] ?>
+                    <?php echo $line['fecha_certificado'] ?>
                 </td>
                 <td>
-                    <?php echo $line['nit'] ?>
-                </td> -->
+                    <?php echo $line['no_certificado'] ?>
+                </td>
                 <td>
                     <?php
-                        if(isset($_GET['sel'])){
+                        if(isset($_GET['group'])){
                     ?>
-                    <a href="form_edit.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">
+                    <a href="crear_hito.php?id=<?php echo $line['id']?>&group=<?php echo $_GET['group']?>&pro_id=<?php echo $line['proyecto_id']?>" class="btn btn-secondary mb-1">
                         <i class="bi bi-pen"></i>
                     </a>
                     <?php
@@ -150,13 +148,6 @@ include('includes/scripts.php');
         </div>
     </div>
 </div>
-    <!-- <script>
-        $(function(){
-            $("p").click(function(event){
-                alert("evento click")
-            });
-        });
-    </script> -->
 </div>
 </tbody>
 <!-- Paginador -->

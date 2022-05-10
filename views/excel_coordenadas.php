@@ -16,16 +16,19 @@ ID_BPIN|NOMBRE_PROYECTO|UNIDAD_FUNCIONAL_ACUERDO_OBRA |NUM_CONTRATO |LATITUD|LON
     <?php
         include('../config/db.php');
         $query ="
-        SELECT 
-        b.no_contrato,
+        SELECT
         c.no_proyecto,
-        a.hito,
-        a.fecha_hito,
-        a.detalle_hito,
-        a.valor_adiciones_hito,
-        a.dias_hito
-        FROM hitos a
-        INNER JOIN contrato b ON b.id = a.contrato_fk
+        c.objeto,
+        c.objeto,
+        b.no_contrato,
+        a.latitud,
+        a.longitud,
+        a.latitud_inicial,
+        a.latitud_final,
+        a.longitud_inicial,
+        a.longitud_final
+        FROM coordenadas a
+        INNER JOIN contrato b ON b.id = a.coo_contrato_fk
         INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
         WHERE c.group_entrada ='".$_GET['group']."'";
         $result = pg_query($query);

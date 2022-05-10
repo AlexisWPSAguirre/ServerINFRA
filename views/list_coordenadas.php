@@ -1,10 +1,12 @@
 <?php
 session_start(); 
+$_SESSION['group_coordenadas'] = $_GET['group'];
 include('../config/db.php');
 include('includes/header.php');
 include('includes/styles.php');
 include('includes/jquery.php');
 include('includes/scripts.php');
+
 ?>
 <div class="container mt-3">
     <div class="car car-body">   
@@ -28,15 +30,16 @@ include('includes/scripts.php');
         <thead>
             <tr>
                 <th>ID</th>
-                <th>NO_CONTRATO</th>
                 <th>ID_BPIN</th>
                 <th>NOMBRE_PROYECTO</th>
-                <th>HITO</th>
-                <th>FECHA_HITO</th>
-                <th>DETALLE_HITO</th>
-                <th>VALOR_ADICIONES_HITO</th>
-                <th>DIAS_HITO</th>
-                <th></th>
+                <th>UNIDAD_FUNCIONAL_ACUERDO_OBRA</th>
+                <th>NUM_CONTRATO</th>
+                <th>LATITUD</th>
+                <th>LONGITUD</th>
+                <th>LATITUD INICIAL</th>
+                <th>LATITUD FINAL</th>
+                <th>LONGITUD INICIAL</th>
+                <th>LONGITUD FINAL</th>
             </tr>
         </thead>
         <tbody>
@@ -60,40 +63,44 @@ include('includes/scripts.php');
                 $query ="
                 SELECT 
                 a.id,
-                b.no_contrato,
                 c.no_proyecto,
                 c.objeto,
-                a.hito,
-                a.fecha_hito,
-                a.detalle_hito,
-                a.valor_adiciones_hito,
-                a.dias_hito
-                FROM hitos a
-                INNER JOIN contrato b ON b.id = a.contrato_fk
+                c.objeto,
+                b.no_contrato,
+                a.latitud,
+                a.longitud,
+                a.latitud_inicial,
+                a.latitud_final,
+                a.longitud_inicial,
+                a.longitud_final
+                FROM coordenadas a
+                INNER JOIN contrato b ON b.id = a.coo_contrato_fk
                 INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
                 WHERE c.group_entrada ='".$_GET['group']."'";
             }
-            else
+            else 
             {
                 $query ="
                 SELECT 
                 a.id,
-                b.no_contrato,
                 c.no_proyecto,
                 c.objeto,
-                a.hito,
-                a.fecha_hito,
-                a.detalle_hito,
-                a.valor_adiciones_hito,
-                a.dias_hito
-                FROM hitos a
-                INNER JOIN contrato b ON b.id = a.contrato_fk
+                c.objeto,
+                b.no_contrato,
+                a.latitud,
+                a.longitud,
+                a.latitud_inicial,
+                a.latitud_final,
+                a.longitud_inicial,
+                a.longitud_final
+                FROM coordenadas a
+                INNER JOIN contrato b ON b.id = a.coo_contrato_fk
                 INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
                 WHERE c.group_entrada is null";
             }
-            
             $result = pg_query($query);
             while($line=pg_fetch_assoc($result)){
+
         ?>
             <tr>
                 <td>
@@ -103,38 +110,43 @@ include('includes/scripts.php');
                 </td>
                 <td>
                     <?php
-                        echo $line['no_contrato'];
+                        echo $line['no_proyecto'];
                     ?>
-                </td>
-                <td>
-                    <?php echo $line['no_proyecto'] ?>
                 </td>
                 <td>
                     <?php echo $line['objeto'] ?>
                 </td>
                 <td>
-                    <?php echo $line['hito'] ?>
+                    <?php echo $line['objeto'] ?>
                 </td>
                 <td>
-                    <?php echo $line['fecha_hito'] ?>
+                    <?php echo $line['no_contrato'] ?>
                 </td>
                 <td>
-                    <?php echo $line['detalle_hito'] ?>
+                    <?php echo $line['latitud'] ?>
                 </td>
                 <td>
-                    <?php echo $line['valor_adiciones_hito'] ?>
+                    <?php echo $line['longitud'] ?>
                 </td>
                 <td>
-                    <?php echo $line['dias_hito'] ?>
+                    <?php echo $line['latitud_inicial'] ?>
+                </td>
+                <td>
+                    <?php echo $line['latitud_final'] ?>
+                </td>
+                <td>
+                    <?php echo $line['longitud_inicial'] ?>
+                </td>
+                <td>
+                    <?php echo $line['longitud_final'] ?>
                 </td>
                 <td>
                     <?php
-                        $_SESSION['group_hito'] = $_GET['group'] ;
                     ?>
-                    <a href="edit_hito.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">
+                    <a href="edit_coordenadas.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">
                         <i class="bi bi-pen"></i>
-                    </a>                    
-                    <a href="../controllers/hitos/delete.php?id=<?php echo $line['id']?>" class="btn btn-danger">
+                    </a>                   
+                    <a href="../controllers/coordenadas/delete.php?id=<?php echo $line['id']?>" class="btn btn-danger">
                     <i class="bi bi-trash"></i>
                     </a>
                 </td>

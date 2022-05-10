@@ -28,7 +28,6 @@ include('includes/scripts.php');
         <thead>
             <tr>
                 <th>ID</th>
-                <th>NO_CONTRATO</th>
                 <th>ID_BPIN</th>
                 <th>NOMBRE_PROYECTO</th>
                 <th>HITO</th>
@@ -36,7 +35,6 @@ include('includes/scripts.php');
                 <th>DETALLE_HITO</th>
                 <th>VALOR_ADICIONES_HITO</th>
                 <th>DIAS_HITO</th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -56,42 +54,20 @@ include('includes/scripts.php');
                 $desde = ($pagina-1) * $por_pagina;
             }
             $total_paginas = ceil($total_register/$por_pagina); */
-            if(!isset($_GET['group'])){
-                $query ="
-                SELECT 
-                a.id,
-                b.no_contrato,
-                c.no_proyecto,
-                c.objeto,
-                a.hito,
-                a.fecha_hito,
-                a.detalle_hito,
-                a.valor_adiciones_hito,
-                a.dias_hito
-                FROM hitos a
-                INNER JOIN contrato b ON b.id = a.contrato_fk
-                INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-                WHERE c.group_entrada ='".$_GET['group']."'";
-            }
-            else
-            {
-                $query ="
-                SELECT 
-                a.id,
-                b.no_contrato,
-                c.no_proyecto,
-                c.objeto,
-                a.hito,
-                a.fecha_hito,
-                a.detalle_hito,
-                a.valor_adiciones_hito,
-                a.dias_hito
-                FROM hitos a
-                INNER JOIN contrato b ON b.id = a.contrato_fk
-                INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-                WHERE c.group_entrada is null";
-            }
-            
+            $query ="
+            SELECT 
+            a.id,
+            b.no_contrato,
+            c.no_proyecto,
+            a.hito,
+            a.fecha_hito,
+            a.detalle_hito,
+            a.valor_adiciones_hito,
+            a.dias_hito
+            FROM hitos a
+            INNER JOIN contrato b ON b.id = a.contrato_fk
+            INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
+            WHERE c.group_entrada ='".$_GET['group']."'";
             $result = pg_query($query);
             while($line=pg_fetch_assoc($result)){
         ?>
@@ -110,9 +86,6 @@ include('includes/scripts.php');
                     <?php echo $line['no_proyecto'] ?>
                 </td>
                 <td>
-                    <?php echo $line['objeto'] ?>
-                </td>
-                <td>
                     <?php echo $line['hito'] ?>
                 </td>
                 <td>
@@ -125,13 +98,10 @@ include('includes/scripts.php');
                     <?php echo $line['valor_adiciones_hito'] ?>
                 </td>
                 <td>
-                    <?php echo $line['dias_hito'] ?>
+                    <?php echo $line['no_proyecto'] ?>
                 </td>
                 <td>
-                    <?php
-                        $_SESSION['group_hito'] = $_GET['group'] ;
-                    ?>
-                    <a href="edit_hito.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">
+                    <a href="edit_hito.php?id=<?php echo $line['id']?>&group=<?php echo $_GET['group']?>" class="btn btn-secondary mb-1">
                         <i class="bi bi-pen"></i>
                     </a>                    
                     <a href="../controllers/hitos/delete.php?id=<?php echo $line['id']?>" class="btn btn-danger">

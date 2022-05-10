@@ -19,6 +19,7 @@ header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
         SELECT 
         b.no_contrato,
         c.no_proyecto,
+        c.objeto,
         a.hito,
         a.fecha_hito,
         a.detalle_hito,
