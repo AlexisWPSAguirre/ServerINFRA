@@ -1,4 +1,5 @@
 <?php
+session_start();
 include('../config/db.php');
 include('includes/header.php');
 include('includes/styles.php');
@@ -17,19 +18,7 @@ include('includes/scripts.php');
                     </div>
                 </form>
                 <div class="col">
-                    <a href="form_crear.php" class="btn btn-secondary">CREAR</a>
-                </div>
-                <div class="col">
-                    <a href="groups_hitos.php" class="btn btn-secondary">HITOS</a>
-                </div>
-                <div class="col">
-                    <a href="form_obras.php" class="btn btn-secondary">OBRAS</a>
-                </div>
-                <div class="col">
-                    <a href="form_coordenadas.php" class="btn btn-secondary">COORDENADAS</a>
-                </div>
-                <div class="col">
-                    <a href="form_contratista.php" class="btn btn-secondary">CONTRATISTAS</a>
+                    <a href="crear_contratos.php" class="btn btn-secondary">CREAR</a>
                 </div>
         </div>
     </div>
@@ -39,14 +28,14 @@ include('includes/scripts.php');
         <thead>
             <tr>
                 <th>ID</th>
-                <th>No. Proyecto</th>
                 <th>No. Contrato</th>
+                <th>No. Proyecto</th>
+                <th>No. Certificado</th>
+                <th>Fecha Certificado</th>
+                <th>Fecha de Firma</th>
                 <th>No. Presupuestal</th>
                 <th>Fecha Presupuestal</th>
-                <th>Fecha de Firma</th>
                 <th>Fecha Aprobación Polizas</th>
-                <th>Fecha Certificado</th>
-                <th>No Certificado</th>
                 <th>
                 </th>
             </tr>
@@ -99,10 +88,19 @@ include('includes/scripts.php');
                     ?>
                 </td>
                 <td>
+                    <?php echo $line['no_contrato'] ?>
+                </td>
+                <td>
                     <?php echo $line['no_proyecto'] ?>
                 </td>
                 <td>
-                    <?php echo $line['no_contrato'] ?>
+                    <?php echo $line['no_certificado'] ?>
+                </td>
+                <td>
+                    <?php echo $line['fecha_certificado'] ?>
+                </td>
+                <td>
+                    <?php echo $line['fecha_firma'] ?>
                 </td>
                 <td>
                     <?php echo $line['no_presupuestal'] ?>
@@ -111,31 +109,22 @@ include('includes/scripts.php');
                     <?php echo $line['fecha_presupuestal'] ?>
                 </td>
                 <td>
-                    <?php echo $line['fecha_firma'] ?>
-                </td>
-                <td>
                     <?php echo $line['f_aprob_polizas'] ?>
-                </td>
-                <td>
-                    <?php echo $line['fecha_certificado'] ?>
-                </td>
-                <td>
-                    <?php echo $line['no_certificado'] ?>
                 </td>
                 <td>
                     <?php
                         if(isset($_GET['group'])){
                     ?>
-                    <a href="crear_hito.php?id=<?php echo $line['id']?>&group=<?php echo $_GET['group']?>&pro_id=<?php echo $line['proyecto_id']?>" class="btn btn-secondary mb-1">
+                    <a href="crear_hito.php?id=<?php echo $line['id']?>&pro_id=<?php echo $line['proyecto_id']?>" class="btn btn-secondary mb-1">
                         <i class="bi bi-pen"></i>
                     </a>
                     <?php
                         }else{
                     ?>
-                    <a href="form_edit.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">
+                    <a href="edit_contratos.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">
                         <i class="bi bi-pen"></i>
                     </a>
-                    <a href="../controllers/proyectos/delete.php?id=<?php echo $line['id']?>" class="btn btn-danger">
+                    <a href="../controllers/contratos/delete.php?id=<?php echo $line['id']?>" class="btn btn-danger">
                     <i class="bi bi-trash"></i>
                     </a>
                     <?php

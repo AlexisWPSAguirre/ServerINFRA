@@ -1,4 +1,5 @@
 <?php 
+session_start();
 include("../config/db.php"); 
 include("includes/header.php");
 include('includes/styles.php');
@@ -31,7 +32,7 @@ if(isset($_GET['id'])) {
     <div class="card card-body">
         <div class="row">
             <div class="col">
-                <form action="crear_hito.php?id=<?php echo $_GET['id'];?>&group=<?php echo $_GET['group']?>&pro_id=<?php echo $_GET['pro_id']?>" method="POST">
+                <form action="crear_hito.php?id=<?php echo $_GET['id'];?>&group=<?= $_SESSION['group_hito']?>&pro_id=<?php echo $_GET['pro_id']?>" method="POST">
                     <div class="mb-3">
                         <label for="" class="form-label">No. Proyecto:</label>
                         <input type="text" name="no_proyecto" class="form-control" value="<?php echo $line['no_proyecto'];?>" disabled>
@@ -68,7 +69,7 @@ if(isset($_GET['id'])) {
                             <input type="date" name="fecha_hito" class="form-control">
                         </div>
                         <div class="mb-1 abs-center">
-                            <a href="list_contratos.php?sel=true" class="btn btn-danger">
+                            <a href="list_hitos.php?group=<?= $_SESSION['group_hito'] ?>" class="btn btn-danger">
                                 CANCELAR
                             </a>
                         </div>

@@ -56,7 +56,7 @@ include('includes/scripts.php');
                 $desde = ($pagina-1) * $por_pagina;
             }
             $total_paginas = ceil($total_register/$por_pagina); */
-            if(!isset($_GET['group'])){
+            if($_GET['group'] != null){
                 $query ="
                 SELECT 
                 a.id,

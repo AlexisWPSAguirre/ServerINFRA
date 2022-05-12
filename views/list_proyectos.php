@@ -18,7 +18,7 @@ include('includes/scripts.php');
                     </div>
                 </form>
                 <div class="col">
-                    <a href="form_crear.php" class="btn btn-secondary">CREAR</a>
+                    <a href="crear_proyecto.php" class="btn btn-secondary">CREAR</a>
                 </div>
                 <div class="col">
                     <a href="groups_hitos.php" class="btn btn-secondary">HITOS</a>
@@ -30,7 +30,7 @@ include('includes/scripts.php');
                     <a href="groups_coordenadas.php" class="btn btn-secondary">COORDENADAS</a>
                 </div>
                 <div class="col">
-                    <a href="form_contratista.php" class="btn btn-secondary">CONTRATISTAS</a>
+                    <a href="crear_list_contratistas.php" class="btn btn-secondary">CONTRATISTAS</a>
                 </div>
                 <div class="col">
                     <a href="list_contratos.php" class="btn btn-secondary">CONTRATOS</a>
@@ -44,13 +44,17 @@ include('includes/scripts.php');
             <tr>
                 <th>ID</th>
                 <th>No. Proyecto</th>
+                <th>Objeto</th>
                 <th>Proceso</th>
+                <th>Nombre contratista</th>
+                <th>NIT contratista</th>
                 <th>Fecha de Iniciación</th>
                 <th>Fecha de Terminación</th>
                 <th>Fecha de Liquidación</th>
                 <th>Supervisor</th>
-                <th>Fecha Modificación</th>
-                <th>NIT</th>
+                <th>Dirección</th>
+                <th>Telefono Celular</th>
+                <th>Correo</th>
                 <th>
                 </th>
             </tr>
@@ -79,12 +83,19 @@ include('includes/scripts.php');
             $query = 'SELECT
             a.id,
             a.no_proyecto,
+            a.objeto,
             a.proceso,
+            b.nombre,
+            b.nit,
             a.fecha_iniciacion,
             a.fecha_terminacion,
             a.fecha_liquidacion,
-            a.supervision_interventoria            
+            a.supervision_interventoria,
+            a.direccion,
+            a.tel_cel,
+            a.correo           
             FROM proyecto a 
+            INNER JOIN contratista b ON a.contratista_fk = b.id
             ORDER BY a.id ASC';
             $query = $query." LIMIT $por_pagina OFFSET $desde";
             $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error());
@@ -101,7 +112,16 @@ include('includes/scripts.php');
                     <?php echo $line['no_proyecto'] ?>
                 </td>
                 <td>
+                    <?php echo $line['objeto'] ?>
+                </td>
+                <td>
                     <?php echo $line['proceso'] ?>
+                </td>
+                <td>
+                    <?php echo $line['nombre'] ?>
+                </td>
+                <td>
+                    <?php echo $line['nit'] ?>
                 </td>
                 <td>
                     <?php echo $line['fecha_iniciacion'] ?>
@@ -116,34 +136,22 @@ include('includes/scripts.php');
                     <?php echo $line['supervision_interventoria'] ?>
                 </td>
                 <td>
-                    
-                </td>
-             <!--    <td>
-                    <?php echo $line['nombre'] ?>
+                    <?php echo $line['direccion'] ?>
                 </td>
                 <td>
-                    <?php echo $line['nit'] ?>
-                </td> -->
+                    <?php echo $line['tel_cel'] ?>
+                </td>
                 <td>
-                    <?php
-                        if(isset($_GET['sel'])){
-                    ?>
-                    <a href="form_edit.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">
-                        <i class="bi bi-pen"></i>
-                    </a>
-                    <?php
-                        }else{
-                    ?>
-                    <a href="form_edit.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">
+                    <?php echo $line['correo'] ?>
+                </td>
+                <td>
+                    <a href="edit_proyecto.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">
                         <i class="bi bi-pen"></i>
                     </a>
                     <a href="../controllers/proyectos/delete.php?id=<?php echo $line['id']?>" class="btn btn-danger">
                     <i class="bi bi-trash"></i>
                     </a>
-                    <?php
-                        }
-                    ?>
-                    </td>
+                </td>
             </tr>
         <?php } ?>
         </table>

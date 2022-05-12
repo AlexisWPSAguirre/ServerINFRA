@@ -6,7 +6,6 @@
         $query="INSERT INTO contratista
         (nombre,nit)
         VALUES ('".$_POST['nombre']."','".$_POST['nit']."')";
-        echo $query;
         $result = pg_query($query);
         if(!$result)
         {
@@ -27,9 +26,12 @@
                         <input type="text" name="nit" class="form-control">
                     </div>
                     <div class="mb-1 abs-center">
-                        <button type="submit" class="btn btn-secondary" name="create">
+                        <button type="submit" class="btn btn-secondary m-2" name="create">
                             GUARDAR
                         </button>
+                        <a href="list_proyectos.php" class="btn btn-secondary">
+                            CANCELAR
+                        </a>
                     </div>
             </form>
         </div>
@@ -50,10 +52,14 @@
                     while ($line = pg_fetch_assoc($result)) {
                 ?>
                 <tr>
+                    <td><?= $line['id'] ?></td>
+                    <td><?= $line['nombre'] ?></td>
+                    <td><?= $line['nit'] ?></td>
+                    <td>
+                        <a class="btn btn-primary mb-1" href="edit_contratista.php?id=<?= $line['id']?>">EDITAR</a>
+                        <a class="btn btn-dark" href="../controllers/contratista/delete.php?id=<?= $line['id']?>">ELIMINAR</a>
+                    </td>
                     <?php
-                            echo "<td>".$line['id']."</td>";
-                            echo "<td>".$line['nombre']."</td>";
-                            echo "<td>".$line['nit']."</td>";
                         }
                     ?>
                     

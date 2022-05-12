@@ -1,6 +1,6 @@
 <?php
 session_start(); 
-$_SESSION['group_coordenadas'] = $_GET['group'];
+
 include('../config/db.php');
 include('includes/header.php');
 include('includes/styles.php');
@@ -20,7 +20,7 @@ include('includes/scripts.php');
                     </div>
                 </form>
                 <div class="col">
-                    <a href="list_contratos.php?group=<?php echo $_GET['group']?>" class="btn btn-secondary">AÑADIR</a>
+                    <a href="crear_coordenadas.php" class="btn btn-secondary">AÑADIR</a>
                 </div>
         </div>
     </div>
@@ -142,6 +142,7 @@ include('includes/scripts.php');
                 </td>
                 <td>
                     <?php
+                        $_SESSION['group_coordenadas'] = $_GET['group'];
                     ?>
                     <a href="edit_coordenadas.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">
                         <i class="bi bi-pen"></i>

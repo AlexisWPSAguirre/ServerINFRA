@@ -8,14 +8,9 @@
     <title>Temporal</title>
 </head>
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <a href="views/inicio.php" class="btn btn-dark">PRINCIPAL</a>   
-            </div>
-        </div>
-    </div>
-    <script src="libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <?php
+        header('Location: views/list_proyectos.php');
+    ?>
     
 </body>
 </html>

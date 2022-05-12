@@ -8,6 +8,6 @@
 <body>
 <nav class="navbar navbar-dark  bg-dark">
     <div class="container">
-        <a href="inicio.php" class="navbar-brand">CONTRATOS RELACION</a>
+        <a href="list_proyectos.php" class="navbar-brand">CONTRATOS RELACION</a>
     </div>
 </nav>
