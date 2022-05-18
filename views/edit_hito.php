@@ -8,7 +8,7 @@ if(isset($_POST['editar'])){
         $id = $_GET["id"];
         $query = "UPDATE hitos SET hito='".$_POST['hito']."', detalle_hito='".$_POST['detalle_hito']."',
         valor_adiciones_hito='".$_POST['valor_adiciones_hito']."', dias_hito='".$_POST['dias_hito']."',
-        contrato_fk=(SELECT id FROM contrato WHERE no_contrato ='".$_SESSION['no_contrato']."' LIMIT 1), fecha_hito='".$_POST['fecha_hito']."'
+        fecha_hito='".$_POST['fecha_hito']."'
         WHERE id=$id";
         $result = pg_query($query);
         if(!$result)
@@ -32,7 +32,6 @@ if(isset($_GET['id'])) {
     }
     while ($line = pg_fetch_assoc($result))
     {
-    $_SESSION['no_contrato'] = $line['no_contrato']
 ?>
 <div class="container p-4">
     <div class="card card-body">

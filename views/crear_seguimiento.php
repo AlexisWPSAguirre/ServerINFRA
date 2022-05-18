@@ -1,4 +1,5 @@
 <?php
+    session_start();
     include("../config/db.php"); 
     include("includes/header.php");
     include('includes/styles.php');
@@ -22,13 +23,11 @@
         "','".$_POST['observaciones']."','".$_POST['link_secop']."','".$_POST['fecha_inicio']."','".$_POST['fecha_inicial_terminacion'].
         "','".$_POST['fecha_final_terminacion']."','".$_POST['valor_inicial']."','".$_POST['valor_final'].
         "')";
-        echo $query;
-        /* $result = pg_query($query);
+        $result = pg_query($query);
         if(!$result)
         {
             die("Query Failed.");
         }
-        */
     }
 ?>
 <div class="container mt-3">
@@ -175,7 +174,11 @@
                         <button type="submit" class="btn btn-secondary" name="create">
                             GUARDAR
                         </button>
+                        <a href="list_seguimiento.php?group=<?= $_SESSION['group_seguimiento']?>" type="submit" class="btn btn-danger">
+                            CANCELAR
+                        </a>
                     </div>
+                
             </form>
         </div>
     </div>

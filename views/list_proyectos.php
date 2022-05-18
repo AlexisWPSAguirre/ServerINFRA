@@ -24,7 +24,7 @@ include('includes/scripts.php');
                     <a href="groups_hitos.php" class="btn btn-secondary">HITOS</a>
                 </div>
                 <div class="col">
-                    <a href="form_obras.php" class="btn btn-secondary">OBRAS</a>
+                    <a href="groups_seguimiento.php" class="btn btn-secondary">OBRAS</a>
                 </div>
                 <div class="col">
                     <a href="groups_coordenadas.php" class="btn btn-secondary">COORDENADAS</a>

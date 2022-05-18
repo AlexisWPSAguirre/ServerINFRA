@@ -103,6 +103,7 @@
             }
         }
     }
+    
     function import_contratos(){
         global $cantidad;
         /* Las columnas de la relación 2021: 
@@ -279,6 +280,71 @@
             return false;
         }
     }
+
+    function import_hitos(){
+        global $cantidad;
+        /* Las columnas de seguimiento 2021: 
+        subconsulta(id contrato) 0 - contrato_fk
+        3 - hito
+        4 - fecha_hito
+        5 - detalle_hito
+        6 - valor_adiciones_hito
+        7 - dias_hito
+	    */
+        $columns = array('3','4','5','6','7','0');
+        /* Muestra en página html */
+        echo '<table class="table table-striped">';
+        for ($i=4; $i < count($cantidad) ; $i++) {
+            echo '<tr>';
+            foreach ($columns as $key) {
+                if($cantidad[$i][$key]!=''){
+                    foreach($columns as $ki){
+                        $count = 0;
+                        /* if($ki=='1' AND $cantidad[$i][$ki]==''){
+                            do {
+                                $count += 1;
+                            } while ($cantidad[($i-$count)][$ki]=='');
+                            echo '<td>'.$cantidad[($i-$count)][$ki].'</td>';
+                        }
+                        else{   
+                            echo '<td>'.$cantidad[$i][$ki].'</td>';
+                        } */
+                    }
+                    break;
+                }
+            }
+            echo '</tr>';
+        }
+        echo '</table>'; 
+        /* ------------------------------------------------------------- */
+        /* Carga los registros a la BD SQL */
+        for ($i=4; $i < count($cantidad) ; $i++) {
+            foreach ($columns as $key) {
+                if($cantidad[$i][$key]!=''){
+                    $query = 'INSERT INTO hitos(hito,detalle_hito,valor_adiciones_hito,dias_hito,contrato_fk,
+                    fecha_hito) VALUES(';
+                    foreach($columns as $ki){
+                        $count = 0;
+                        if($ki=='0'){
+                            if($cantidad[$i][1]==''){
+                                do {
+                                    $count += 1;
+                                } while ($cantidad[($i-$count)][1]=='');
+                                $cantidad[$i][1]=$cantidad[($i-$count)][1];
+                            }
+                            $query = $query."'".$cantidad[$i][$ki]."',(SELECT id FROM proyecto WHERE no_proyecto ='".$cantidad[$i][1]."' LIMIT 1))";
+                            break;
+                        }
+                        $query = $query."'".$cantidad[$i][$ki]."',";
+                    }
+                    /* $result = pg_query($query); */
+                    break;
+                }
+            }
+        }
+        
+    }
+
 ?>
 </body>
 </html>
