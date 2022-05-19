@@ -18,6 +18,9 @@ include('includes/scripts.php');
                     </div>
                 </form>
                 <div class="col">
+                    <a href="../spreadsheet.php" class="btn btn-secondary">IMPORTAR</a>
+                </div>
+                <div class="col">
                     <a href="crear_proyecto.php" class="btn btn-secondary">CREAR</a>
                 </div>
                 <div class="col">
@@ -34,6 +37,9 @@ include('includes/scripts.php');
                 </div>
                 <div class="col">
                     <a href="list_contratos.php" class="btn btn-secondary">CONTRATOS</a>
+                </div>
+                <div class="col">
+                    <a href="list_certificado.php" class="btn btn-secondary">RUBROS</a>
                 </div>
         </div>
     </div>
@@ -186,4 +192,10 @@ include('includes/scripts.php');
         ?>
     </div>
 </div>
-<?php include('includes/footer.php');?>
+<?php 
+    
+    /* $cadena = "COMUNICADO DE ACEPTACIÃ“N No. 632/2021";
+    $str = stristr($cadena,"No.");
+    print(substr($str,4)); */
+    include('includes/footer.php');
+?>

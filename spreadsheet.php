@@ -20,7 +20,7 @@
         }
     }
     $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-    $inputFileName = 'prueba.xlsx';
+    $inputFileName = 'SEGUIMIENTO2021.xlsx';
     /**  Identify the type of $inputFileName  **/
     $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
     /**  Create a new Reader of the type that has been identified  **/
@@ -36,7 +36,10 @@
 <body>
 
 <?php
+    import_seguimiento();
     /*
+    import_coordenadas();
+    import_hitos();
     import_rubros();
     import_contratos();
     import_proyectos(); 
@@ -170,8 +173,6 @@
         }
     }
 
-    
-    
     function import_contratistas(){
         //IMPRIME
         global $cantidad;
@@ -283,7 +284,7 @@
 
     function import_hitos(){
         global $cantidad;
-        /* Las columnas de seguimiento 2021: 
+        /* Las columnas de hitos 2021: 
         subconsulta(id contrato) 0 - contrato_fk
         3 - hito
         4 - fecha_hito
@@ -321,25 +322,125 @@
         for ($i=4; $i < count($cantidad) ; $i++) {
             foreach ($columns as $key) {
                 if($cantidad[$i][$key]!=''){
-                    $query = 'INSERT INTO hitos(hito,detalle_hito,valor_adiciones_hito,dias_hito,contrato_fk,
-                    fecha_hito) VALUES(';
+                    $query = 'INSERT INTO hitos(hito,fecha_hito,detalle_hito,valor_adiciones_hito,dias_hito,
+                    contrato_fk) VALUES(';
                     foreach($columns as $ki){
-                        $count = 0;
-                        if($ki=='0'){
-                            if($cantidad[$i][1]==''){
-                                do {
-                                    $count += 1;
-                                } while ($cantidad[($i-$count)][1]=='');
-                                $cantidad[$i][1]=$cantidad[($i-$count)][1];
-                            }
-                            $query = $query."'".$cantidad[$i][$ki]."',(SELECT id FROM proyecto WHERE no_proyecto ='".$cantidad[$i][1]."' LIMIT 1))";
+                        if($ki=='7'){
+                            $cantidad[$i][0] = str_replace("-","/",$cantidad[$i][0]);
+                            $query = $query."'".$cantidad[$i][$ki]."',(SELECT id FROM contrato WHERE no_contrato LIKE '%".$cantidad[$i][0]."%' LIMIT 1))";
                             break;
                         }
                         $query = $query."'".$cantidad[$i][$ki]."',";
                     }
-                    /* $result = pg_query($query); */
-                    break;
                 }
+                PRINT($query);
+                $result = pg_query($query);
+                break;
+            }
+        }
+        
+    }
+
+    function import_coordenadas(){
+        global $cantidad;
+        /* Las columnas de coordenadas 2021: 
+        subconsulta(id contrato) 3 - contrato_fk
+        4 - latitud
+        5 - longitud    
+        6 - latitud_inicial
+        7 - latitud_final
+        8 - longitud_inicial
+        9 - longitud_final
+	    */
+        $columns = array('4','5','6','7','8','9','3');
+        /* Carga los registros a la BD SQL */
+        for ($i=4; $i < count($cantidad) ; $i++) {
+            foreach ($columns as $key) {
+                    if($cantidad[$i][0]!=''){
+                        $query = 'INSERT INTO coordenadas(latitud,longitud,latitud_inicial,latitud_final,longitud_inicial,
+                        longitud_final,coo_contrato_fk) VALUES(';
+                        foreach($columns as $ki){
+                            $cantidad[$i][$ki] = str_replace("'","`",$cantidad[$i][$ki]);
+                            if($ki=='9'){
+                                $cantidad[$i][3] = str_replace("-","/",$cantidad[$i][3]);
+                                $query = $query."'".$cantidad[$i][$ki]."',(SELECT id FROM contrato WHERE no_contrato LIKE '%".$cantidad[$i][3]."%' LIMIT 1))";
+                                break;
+                            }
+                            $query = $query."'".$cantidad[$i][$ki]."',";
+                        }
+                        PRINT($query);
+                        echo "<hr>";
+                        $result = pg_query($query);
+                        break;
+                    }
+            }
+        }
+        
+    }
+    function import_seguimiento(){
+        global $cantidad;
+        /* Las columnas de coordenadas 2021: 
+        subconsulta(id contrato) 1 - contrato_fk
+        2 - sector
+        3 - municipio_obra
+        4 - departamento_obra
+        6.codigo_divipola_municipio
+        7.unidad_funcional_acuerdo_obra,
+        8.fecha_inicio,
+        9.fecha_inicial_terminacion,
+        10.fecha_final_terminacion,
+        11.valor_inicial,
+        12.valor_final,
+        13.avance_fisico_inicial,
+        14.avance_fisico_ejecutado,
+        15.avance_financiero_ejecutado,
+        17.cantidad_suspensiones,
+        18.cantidad_prorrogas,
+        19.tiempo_suspensiones,
+        20.tiempo_prorrogas,
+        21.cantidad_adiciones,
+        22.valor_total_adiciones,
+        23.origen_recursos,
+        24.valor_comprometido,
+        25.valor_obligado,
+        26.valor_pagado,
+        27.valor_anticipo,
+        30.latitud_inicial,
+        31.latitud_final,
+        33.longitud_final,
+        34.estado,
+        37.cesion,
+        38.nuevo_contratista,
+        39.observaciones,
+        40.link_secop
+	    */
+        $columns = array('2','3','4','6','7','8','9','10','11','12','13','14','15','17','18','19','20',
+        '21','22','23','24','25','26','27','30','31','33','34','37','38','39','40','1');
+        /* Carga los registros a la BD SQL */
+        for ($i=4; $i < count($cantidad) ; $i++) {
+            foreach ($columns as $key) {
+                    if($cantidad[$i][0]!=''){
+                        $query = 'INSERT INTO obras(sector,municipio_obra,departamento_obra,codigo_divipola_municipio,
+                        unidad_funcional_acuerdo_obra,fecha_inicio,fecha_inicial_terminacion,fecha_final_terminacion,valor_inicial,valor_final,
+                        avance_fisico_inicial,avance_fisico_ejecutado,avance_financiero_ejecutado,cantidad_suspensiones,
+                        cantidad_prorrogas,tiempo_suspensiones,tiempo_prorrogas,cantidad_adiciones,valor_total_adiciones,origen_recursos,valor_comprometido,
+                        valor_obligado,valor_pagado,valor_anticipo,latitud_inicial,latitud_final,longitud_final,estado,cesion,
+                        nuevo_contratista,observaciones,link_secop,obra_contrato_fk) 
+                        VALUES(';
+                        foreach($columns as $ki){
+                            $cantidad[$i][$ki] = str_replace("'","`",$cantidad[$i][$ki]);
+                            if($ki=='40'){
+                                $cantidad[$i][1] = str_replace("-","/",$cantidad[$i][1]);
+                                $query = $query."'".$cantidad[$i][$ki]."',(SELECT id FROM contrato WHERE no_contrato LIKE '%".$cantidad[$i][1]."%' LIMIT 1))";
+                                break;
+                            }
+                            $query = $query."'".$cantidad[$i][$ki]."',";
+                        }
+                        PRINT($query);
+                        $result = pg_query($query);
+                        echo "<hr>";
+                        break;
+                    }
             }
         }
         
