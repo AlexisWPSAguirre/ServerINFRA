@@ -18,7 +18,7 @@ include('includes/scripts.php');
                     </div>
                 </form>
                 <div class="col">
-                    <a href="../spreadsheet.php" class="btn btn-secondary">IMPORTAR</a>
+                    <a href="prueba.php" class="btn btn-secondary">PRUEBA</a>
                 </div>
                 <div class="col">
                     <a href="crear_proyecto.php" class="btn btn-secondary">CREAR</a>

@@ -8,6 +8,14 @@
         if($_POST['codigo_divipola_municipio']==''){
             $_POST['codigo_divipola_municipio']=0;
         }
+        $query="
+        SELECT 
+        b.id as pro_id,
+        * FROM contrato a
+        INNER JOIN proyecto b ON a.no_proyecto_fk = b.id
+        WHERE a.id = ".$_POST['no_contrato']." LIMIT 1";
+        $result = pg_query($query);
+        $pro_id = $line=pg_fetch_assoc($result);
         $query="INSERT INTO obras 
         (obra_contrato_fk,sector,municipio_obra,departamento_obra,codigo_divipola_municipio,unidad_funcional_acuerdo_obra,avance_fisico_ejecutado,
         cantidad_suspensiones,cantidad_prorrogas,tiempo_suspensiones,tiempo_prorrogas,cantidad_adiciones,valor_total_adiciones,origen_recursos,valor_comprometido,valor_obligado,valor_pagado,
@@ -22,18 +30,20 @@
         "','".$_POST['longitud_final']."','".$_POST['estado']."','".$_POST['cesion']."','".$_POST['nuevo_contratista'].
         "','".$_POST['observaciones']."','".$_POST['link_secop']."','".$_POST['fecha_inicio']."','".$_POST['fecha_inicial_terminacion'].
         "','".$_POST['fecha_final_terminacion']."','".$_POST['valor_inicial']."','".$_POST['valor_final'].
-        "')";
+        "');
+        UPDATE proyecto SET group_seguimiento = '".$_SESSION['group_seguimiento']."' WHERE id =".$pro_id['pro_id'];
         $result = pg_query($query);
         if(!$result)
         {
             die("Query Failed.");
-        }
+        } 
+        header('Location: groups_seguimiento.php?group='.$_SESSION['group_seguimiento']);
     }
 ?>
 <div class="container mt-3">
     <div class="row">
         <div class="col-5">
-            <form action="" method="POST">
+            <form action="crear_seguimiento.php" method="POST">
                     <div class="mb-3">
                         <label for="" class="form-label">No. Contrato:</label>
                         <select name="no_contrato" id="" class="form-select">

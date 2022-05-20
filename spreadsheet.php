@@ -36,8 +36,8 @@
 <body>
 
 <?php
-    import_seguimiento();
     /*
+    import_seguimiento();
     import_coordenadas();
     import_hitos();
     import_rubros();
@@ -377,6 +377,7 @@
         }
         
     }
+    
     function import_seguimiento(){
         global $cantidad;
         /* Las columnas de coordenadas 2021: 

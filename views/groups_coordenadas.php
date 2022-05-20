@@ -45,7 +45,7 @@ include('includes/scripts.php');
                 $pagina = $_GET['pagina'];
                 $desde = ($pagina-1) * $por_pagina;
             }
-            $total_paginas = ceil($total_register/$por_pagina); */
+            $total_paginas = ceil($total_register/$por_pagina); */            
             $query = '
             SELECT count(*),c.group_entrada
             FROM coordenadas a

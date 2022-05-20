@@ -4,9 +4,19 @@
     include("includes/header.php");
     include('includes/styles.php');
     if(isset($_POST['create'])){
+        $query="
+        SELECT 
+        b.id as pro_id,
+        * FROM contrato a
+        INNER JOIN proyecto b ON a.no_proyecto_fk = b.id
+        WHERE a.id = ".$_POST['coo_contrato_fk']." LIMIT 1";
+        $result = pg_query($query);
+        $pro_id = $line=pg_fetch_assoc($result);
+
         $query="INSERT INTO coordenadas 
         (coo_contrato_fk, latitud, longitud, latitud_inicial, latitud_final, longitud_inicial, longitud_final) VALUES (".$_POST['coo_contrato_fk'].",'".$_POST['latitud']."','"
-        .$_POST['longitud']."','".$_POST['latitud_inicial']."','".$_POST['latitud_final']."','".$_POST['longitud_inicial']."','".$_POST['longitud_final']."')";
+        .$_POST['longitud']."','".$_POST['latitud_inicial']."','".$_POST['latitud_final']."','".$_POST['longitud_inicial']."','".$_POST['longitud_final']."');
+        UPDATE proyecto SET group_coordenadas = '".$_SESSION['group_coordenadas']."' WHERE id =".$pro_id['pro_id'];
         $result = pg_query($query);
         if(!$result)
         {

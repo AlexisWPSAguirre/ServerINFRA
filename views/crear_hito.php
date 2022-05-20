@@ -36,6 +36,7 @@ if(isset($_GET['id'])) {
                     <div class="mb-3">
                         <label for="" class="form-label">No. Proyecto:</label>
                         <input type="text" name="no_proyecto" class="form-control" value="<?php echo $line['no_proyecto'];?>" disabled>
+                        <input type="text" value="<?= $_SESSION['group_hito'] ?>" disabled>
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">No. contrato</label>

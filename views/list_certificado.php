@@ -17,7 +17,7 @@ include('includes/scripts.php');
                     </div>
                 </form>
                 <div class="col">
-                    <a href="list_contratos.php?group=<?php echo $_GET['group']?>" class="btn btn-secondary">AÑADIR</a>
+                    <a href="crear_certificado.php" class="btn btn-secondary">AÑADIR</a>
                 </div>
         </div>
     </div>

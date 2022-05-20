@@ -46,6 +46,8 @@ include('includes/scripts.php');
                 $desde = ($pagina-1) * $por_pagina;
             }
             $total_paginas = ceil($total_register/$por_pagina); */
+
+            
             $query = '
             SELECT count(*),c.group_entrada
             FROM obras a
@@ -68,7 +70,6 @@ include('includes/scripts.php');
                 </td>
                 <td>
                     <?php echo $line['group_entrada'] ?>
-                </td>
                 </td>
                 <td>
                     
