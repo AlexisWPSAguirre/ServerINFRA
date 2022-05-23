@@ -59,7 +59,7 @@ include('includes/scripts.php');
             if($_GET['group'] != null){
                 $query ="
                 SELECT 
-                a.id,
+                a.id as id_hito,
                 b.no_contrato,
                 c.no_proyecto,
                 c.objeto,
@@ -71,13 +71,13 @@ include('includes/scripts.php');
                 FROM hitos a
                 INNER JOIN contrato b ON b.id = a.contrato_fk
                 INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-                WHERE c.group_entrada ='".$_GET['group']."'";
+                WHERE c.group_hito ='".$_GET['group']."'";
             }
             else
             {
                 $query ="
                 SELECT 
-                a.id,
+                a.id as id_hito,
                 b.no_contrato,
                 c.no_proyecto,
                 c.objeto,
@@ -89,7 +89,7 @@ include('includes/scripts.php');
                 FROM hitos a
                 INNER JOIN contrato b ON b.id = a.contrato_fk
                 INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-                WHERE c.group_entrada is null";
+                WHERE c.group_hito is null";
             }
             
             $result = pg_query($query);
@@ -98,7 +98,7 @@ include('includes/scripts.php');
             <tr>
                 <td>
                     <?php
-                        echo $line['id'];
+                        echo $line['id_hito'];
                     ?>
                 </td>
                 <td>

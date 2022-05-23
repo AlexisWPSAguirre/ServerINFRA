@@ -9,7 +9,7 @@
 </head>
 <body>
     <?php
-        header('Location: views/list_proyectos.php');
+        header('Location: views/login.php');
     ?>
     
 </body>

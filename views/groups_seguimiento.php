@@ -49,12 +49,12 @@ include('includes/scripts.php');
 
             
             $query = '
-            SELECT count(*),c.group_entrada
+            SELECT count(*),c.group_seguimiento
             FROM obras a
             INNER JOIN contrato b ON b.id = a.obra_contrato_fk
             INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-            GROUP BY c.group_entrada
-            ORDER BY c.group_entrada ASC';
+            GROUP BY c.group_seguimiento
+            ORDER BY c.group_seguimiento ASC';
             /* $query = $query." LIMIT $por_pagina OFFSET $desde"; */
             $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error());
             $index = 1;
@@ -62,20 +62,20 @@ include('includes/scripts.php');
         ?>
             <tr>
                 <td>
-                    <a href="list_seguimiento.php?group=<?php echo $line['group_entrada'] ?>">
+                    <a href="list_seguimiento.php?group=<?php echo $line['group_seguimiento'] ?>">
                     <?php
                         echo $line['count'];
                     ?>
                     </a>
                 </td>
                 <td>
-                    <?php echo $line['group_entrada'] ?>
+                    <?php echo $line['group_seguimiento'] ?>
                 </td>
                 <td>
-                    
+                    <!-- Descripcions -->
                 </td>
                 <td>
-                    <a href="excel_seguimiento.php?group=<?php echo $line['group_entrada']?>" class="btn btn-dark mb-1">
+                    <a href="excel_seguimiento.php?group=<?php echo $line['group_seguimiento']?>" class="btn btn-dark mb-1">
                     <i class="bi bi-file-earmark-spreadsheet"></i>
                     </a>
                     <!-- 

@@ -137,11 +137,11 @@ include('includes/scripts.php');
                 a.observaciones,
                 a.link_secop
                 FROM obras a
-                INNER JOIN contrato b ON b.id = a.obra_contrato_fk
-                INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-                INNER JOIN contratista d ON d.id = c.contratista_fk
+                LEFT JOIN contrato b ON b.id = a.obra_contrato_fk
+                LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+                LEFT JOIN contratista d ON d.id = c.contratista_fk
                 LEFT JOIN coordenadas e ON e.coo_contrato_fk = b.id
-                WHERE c.group_entrada ='".$_GET['group']."'";
+                WHERE c.group_seguimiento ='".$_GET['group']."'";
             }
             else
             {
@@ -195,7 +195,7 @@ include('includes/scripts.php');
                 INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
                 INNER JOIN contratista d ON d.id = c.contratista_fk
                 LEFT JOIN coordenadas e ON e.coo_contrato_fk = b.id
-                WHERE c.group_entrada is null";
+                WHERE c.group_seguimiento is null";
             }
             
             $result = pg_query($query);

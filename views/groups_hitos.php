@@ -47,12 +47,12 @@ include('includes/scripts.php');
             }
             $total_paginas = ceil($total_register/$por_pagina); */
             $query = '
-            SELECT count(*),c.group_entrada
+            SELECT count(*),c.group_hito
             FROM hitos a
             INNER JOIN contrato b ON b.id = a.contrato_fk
             INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-            GROUP BY c.group_entrada
-            ORDER BY c.group_entrada ASC';
+            GROUP BY c.group_hito
+            ORDER BY c.group_hito ASC';
             /* $query = $query." LIMIT $por_pagina OFFSET $desde"; */
             $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error());
             $index = 1;
@@ -60,21 +60,21 @@ include('includes/scripts.php');
         ?>
             <tr>
                 <td>
-                    <a href="list_hitos.php?group=<?php echo $line['group_entrada'] ?>">
+                    <a href="list_hitos.php?group=<?php echo $line['group_hito'] ?>">
                     <?php
                         echo $line['count'];
                     ?>
                     </a>
                 </td>
                 <td>
-                    <?php echo $line['group_entrada'] ?>
+                    <?php echo $line['group_hito'] ?>
                 </td>
                 </td>
                 <td>
                     
                 </td>
                 <td>
-                    <a href="excel_hitos.php?group=<?php echo $line['group_entrada']?>" class="btn btn-dark mb-1">
+                    <a href="excel_hitos.php?group=<?php echo $line['group_hito']?>" class="btn btn-dark mb-1">
                     <i class="bi bi-file-earmark-spreadsheet"></i>
                     </a>
                     <!-- 

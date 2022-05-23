@@ -59,7 +59,7 @@ include('includes/scripts.php');
                 $desde = ($pagina-1) * $por_pagina;
             }
             $total_paginas = ceil($total_register/$por_pagina); */
-            if(!isset($_GET['group'])){
+            if(!empty($_GET['group'])){
                 $query ="
                 SELECT 
                 a.id,
@@ -76,7 +76,7 @@ include('includes/scripts.php');
                 FROM coordenadas a
                 INNER JOIN contrato b ON b.id = a.coo_contrato_fk
                 INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-                WHERE c.group_entrada ='".$_GET['group']."'";
+                WHERE c.group_coordenadas ='".$_GET['group']."'";
             }
             else 
             {
@@ -96,7 +96,7 @@ include('includes/scripts.php');
                 FROM coordenadas a
                 INNER JOIN contrato b ON b.id = a.coo_contrato_fk
                 INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-                WHERE c.group_entrada is null";
+                WHERE c.group_coordenadas is null";
             }
             $result = pg_query($query);
             while($line=pg_fetch_assoc($result)){

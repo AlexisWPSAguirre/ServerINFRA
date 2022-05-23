@@ -47,33 +47,33 @@ include('includes/scripts.php');
             }
             $total_paginas = ceil($total_register/$por_pagina); */            
             $query = '
-            SELECT count(*),c.group_entrada
+            SELECT count(*),c.group_coordenadas
             FROM coordenadas a
             INNER JOIN contrato b ON b.id = a.coo_contrato_fk
             INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-            GROUP BY c.group_entrada
-            ORDER BY c.group_entrada ASC';
+            GROUP BY c.group_coordenadas
+            ORDER BY c.group_coordenadas ASC';
             /* $query = $query." LIMIT $por_pagina OFFSET $desde"; */
             $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error());
             while ($line = pg_fetch_assoc($result)) {
         ?>
             <tr>
                 <td>
-                    <a href="list_coordenadas.php?group=<?php echo $line['group_entrada'] ?>">
+                    <a href="list_coordenadas.php?group=<?php echo $line['group_coordenadas'] ?>">
                     <?php
                         echo $line['count'];
                     ?>
                     </a>
                 </td>
                 <td>
-                    <?php echo $line['group_entrada'] ?>
+                    <?php echo $line['group_coordenadas'] ?>
                 </td>
                 </td>
                 <td>
                     
                 </td>
                 <td>
-                    <a href="excel_coordenadas.php?group=<?php echo $line['group_entrada']?>" class="btn btn-dark mb-1">
+                    <a href="excel_coordenadas.php?group=<?php echo $line['group_coordenadas']?>" class="btn btn-dark mb-1">
                     <i class="bi bi-file-earmark-spreadsheet"></i>
                     </a>
                     <!-- 

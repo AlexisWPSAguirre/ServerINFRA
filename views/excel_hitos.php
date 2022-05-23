@@ -28,7 +28,7 @@ header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
         FROM hitos a
         INNER JOIN contrato b ON b.id = a.contrato_fk
         INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-        WHERE c.group_entrada ='".$_GET['group']."'";
+        WHERE c.group_hito ='".$_GET['group']."'";
         $result = pg_query($query);
         while($line=pg_fetch_row($result)){
     ?>
