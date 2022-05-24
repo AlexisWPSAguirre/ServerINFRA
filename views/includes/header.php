@@ -9,5 +9,7 @@
 <nav class="navbar navbar-dark  bg-dark">
     <div class="container">
         <a href="list_proyectos.php" class="navbar-brand">CONTRATOS RELACION</a>
+        <a href="cerrar_session.php" class="navbar-brand">Cerrar Sesion</a>
     </div>
+    
 </nav>

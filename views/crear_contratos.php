@@ -2,6 +2,11 @@
     include("../config/db.php"); 
     include("includes/header.php");
     include('includes/styles.php');
+    include_once '../config/user_session.php';
+    $userSession = new UserSession();
+    if( !isset($_SESSION['user'])){
+        header("Location: login.php");
+    }
     if(isset($_POST['create'])){
         $query="INSERT INTO contrato 
         (no_contrato, no_proyecto_fk, no_certificado, fecha_certificado, fecha_firma, no_presupuestal, fecha_presupuestal,

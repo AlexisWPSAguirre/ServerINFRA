@@ -2,6 +2,11 @@
     include("../config/db.php"); 
     include("includes/header.php");
     include('includes/styles.php');
+    include_once '../config/user_session.php';
+    $userSession = new UserSession();
+    if( !isset($_SESSION['user'])){
+        header("Location: login.php");
+    }
     $query = "SELECT id,no_contrato from contrato";
     $result = pg_query($query);
     

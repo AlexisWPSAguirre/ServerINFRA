@@ -1,10 +1,14 @@
 <?php
-session_start(); 
 include('../config/db.php');
 include('includes/header.php');
 include('includes/styles.php');
 include('includes/jquery.php');
 include('includes/scripts.php');
+include_once '../config/user_session.php';
+$userSession = new UserSession();
+if( !isset($_SESSION['user'])){
+    header("Location: login.php");
+}
 ?>
 <div class="container mt-3">
     <div class="car car-body">   
@@ -131,10 +135,10 @@ include('includes/scripts.php');
                     <?php
                         $_SESSION['group_hito'] = $_GET['group'] ;
                     ?>
-                    <a href="edit_hito.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">
+                    <a href="edit_hito.php?id=<?php echo $line['id_hito']?>" class="btn btn-secondary mb-1">
                         <i class="bi bi-pen"></i>
                     </a>                    
-                    <a href="../controllers/hitos/delete.php?id=<?php echo $line['id']?>" class="btn btn-danger">
+                    <a href="../controllers/hitos/delete.php?id=<?php echo $line['id_hito']?>" class="btn btn-danger">
                     <i class="bi bi-trash"></i>
                     </a>
                 </td>

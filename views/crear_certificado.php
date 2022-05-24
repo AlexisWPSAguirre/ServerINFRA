@@ -2,6 +2,11 @@
 include("../config/db.php"); 
 include("includes/header.php");
 include('includes/styles.php');
+include_once '../config/user_session.php';
+$userSession = new UserSession();
+if( !isset($_SESSION['user'])){
+    header("Location: login.php");
+}
 if(isset($_POST['crear'])){
         $id = $_GET["id"];
         $query = "INSERT INTO certificado_disponibilidad(rubro,valor,fuente_recursos,anticipo,contrato_fk)

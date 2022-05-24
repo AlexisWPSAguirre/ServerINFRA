@@ -20,7 +20,7 @@
         }
     }
     $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-    $inputFileName = 'SEGUIMIENTO2021.xlsx';
+    $inputFileName = 'CONTRATOS 2007 a 2021/INF GRAL CONTR 2021.xlsx'; 
     /**  Identify the type of $inputFileName  **/
     $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
     /**  Create a new Reader of the type that has been identified  **/
@@ -41,10 +41,10 @@
     import_coordenadas();
     import_hitos();
     import_rubros();
-    import_contratos();
     import_proyectos(); 
     import_contratistas();
-     */
+    */
+    import_contratos();
 ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <?php
@@ -121,33 +121,8 @@
 	    8 - fecha_certificado
 	    */
         $columns = array('0','7','8','10','11','14','16','1');
-        /* Muestra en página html */
-        echo '<table class="table table-striped">';
-        for ($i=4; $i < count($cantidad) ; $i++) {
-            echo '<tr>';
-            foreach ($columns as $key) {
-                if($cantidad[$i][$key]!=''){
-                    foreach($columns as $ki){
-                        $count = 0;
-                        /* if($ki=='1' AND $cantidad[$i][$ki]==''){
-                            do {
-                                $count += 1;
-                            } while ($cantidad[($i-$count)][$ki]=='');
-                            echo '<td>'.$cantidad[($i-$count)][$ki].'</td>';
-                        }
-                        else{   
-                            echo '<td>'.$cantidad[$i][$ki].'</td>';
-                        } */
-                    }
-                    break;
-                }
-            }
-            echo '</tr>';
-        }
-        echo '</table>'; 
-        /* ------------------------------------------------------------- */
         /* Carga los registros a la BD SQL */
-        for ($i=4; $i < count($cantidad) ; $i++) {
+        for ($i=5; $i < count($cantidad) ; $i++) {
             foreach ($columns as $key) {
                 if($cantidad[$i][$key]!=''){
                     $query = 'INSERT INTO contrato(no_contrato,no_certificado,fecha_certificado,fecha_firma,no_presupuestal,
@@ -166,7 +141,7 @@
                         }
                         $query = $query."'".$cantidad[$i][$ki]."',";
                     }
-                    /* $result = pg_query($query); */
+                    $result = pg_query($query); 
                     break;
                 }
             }
@@ -174,44 +149,29 @@
     }
 
     function import_contratistas(){
-        //IMPRIME
+        $anio = 2021;
         global $cantidad;
-        echo '<table class="table table-striped">';
-        /* Columnas 4 y 5 de RELACION 2021
+        /* 
+        RELACION 2021,2020,2019,2018,2017,2016,2015,2014,2013,2010,2009,2008
         4 -> NOMBRE CONTRATISTA
         5 -> NIT
+        RELACION 2012, 2011,2007
+        3 -> NOMBRE 
+        4 -> NIT
         */
-        $j = 4;
-        for ($i=4; $i < count($cantidad) ; $i++) {
-            echo '<tr>';
-            if(val_empty($i,$j)==1 OR val_empty($i,($j+1))==1)
-            {
-                    echo
-                    '<td>'.$cantidad[$i][$j].
-                    '</td>';
-                    echo 
-                    '<td>'.$cantidad[$i][($j+1)].
-                    '</td>';
-            }
-            echo '</tr>';
-        }
-        echo '</table>'; 
         $j=4;
-        $count = 0;
-
-        /*
         for ($i=4; $i < count($cantidad) ; $i++) {
                 if(val_empty($i,$j)==1 OR val_empty($i,($j+1))==1)
-                {
-                    COMPROBAR EL TIPO DE ERROR (UNIQUE) 
+                {   
+                    $cantidad[$i][($j+1)] = str_nit($cantidad[$i][($j+1)]);
                     $query = "SELECT * FROM contratista WHERE nit ='".$cantidad[$i][($j+1)]."'";
                     $result = pg_query($query);
-                    $line = pg_fetch_row($result);
-                    $query = "INSERT INTO contratista(nombre,nit) VALUES('".$cantidad[$i][$j]."','".$cantidad[$i][($j+1)]."')";
-                    $result = pg_query($query);
+                    if(!$line=pg_fetch_assoc($result)){
+                        $query = "INSERT INTO contratista(nombre,nit,anio) VALUES('".$cantidad[$i][$j]."','".$cantidad[$i][($j+1)]."',$anio)";
+                        pg_query($query);
+                    }
                 }
             }
-            */
     };
 
     function import_proyectos(){
@@ -269,16 +229,6 @@
                     break;
                 }
             }
-        }
-    }
-
-    function val_empty($a,$b){
-        global $cantidad;
-        if($cantidad[$a][$b]!='NULL' AND $cantidad[$a][$b]!=''){
-            return true;
-        }
-        else{
-            return false;
         }
     }
 
@@ -445,6 +395,22 @@
             }
         }
         
+    }
+
+    function val_empty($a,$b){
+        global $cantidad;
+        if($cantidad[$a][$b]!='NULL' AND $cantidad[$a][$b]!=''){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    function str_nit($nit)
+    {
+        $chars = array(","," ",".");
+        return str_replace($chars,"",$nit);
     }
 
 ?>

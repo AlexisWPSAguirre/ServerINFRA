@@ -1,10 +1,14 @@
 <?php
-session_start(); 
 include('../config/db.php');
 include('includes/header.php');
 include('includes/styles.php');
 include('includes/jquery.php');
 include('includes/scripts.php');
+include_once '../config/user_session.php';
+$userSession = new UserSession();
+if( !isset($_SESSION['user'])){
+    header("Location: login.php");
+}
 ?>
 <div class="container mt-3">
     <div class="car car-body">   
@@ -137,10 +141,10 @@ include('includes/scripts.php');
                 a.observaciones,
                 a.link_secop
                 FROM obras a
-                LEFT JOIN contrato b ON b.id = a.obra_contrato_fk
-                LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
-                LEFT JOIN contratista d ON d.id = c.contratista_fk
-                LEFT JOIN coordenadas e ON e.coo_contrato_fk = b.id
+                INNER JOIN contrato b ON b.id = a.obra_contrato_fk
+                INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
+                INNER JOIN contratista d ON d.id = c.contratista_fk
+                INNER JOIN coordenadas e ON e.id = a.se_coordenada_fk
                 WHERE c.group_seguimiento ='".$_GET['group']."'";
             }
             else
@@ -194,7 +198,7 @@ include('includes/scripts.php');
                 INNER JOIN contrato b ON b.id = a.obra_contrato_fk
                 INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
                 INNER JOIN contratista d ON d.id = c.contratista_fk
-                LEFT JOIN coordenadas e ON e.coo_contrato_fk = b.id
+                INNER JOIN coordenadas e ON e.id = a.se_coordenada_fk
                 WHERE c.group_seguimiento is null";
             }
             

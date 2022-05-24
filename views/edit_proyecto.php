@@ -2,6 +2,11 @@
 include("../config/db.php"); 
 include("includes/header.php");
 include('includes/styles.php');
+include_once '../config/user_session.php';
+$userSession = new UserSession();
+if( !isset($_SESSION['user'])){
+    header("Location: login.php");
+}
 if(isset($_POST['update'])){
         $id = $_GET["id"];
         $query = "UPDATE proyecto SET no_proyecto='".$_POST['no_proyecto']."', objeto='".$_POST['objeto']."', proceso='".$_POST['proceso']."',

@@ -2,6 +2,11 @@
     include("../config/db.php"); 
     include("includes/header.php");
     include('includes/styles.php');
+    include_once '../config/user_session.php';
+    $userSession = new UserSession();
+    if( !isset($_SESSION['user'])){
+        header("Location: login.php");
+    }
     if(isset($_POST['create'])){
         date_default_timezone_set("America/Bogota");
         $group_entrada = date('m');
