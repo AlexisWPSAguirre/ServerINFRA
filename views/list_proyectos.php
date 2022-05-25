@@ -26,6 +26,9 @@ if( !isset($_SESSION['user'])){
                     <a href="../spreadsheet.php" class="btn btn-secondary">IMPORT</a>
                 </div>
                 <div class="col">
+                    <a href="prueba.php" class="btn btn-secondary">Prueba</a>
+                </div>
+                <div class="col">
                     <a href="crear_proyecto.php" class="btn btn-secondary">CREAR</a>
                 </div>
                 <div class="col">

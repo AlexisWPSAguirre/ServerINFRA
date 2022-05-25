@@ -4,19 +4,12 @@ include('includes/header.php');
 include('includes/styles.php');
 include('includes/jquery.php');
 include('includes/scripts.php');
+    $oldDate = "4/6/2021";
+    echo $time = date("Y-m-d",strtotime($oldDate))."<hr>";
+    $porciones = explode("/",$oldDate); 
+    $oldDate = "$porciones[2]-$porciones[0]-$porciones[1]";
+    echo $oldDate."<hr>";
+    echo $time = date("Y-m-d",strtotime($oldDate))
 
-$query = "
-    SELECT * 
-    FROM coordenadas a
-    INNER JOIN contrato b ON b.id = a.coo_contrato_fk
-    INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-    WHERE c.group_coordenadas is not null
-    ";
-    $result = pg_query($query);
-    while($row = pg_fetch_array($result)){
-        foreach ($row as $key) {
-            print($key."---");
-        }
-        echo "<hr>";
-    };
+
 ?>

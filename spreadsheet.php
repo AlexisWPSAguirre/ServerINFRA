@@ -20,7 +20,8 @@
         }
     }
     $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-    $inputFileName = 'CONTRATOS 2007 a 2021/INF GRAL CONTR 2021.xlsx'; 
+    /* $inputFileName = 'CONTRATOS 2007 a 2021/INF GRAL CONTR 2021.xlsx';  */
+    $inputFileName = 'MATRIZ2021/MATRIZ COORDENADAS OBRAS 2021.xlsx'; 
     /**  Identify the type of $inputFileName  **/
     $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
     /**  Create a new Reader of the type that has been identified  **/
@@ -37,75 +38,17 @@
 
 <?php
     /*
-    import_seguimiento();
-    import_coordenadas();
-    import_hitos();
-    import_rubros();
+    import_contratos();
     import_proyectos(); 
     import_contratistas();
+    import_seguimiento();
+    import_rubros();
+    import_hitos();
     */
-    import_contratos();
+    import_coordenadas();
 ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <?php
-    function import_rubros(){
-        global $cantidad;
-        /* Las columnas de la relación 2021: 
-	    6 - rubro
-        9 - valor
-        13 - fuentes
-        29 - anticipo
-        subconsulta(contrato_fk)  0 - contrato
-	    */
-        $columns = array('6','9','13','29','0');
-        echo '<table class="table table-striped">';
-        for ($i=4; $i < count($cantidad) ; $i++) {
-            echo '<tr>';
-            foreach ($columns as $key) {
-                if($cantidad[$i][$key]!=''){
-                    foreach($columns as $ki){
-                        $count = 0;
-                        if($ki=='0' AND $cantidad[$i][$ki]==''){
-                            do {
-                                $count += 1;
-                            } while ($cantidad[($i-$count)][$ki]=='');
-                            echo '<td>'.$cantidad[($i-$count)][$ki].'</td>';
-                        }
-                            echo '<td>'.$cantidad[$i][$ki].'</td>';
-                    }
-                    break;
-                }
-            }
-            echo '</tr>';
-        }
-        echo '</table>';  
-        /* ------------------------------------------------------------- */
-        /* Carga los registros a la BD SQL */
-        for ($i=4; $i < count($cantidad) ; $i++) {
-            foreach ($columns as $key) {
-                if($cantidad[$i][$key]!=''){
-                    $query = 'INSERT INTO certificado_disponibilidad(rubro,valor,fuente_recursos,anticipo,contrato_fk) VALUES(';
-                    foreach($columns as $ki){
-                        $count = 0;
-                        if($ki=='0'){
-                            if($cantidad[$i][$ki]==''){
-                                do {
-                                    $count += 1;
-                                } while ($cantidad[($i-$count)][$ki]=='');
-                                $cantidad[$i][$ki]=$cantidad[($i-$count)][$ki];
-                            }
-                            $query = $query."(SELECT id FROM contrato WHERE no_contrato ='".$cantidad[$i][$ki]."' LIMIT 1))";
-                            break;
-                        }
-                        $query = $query."'".$cantidad[$i][$ki]."',";
-                    }
-                    echo '<p>'.$query.'</p>';
-                    /* $result = pg_query($query);  */
-                    break;
-                }
-            }
-        }
-    }
     
     function import_contratos(){
         global $cantidad;
@@ -122,11 +65,23 @@
 	    */
         $columns = array('0','7','8','10','11','14','16','1');
         /* Carga los registros a la BD SQL */
+        $index_fechas= array(14,10,16,8);
         for ($i=5; $i < count($cantidad) ; $i++) {
             foreach ($columns as $key) {
                 if($cantidad[$i][$key]!=''){
                     $query = 'INSERT INTO contrato(no_contrato,no_certificado,fecha_certificado,fecha_firma,no_presupuestal,
                     fecha_presupuestal,f_aprob_polizas,no_proyecto_fk) VALUES(';
+                    foreach ($index_fechas as $key => $value) {
+                        if(!strrpos($cantidad[$i][$value],'-') AND $cantidad[$i][$value]!=""){
+                            if(date("Y-m-d",strtotime($cantidad[$i][$value]))!="1970-01-01"){
+                                $cantidad[$i][$value] = date("Y-m-d",strtotime($cantidad[$i][$value]));
+                            }   
+                        }
+                    }
+
+                    $cantidad[$i][1] = str_nit($cantidad[$i][1]);
+                    $cantidad[$i][1] = str_replace("-","",$cantidad[$i][1]);
+
                     foreach($columns as $ki){
                         $count = 0;
                         if($ki=='16'){
@@ -136,9 +91,11 @@
                                 } while ($cantidad[($i-$count)][1]=='');
                                 $cantidad[$i][1]=$cantidad[($i-$count)][1];
                             }
-                            $query = $query."'".$cantidad[$i][$ki]."',(SELECT id FROM proyecto WHERE no_proyecto ='".$cantidad[$i][1]."' LIMIT 1))";
+                        
+                            $query = $query."'".$cantidad[$i][$ki]."',(SELECT id FROM proyecto WHERE no_proyecto ='".$cantidad[$i][1]."' AND objeto = '".$cantidad[$i][2]."' LIMIT 1))";
                             break;
                         }
+                        print($query);
                         $query = $query."'".$cantidad[$i][$ki]."',";
                     }
                     $result = pg_query($query); 
@@ -172,12 +129,12 @@
                     }
                 }
             }
-    };
+    }
 
     function import_proyectos(){
         global $cantidad;
-        $index = 0;
         $columns = array('1','3','17','25','26','28','2');
+        $anio = '2021';
         /* Las columnas de la relación 2021: 
         1 - No_proyecto
         3 - proceso
@@ -189,40 +146,78 @@
         k - anio
         subconsulta - 5 - contratista_fk
         */
-
-        /* Muestra en página html */
-        echo '<table class="table table-striped">';
-        for ($i=4; $i < count($cantidad) ; $i++) {
-            echo '<tr>';
-            foreach ($columns as $key) {
-                if($cantidad[$i][$key]!=''){
-                    foreach($columns as $key){
-                        echo '<td>'.$cantidad[$i][$key].'</td>';
-                    }
-                    break;
-                }
-            }
-            echo '</tr>';
-        }
-        echo '</table>'; 
-        /* ------------------------------------------------------------- */
         /* Carga los registros a la BD SQL */
-        $anio = '2021';
         for ($i=4; $i < count($cantidad) ; $i++) {
             foreach ($columns as $key) {
                 if($cantidad[$i][$key]!=''){
                     $query = 'INSERT INTO proyecto(no_proyecto,proceso,fecha_iniciacion,fecha_terminacion,fecha_liquidacion,
                     supervision_interventoria,objeto,anio,contratista_fk) VALUES(';
+                    if(!strrpos($cantidad[$i][17],'-') AND $cantidad[$i][17]!=""){
+                        if(date("Y-m-d",strtotime($cantidad[$i][17]))!="1970-01-01"){
+                            $cantidad[$i][17] = date("Y-m-d",strtotime($cantidad[$i][17]));
+                        }   
+                    }
+                    if(!strrpos($cantidad[$i][25],'-') AND $cantidad[$i][25]!=""){
+                        if(date("Y-m-d",strtotime($cantidad[$i][25]))!="1970-01-01"){
+                            $cantidad[$i][25] = date("Y-m-d",strtotime($cantidad[$i][25]));
+                        }   
+                    }
+                    if(!strrpos($cantidad[$i][26],'-') AND $cantidad[$i][26]!=""){
+                        if(date("Y-m-d",strtotime($cantidad[$i][26]))!="1970-01-01"){
+                            $cantidad[$i][26] = date("Y-m-d",strtotime($cantidad[$i][26]));
+                        }   
+                    }
+                    
                     foreach($columns as $ki){
+                        if($ki=='1')
+                        {   
+                            $cantidad[$i][$ki] = str_nit($cantidad[$i][$ki]);
+                            $cantidad[$i][$ki] = str_replace("-","",$cantidad[$i][$ki]);
+                        }
                         if($ki=='2'){
+                            $cantidad[$i][5] = str_nit($cantidad[$i][5]);
                             $query = $query."'".$cantidad[$i][$ki]."',$anio,(SELECT id FROM contratista WHERE nit ='".$cantidad[$i][5]."' LIMIT 1))";
                             break;
                         }
-                        /* if($ki=='17' OR $ki=='25' OR $ki=='26'){
-                            $cantidad[$i][$ki] = str_replace("/","-",$cantidad[$i][$ki]);
-                            $cantidad[$i][$ki] = date("Y-m-d",strtotime($cantidad[$i][$ki]));
-                            print $cantidad[$i][$ki];
-                        } */
+                        $query = $query."'".$cantidad[$i][$ki]."',";
+                    }
+                    $result = pg_query($query); 
+                    break;
+                }
+            }
+        }
+    }
+
+    function import_rubros(){
+        global $cantidad;
+        /* Las columnas de la relación 2021: 
+	    6 - rubro
+        9 - valor
+        13 - fuentes
+        29 - anticipo
+        subconsulta(contrato_fk)  0 - contrato
+	    */
+        $columns = array('6','9','13','29','0'); 
+        /* Carga los registros a la BD SQL */
+        for ($i=5; $i < count($cantidad) ; $i++) {
+            foreach ($columns as $key) {
+                $cantidad[$i][6] = str_nit($cantidad[$i][6]);
+                $cantidad[$i][6] = str_replace("-","",$cantidad[$i][6]);
+
+                if($cantidad[$i][$key]!=''){
+                    $query = 'INSERT INTO certificado_disponibilidad(rubro,valor,fuente_recursos,anticipo,contrato_fk) VALUES(';
+                    foreach($columns as $ki){
+                        $count = 0;
+                        if($ki=='0'){
+                            if($cantidad[$i][$ki]==''){
+                                do {
+                                    $count += 1;
+                                } while ($cantidad[($i-$count)][$ki]=='');
+                                $cantidad[$i][$ki]=$cantidad[($i-$count)][$ki];
+                            }
+                            $query = $query."(SELECT id FROM contrato WHERE no_contrato ='".$cantidad[$i][$ki]."' LIMIT 1))";
+                            break;
+                        }
                         $query = $query."'".$cantidad[$i][$ki]."',";
                     }
                     $result = pg_query($query); 
@@ -243,41 +238,23 @@
         7 - dias_hito
 	    */
         $columns = array('3','4','5','6','7','0');
-        /* Muestra en página html */
-        echo '<table class="table table-striped">';
-        for ($i=4; $i < count($cantidad) ; $i++) {
-            echo '<tr>';
-            foreach ($columns as $key) {
-                if($cantidad[$i][$key]!=''){
-                    foreach($columns as $ki){
-                        $count = 0;
-                        /* if($ki=='1' AND $cantidad[$i][$ki]==''){
-                            do {
-                                $count += 1;
-                            } while ($cantidad[($i-$count)][$ki]=='');
-                            echo '<td>'.$cantidad[($i-$count)][$ki].'</td>';
-                        }
-                        else{   
-                            echo '<td>'.$cantidad[$i][$ki].'</td>';
-                        } */
-                    }
-                    break;
-                }
-            }
-            echo '</tr>';
-        }
-        echo '</table>'; 
-        /* ------------------------------------------------------------- */
         /* Carga los registros a la BD SQL */
+        echo "<h1>".count($cantidad)."</h1>";
         for ($i=4; $i < count($cantidad) ; $i++) {
             foreach ($columns as $key) {
-                if($cantidad[$i][$key]!=''){
+                if(!strrpos($cantidad[$i][4],'-') AND $cantidad[$i][4]!=""){
+                    if(date("Y-m-d",strtotime($cantidad[$i][4]))!="1970-01-01"){
+                        $cantidad[$i][4] = date("Y-m-d",strtotime($cantidad[$i][4]));
+                    }   
+                }
+                if($cantidad[$i][$key]!=''){                    
                     $query = 'INSERT INTO hitos(hito,fecha_hito,detalle_hito,valor_adiciones_hito,dias_hito,
                     contrato_fk) VALUES(';
                     foreach($columns as $ki){
                         if($ki=='7'){
                             $cantidad[$i][0] = str_replace("-","/",$cantidad[$i][0]);
-                            $query = $query."'".$cantidad[$i][$ki]."',(SELECT id FROM contrato WHERE no_contrato LIKE '%".$cantidad[$i][0]."%' LIMIT 1))";
+                            $query = $query."'".$cantidad[$i][$ki]."',(SELECT a.id FROM contrato a INNER JOIN proyecto b ON a.no_proyecto_fk = b.id
+                            WHERE a.no_contrato LIKE '%".$cantidad[$i][0]."%' AND b.no_proyecto = '".$cantidad[$i][1]."' LIMIT 1))";
                             break;
                         }
                         $query = $query."'".$cantidad[$i][$ki]."',";
@@ -313,7 +290,9 @@
                             $cantidad[$i][$ki] = str_replace("'","`",$cantidad[$i][$ki]);
                             if($ki=='9'){
                                 $cantidad[$i][3] = str_replace("-","/",$cantidad[$i][3]);
-                                $query = $query."'".$cantidad[$i][$ki]."',(SELECT id FROM contrato WHERE no_contrato LIKE '%".$cantidad[$i][3]."%' LIMIT 1))";
+                                $query = $query."'".$cantidad[$i][$ki]."',(SELECT a.id FROM contrato a
+                                INNER JOIN proyecto b ON b.id = a.no_proyecto_fk
+                                WHERE a.no_contrato LIKE '%".$cantidad[$i][3]."%' AND b.no_proyecto = '".$cantidad[$i][0]."' LIMIT 1))";
                                 break;
                             }
                             $query = $query."'".$cantidad[$i][$ki]."',";
@@ -407,10 +386,10 @@
         }
     }
 
-    function str_nit($nit)
+    function str_nit($string)
     {
-        $chars = array(","," ",".");
-        return str_replace($chars,"",$nit);
+        $chars = array(","," ",".","'");
+        return str_replace($chars,"",$string);
     }
 
 ?>
