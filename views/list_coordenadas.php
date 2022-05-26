@@ -4,11 +4,11 @@ include('includes/header.php');
 include('includes/styles.php');
 include('includes/jquery.php');
 include('includes/scripts.php');
-include_once '../config/user_session.php';
+/* include_once '../config/user_session.php';
 $userSession = new UserSession();
 if( !isset($_SESSION['user'])){
     header("Location: login.php");
-}
+} */
 ?>
 <div class="container mt-3">
     <div class="car car-body">   

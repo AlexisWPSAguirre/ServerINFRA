@@ -1,12 +1,11 @@
 <?php
     include("../config/db.php"); 
-    include("includes/header.php");
-    include('includes/styles.php');
-    include_once '../config/user_session.php';
+
+    /* include_once '../config/user_session.php';
     $userSession = new UserSession();
     if( !isset($_SESSION['user'])){
         header("Location: login.php");
-    }
+    } */
     if(isset($_POST['create'])){
         $query="INSERT INTO contratista
         (nombre,nit)
@@ -18,7 +17,22 @@
         }   
     }
 ?>
-<div class="container mt-3">
+<div class="wrapper row1">
+  <section id="ctdetails" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <ul class="nospace clear">
+          <div class="sectiontitle">
+              <h6 class="heading">Información Contratistas</h6>
+          </div>
+      </li>
+    </ul>
+    <!-- ################################################################################################ -->
+  </section>
+</div>
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <div class="content">
+        <div class="scrollable">
     <div class="row">
         <div class="col-5">
             <form action="" method="POST">
@@ -73,4 +87,6 @@
         </table>
     </div>
 </div>
-    
+</div>  
+</div>
+<?php include('footer.php');?>

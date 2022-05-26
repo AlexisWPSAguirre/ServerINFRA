@@ -1,16 +1,29 @@
 <?php
 include('../config/db.php');
-include('includes/header.php');
-include('includes/styles.php');
 include('includes/jquery.php');
 include('includes/scripts.php');
-include_once '../config/user_session.php';
+/* include_once '../config/user_session.php';
 $userSession = new UserSession();
 if( !isset($_SESSION['user'])){
     header("Location: login.php");
-}
+} */
 ?>
-<div class="container mt-3">
+<div class="wrapper row1">
+    <section id="ctdetails" class="hoc clear"> 
+        <!-- ################################################################################################ -->
+        <ul class="nospace clear">
+            <div class="sectiontitle">
+                <h6 class="heading">Información Rubros</h6>
+            </div>
+        </li>
+        </ul>
+        <!-- ################################################################################################ -->
+    </section>
+    </div>
+    <div class="wrapper row3">
+    <main class="hoc container clear"> 
+    <div class="content">
+        <div class="scrollable">
     <div class="car car-body">   
         <div class="row mb-3">
             <div class="col-3">
@@ -18,7 +31,7 @@ if( !isset($_SESSION['user'])){
                     <input type="text" placeholder="Búsqueda" class="form-control" id="busqueda" name="busqueda">
                     </div>
                     <div class="col">
-                        <button type="submit" class="btn btn-primary"><i class="bi bi-search-heart"></i></button>
+                        <button type="submit" class="btn btn-primary">Buscar</button>
                     </div>
                 </form>
                 <div class="col">
@@ -97,16 +110,17 @@ if( !isset($_SESSION['user'])){
                 </td>
                 <td>
                     <a href="edit_certificado.php?id=<?php echo $line['id_certificado']?>" class="btn btn-secondary mb-1">
-                        <i class="bi bi-pen"></i>
+                        Editar
                     </a>                    
                     <a href="../controllers/certificado/delete.php?id=<?php echo $line['id_certificado']?>" class="btn btn-danger">
-                    <i class="bi bi-trash"></i>
+                        Eliminar
                     </a>
                 </td>
             </tr>
         <?php } ?>
         </table>
         </div>
+    </div>
     </div>
 </div>
     <!-- <script>
@@ -137,4 +151,4 @@ if( !isset($_SESSION['user'])){
         ?>
     </div>
 </div> -->
-<?php include('includes/footer.php');?>
+<?php include('footer.php');?>

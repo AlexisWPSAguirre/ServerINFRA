@@ -21,7 +21,7 @@
     }
     $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
     /* $inputFileName = 'CONTRATOS 2007 a 2021/INF GRAL CONTR 2021.xlsx';  */
-    $inputFileName = 'MATRIZ2021/MATRIZ COORDENADAS OBRAS 2021.xlsx'; 
+    $inputFileName = 'MATRIZ2021/MATRIZ SEGUIMIENTO OBRAS 2021.xlsx'; 
     /**  Identify the type of $inputFileName  **/
     $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
     /**  Create a new Reader of the type that has been identified  **/
@@ -41,11 +41,11 @@
     import_contratos();
     import_proyectos(); 
     import_contratistas();
-    import_seguimiento();
     import_rubros();
     import_hitos();
-    */
     import_coordenadas();
+    import_seguimiento();
+    */
 ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <?php
@@ -133,7 +133,7 @@
 
     function import_proyectos(){
         global $cantidad;
-        $columns = array('1','3','17','25','26','28','2');
+        $columns = array('1','3','17','25','26','28','52','53','54','2');
         $anio = '2021';
         /* Las columnas de la relación 2021: 
         1 - No_proyecto
@@ -142,6 +142,9 @@
         25 - fecha_terminacion
         26 - fecha_liquidacion
         28 - supervision_interventoria
+        52 - direccion
+        53 - tel_cel
+        54 - correo
         2 - objeto
         k - anio
         subconsulta - 5 - contratista_fk
@@ -151,7 +154,7 @@
             foreach ($columns as $key) {
                 if($cantidad[$i][$key]!=''){
                     $query = 'INSERT INTO proyecto(no_proyecto,proceso,fecha_iniciacion,fecha_terminacion,fecha_liquidacion,
-                    supervision_interventoria,objeto,anio,contratista_fk) VALUES(';
+                    supervision_interventoria,direccion,tel_cel,correo,objeto,anio,contratista_fk) VALUES(';
                     if(!strrpos($cantidad[$i][17],'-') AND $cantidad[$i][17]!=""){
                         if(date("Y-m-d",strtotime($cantidad[$i][17]))!="1970-01-01"){
                             $cantidad[$i][17] = date("Y-m-d",strtotime($cantidad[$i][17]));
@@ -240,7 +243,7 @@
         $columns = array('3','4','5','6','7','0');
         /* Carga los registros a la BD SQL */
         echo "<h1>".count($cantidad)."</h1>";
-        for ($i=4; $i < count($cantidad) ; $i++) {
+        for ($i=1; $i < count($cantidad) ; $i++) {
             foreach ($columns as $key) {
                 if(!strrpos($cantidad[$i][4],'-') AND $cantidad[$i][4]!=""){
                     if(date("Y-m-d",strtotime($cantidad[$i][4]))!="1970-01-01"){
@@ -260,7 +263,6 @@
                         $query = $query."'".$cantidad[$i][$ki]."',";
                     }
                 }
-                PRINT($query);
                 $result = pg_query($query);
                 break;
             }
@@ -281,7 +283,7 @@
 	    */
         $columns = array('4','5','6','7','8','9','3');
         /* Carga los registros a la BD SQL */
-        for ($i=4; $i < count($cantidad) ; $i++) {
+        for ($i=1; $i < count($cantidad) ; $i++) {
             foreach ($columns as $key) {
                     if($cantidad[$i][0]!=''){
                         $query = 'INSERT INTO coordenadas(latitud,longitud,latitud_inicial,latitud_final,longitud_inicial,
@@ -297,8 +299,6 @@
                             }
                             $query = $query."'".$cantidad[$i][$ki]."',";
                         }
-                        PRINT($query);
-                        echo "<hr>";
                         $result = pg_query($query);
                         break;
                     }
@@ -316,38 +316,38 @@
         4 - departamento_obra
         6.codigo_divipola_municipio
         7.unidad_funcional_acuerdo_obra,
-        8.fecha_inicio,
-        9.fecha_inicial_terminacion,
-        10.fecha_final_terminacion,
-        11.valor_inicial,
-        12.valor_final,
-        13.avance_fisico_inicial,
-        14.avance_fisico_ejecutado,
-        15.avance_financiero_ejecutado,
-        17.cantidad_suspensiones,
-        18.cantidad_prorrogas,
-        19.tiempo_suspensiones,
-        20.tiempo_prorrogas,
-        21.cantidad_adiciones,
-        22.valor_total_adiciones,
-        23.origen_recursos,
-        24.valor_comprometido,
-        25.valor_obligado,
-        26.valor_pagado,
-        27.valor_anticipo,
-        30.latitud_inicial,
-        31.latitud_final,
-        33.longitud_final,
-        34.estado,
-        37.cesion,
-        38.nuevo_contratista,
-        39.observaciones,
-        40.link_secop
+        9.fecha_inicio,
+        10.fecha_inicial_terminacion,
+        11.fecha_final_terminacion,
+        12.valor_inicial,
+        13.valor_final,
+        14.avance_fisico_inicial,
+        15.avance_fisico_ejecutado,
+        16.avance_financiero_ejecutado,
+        18.cantidad_suspensiones,
+        19.cantidad_prorrogas,
+        20.tiempo_suspensiones,
+        21.tiempo_prorrogas,
+        22.cantidad_adiciones,
+        23.valor_total_adiciones,
+        24.origen_recursos,
+        25.valor_comprometido,
+        26.valor_obligado,
+        27.valor_pagado,
+        28.valor_anticipo,
+        31.latitud_inicial,
+        33.latitud_final,
+        34.longitud_final,
+        35.estado,
+        38.cesion,
+        39.nuevo_contratista,
+        40.observaciones,
+        41.link_secop
 	    */
-        $columns = array('2','3','4','6','7','8','9','10','11','12','13','14','15','17','18','19','20',
-        '21','22','23','24','25','26','27','30','31','33','34','37','38','39','40','1');
+        $columns = array('2','3','4','6','7','9','10','11','12','13','14','15','16','18','19','20',
+        '21','22','23','24','25','26','27','28','31','33','34','35','38','39','40','41','1');
         /* Carga los registros a la BD SQL */
-        for ($i=4; $i < count($cantidad) ; $i++) {
+        for ($i=1; $i < count($cantidad) ; $i++) {
             foreach ($columns as $key) {
                     if($cantidad[$i][0]!=''){
                         $query = 'INSERT INTO obras(sector,municipio_obra,departamento_obra,codigo_divipola_municipio,
@@ -355,13 +355,14 @@
                         avance_fisico_inicial,avance_fisico_ejecutado,avance_financiero_ejecutado,cantidad_suspensiones,
                         cantidad_prorrogas,tiempo_suspensiones,tiempo_prorrogas,cantidad_adiciones,valor_total_adiciones,origen_recursos,valor_comprometido,
                         valor_obligado,valor_pagado,valor_anticipo,latitud_inicial,latitud_final,longitud_final,estado,cesion,
-                        nuevo_contratista,observaciones,link_secop,obra_contrato_fk) 
+                        nuevo_contratista,observaciones,link_secop,obra_contrato_fk,se_coordenada_fk) 
                         VALUES(';
                         foreach($columns as $ki){
                             $cantidad[$i][$ki] = str_replace("'","`",$cantidad[$i][$ki]);
-                            if($ki=='40'){
+                            if($ki=='41'){
                                 $cantidad[$i][1] = str_replace("-","/",$cantidad[$i][1]);
-                                $query = $query."'".$cantidad[$i][$ki]."',(SELECT id FROM contrato WHERE no_contrato LIKE '%".$cantidad[$i][1]."%' LIMIT 1))";
+                                $query = $query."'".$cantidad[$i][$ki]."',(SELECT id FROM contrato WHERE no_contrato LIKE '%".$cantidad[$i][1]."%' LIMIT 1),
+                                (SELECT id FROM coordenadas WHERE coo_contrato_fk = (SELECT id FROM contrato WHERE no_contrato LIKE '%".$cantidad[$i][1]."%' LIMIT 1) LIMIT 1))";
                                 break;
                             }
                             $query = $query."'".$cantidad[$i][$ki]."',";

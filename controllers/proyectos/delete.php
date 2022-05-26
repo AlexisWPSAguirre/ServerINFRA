@@ -7,6 +7,6 @@
       if(!$result) {
         die("Query Failed.");
       } 
-      header('Location: ../../views/list_proyectos.php');
+      header('Location: ../../views/full-width.php?frame=list_proyectos.php');
       }
 ?>

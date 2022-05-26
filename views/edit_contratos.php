@@ -2,11 +2,12 @@
 include("../config/db.php"); 
 include("includes/header.php");
 include('includes/styles.php');
-include_once '../config/user_session.php';
+/* include_once '../config/user_session.php';
 $userSession = new UserSession();
 if( !isset($_SESSION['user'])){
     header("Location: login.php");
-}
+} */
+include_once "full-width.php";
 if(isset($_POST['update'])){
         $id = $_GET["id"];
         $query = "UPDATE contrato SET no_contrato='".$_POST['no_contrato']."', no_proyecto_fk='".$_POST['no_proyecto_fk']."', no_certificado='".$_POST['no_certificado']."',
@@ -35,8 +36,23 @@ if(isset($_GET['id'])) {
     while ($line = pg_fetch_assoc($result))
     {
 ?>
-<div class="container p-4">
-    <div class="card card-body">
+<div class="wrapper row1">
+  <section id="ctdetails" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <ul class="nospace clear">
+          <div class="sectiontitle">
+              <h6 class="heading">Editar Proyecto</h6>
+          </div>
+      </li>
+    </ul>
+    <!-- ################################################################################################ -->
+  </section>
+</div>
+
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <div class="content">
+        <div class="scrollable">
         <div class="row">
             <div class="col">
                 <form action="edit_contratos.php?id=<?php echo $_GET['id'];?>" method="POST">
@@ -109,4 +125,4 @@ if(isset($_GET['id'])) {
 <?php
     }}
 ?>
-<?php include('includes/footer.php');?>
+<?php include('footer.php');?>
