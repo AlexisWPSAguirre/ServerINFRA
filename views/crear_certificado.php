@@ -1,24 +1,33 @@
 <?php 
 include("../config/db.php"); 
-include("includes/header.php");
 include('includes/styles.php');
 include_once '../config/user_session.php';
-$userSession = new UserSession();
-if( !isset($_SESSION['user'])){
-    header("Location: login.php");
-}
+include_once "full-width.php";
 if(isset($_POST['crear'])){
         $id = $_GET["id"];
         $query = "INSERT INTO certificado_disponibilidad(rubro,valor,fuente_recursos,anticipo,contrato_fk)
         VALUES('".$_POST['rubro']."','".$_POST['valor']."','".$_POST['fuente_recursos']."',
         '".$_POST['anticipo']."','".$_POST['contrato_fk']."')";
         pg_query($query);
-        header('Location:list_certificaedo.php');
+        header('Location:../views/full-width.php?frame=list_contratos.php');
     }
-
 ?>
-<div class="container p-4">
-    <div class="card card-body">
+<div class="wrapper row1">
+    <section id="ctdetails" class="hoc clear"> 
+        <!-- ################################################################################################ -->
+        <ul class="nospace clear">
+            <div class="sectiontitle">
+                <h6 class="heading">Matriz Rubros</h6>
+            </div>
+        </li>
+        </ul>
+        <!-- ################################################################################################ -->
+    </section>
+    </div>
+    <div class="wrapper row3">
+    <main class="hoc container clear"> 
+    <div class="content">
+        <div class="scrollable">
         <div class="row">
             <div class="col">
                 <form action="crear_certificado.php" method="POST">
@@ -60,7 +69,7 @@ if(isset($_POST['crear'])){
                             <input type="text" name="anticipo" class="form-control">
                         </div>
                         <div class="mb-1 abs-center">
-                            <a href="list_certificado.php" class="btn btn-danger">
+                            <a href="../views/full-width.php?frame=list_certificado.php" class="btn btn-danger">
                                 CANCELAR
                             </a>
                         </div>
@@ -70,4 +79,4 @@ if(isset($_POST['crear'])){
         </div>
     </div>
 </div>
-<?php include('includes/footer.php');?>
+<?php include('footer.php');?>

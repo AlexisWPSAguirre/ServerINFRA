@@ -1,12 +1,8 @@
 <?php 
 include("../config/db.php"); 
-include("includes/header.php");
 include('includes/styles.php');
-include_once '../config/user_session.php';
-$userSession = new UserSession();
-if( !isset($_SESSION['user'])){
-    header("Location: login.php");
-}
+include_once "full-width.php";
+
 if(isset($_POST['crear'])){
     #No habia visto que el post se almacenará con el name del button D:
         $id = $_GET["id"];
@@ -14,8 +10,12 @@ if(isset($_POST['crear'])){
         VALUES('".$_POST['hito']."','".$_POST['detalle_hito']."','".$_POST['valor_adiciones_hito']."',
         '".$_POST['dias_hito']."',".$id.",'".$_POST['fecha_hito']."');
         UPDATE proyecto SET group_hito = '".$_GET['group']."' WHERE id =".$_GET['pro_id'];
-        pg_query($query);
-        header('Location:groups_hitos.php');
+        $result = pg_query($query);
+        if(!$result)
+        {
+            die("Query Failed.");
+        } 
+        header('Location: list_hitos.php?group='.$_SESSION['group_hito']);
     }
 if(isset($_GET['id'])) {
     $id = $_GET['id'];
@@ -32,15 +32,28 @@ if(isset($_GET['id'])) {
     while ($line = pg_fetch_assoc($result))
     {
 ?>
-<div class="container p-4">
-    <div class="card card-body">
+
+<div class="wrapper row1">
+  <section id="ctdetails" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <ul class="nospace clear">
+          <div class="sectiontitle">
+              <h6 class="heading">Crear Hito</h6>
+          </div>
+      </li>
+    </ul>
+    <!-- ################################################################################################ -->
+  </section>
+</div>
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <div class="content">
         <div class="row">
             <div class="col">
                 <form action="crear_hito.php?id=<?php echo $_GET['id'];?>&group=<?= $_SESSION['group_hito']?>&pro_id=<?php echo $_GET['pro_id']?>" method="POST">
                     <div class="mb-3">
                         <label for="" class="form-label">No. Proyecto:</label>
                         <input type="text" name="no_proyecto" class="form-control" value="<?php echo $line['no_proyecto'];?>" disabled>
-                        <input type="text" value="<?= $_SESSION['group_hito'] ?>" disabled>
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">No. contrato</label>
@@ -67,14 +80,14 @@ if(isset($_GET['id'])) {
                         </div>
                         <div class="mb-3">
                             <label for="" class="form-label">Dias Hito</label>
-                            <input type="text" name="dias_hito" class="form-control">
+                            <input type="text" name="dias_hito" class="form-control" value=0>
                         </div>
                         <div class="mb-3">
                             <label for="" class="form-label">Fecha Hito</label>
                             <input type="date" name="fecha_hito" class="form-control">
                         </div>
                         <div class="mb-1 abs-center">
-                            <a href="list_hitos.php?group=<?= $_SESSION['group_hito'] ?>" class="btn btn-danger">
+                            <a href="../views/full-width.php?frame=list_hitos.php&group=<?= $_SESSION['group_hito'] ?>" class="btn-danger">
                                 CANCELAR
                             </a>
                         </div>
@@ -87,4 +100,4 @@ if(isset($_GET['id'])) {
 <?php
     }}
 ?>
-<?php include('includes/footer.php');?>
+<?php include('footer.php');?>

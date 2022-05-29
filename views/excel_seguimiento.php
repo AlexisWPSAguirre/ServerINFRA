@@ -21,6 +21,8 @@ AVANCE_FINANCIERO_EJECUTADO|NUM_CONTRATO|CANTIDAD_SUSPENSIONES|CANTIDAD_PRORROGA
 <tr>
     <?php
         include('../config/db.php');
+        if(!empty($_GET['group']))
+        {
         $query ="
         SELECT
         c.no_proyecto,
@@ -71,6 +73,60 @@ AVANCE_FINANCIERO_EJECUTADO|NUM_CONTRATO|CANTIDAD_SUSPENSIONES|CANTIDAD_PRORROGA
         INNER JOIN contratista d ON d.id = c.contratista_fk
         LEFT JOIN coordenadas e ON e.coo_contrato_fk = b.id
         WHERE c.group_entrada ='".$_GET['group']."'";
+        }
+        else{
+        $query ="
+        SELECT
+        c.no_proyecto,
+        b.no_contrato,
+        a.sector,
+        a.municipio_obra,
+        a.departamento_obra,
+        c.objeto,
+        a.codigo_divipola_municipio,
+        c.objeto,
+        a.unidad_funcional_acuerdo_obra,
+        a.fecha_inicio,
+        a.fecha_inicial_terminacion,
+        a.fecha_final_terminacion,
+        a.valor_inicial,
+        a.valor_final,
+        a.avance_fisico_inicial,
+        a.avance_fisico_ejecutado,
+        a.avance_financiero_ejecutado,
+        b.no_contrato,
+        a.cantidad_suspensiones,
+        a.cantidad_prorrogas,
+        a.tiempo_suspensiones,
+        a.tiempo_prorrogas,
+        a.cantidad_adiciones,
+        a.valor_total_adiciones,
+        a.origen_recursos,
+        a.valor_comprometido,
+        a.valor_obligado,
+        a.valor_pagado,
+        a.valor_anticipo,
+        e.latitud,
+        e.longitud,
+        a.latitud_inicial,
+        a.latitud_final,
+        e.longitud_inicial,
+        a.longitud_final,
+        a.estado,
+        d.nombre,
+        d.nit,
+        a.cesion,
+        a.nuevo_contratista,
+        a.observaciones,
+        a.link_secop
+        FROM obras a
+        INNER JOIN contrato b ON b.id = a.obra_contrato_fk
+        INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
+        INNER JOIN contratista d ON d.id = c.contratista_fk
+        LEFT JOIN coordenadas e ON e.coo_contrato_fk = b.id
+        WHERE c.group_entrada is null";
+        }
+        
         $result = pg_query($query);
         while($line=pg_fetch_row($result)){
     ?>

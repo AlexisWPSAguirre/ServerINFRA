@@ -2,18 +2,13 @@
 include('../config/db.php');
 include('includes/jquery.php');
 include('includes/scripts.php');
-/* include_once '../config/user_session.php';
-$userSession = new UserSession();
-if( !isset($_SESSION['user'])){
-    header("Location: login.php");
-} */
 ?>
 <div class="wrapper row1">
     <section id="ctdetails" class="hoc clear"> 
         <!-- ################################################################################################ -->
         <ul class="nospace clear">
             <div class="sectiontitle">
-                <h6 class="heading">Información Rubros</h6>
+                <h6 class="heading">Matriz Rubros</h6>
             </div>
         </li>
         </ul>
@@ -24,19 +19,14 @@ if( !isset($_SESSION['user'])){
     <main class="hoc container clear"> 
     <div class="content">
         <div class="scrollable">
-    <div class="car car-body">   
         <div class="row mb-3">
             <div class="col-3">
                 <form action="buscar.php" method="GET">
-                    <input type="text" placeholder="Búsqueda" class="form-control" id="busqueda" name="busqueda">
-                    </div>
-                    <div class="col">
-                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                    <a href="crear_certificado.php" class="btn btn-secondary">AÑADIR</a>
                     </div>
                 </form>
-                <div class="col">
-                    <a href="crear_certificado.php" class="btn btn-secondary">AÑADIR</a>
-                </div>
         </div>
     </div>
     <div class="row">
@@ -57,10 +47,10 @@ if( !isset($_SESSION['user'])){
         <tbody>
         <?php 
             //Paginador
-            /* $sql_register = pg_query("SELECT COUNT(*) as total_registros FROM proyecto");
+            $sql_register = pg_query("SELECT COUNT(*) as total_registros FROM certificado_disponibilidad");
             $result_register = pg_fetch_assoc($sql_register);
             $total_register = $result_register['total_registros'];
-            $por_pagina = 5;
+            $por_pagina = 10;
             if(empty($_GET['pagina']))
             {
                 $pagina = 1;
@@ -70,15 +60,18 @@ if( !isset($_SESSION['user'])){
                 $pagina = $_GET['pagina'];
                 $desde = ($pagina-1) * $por_pagina;
             }
-            $total_paginas = ceil($total_register/$por_pagina); */
+            $total_paginas = ceil($total_register/$por_pagina);
+            
                 $query ="
                 SELECT 
                 a.id AS id_certificado,
                 *
                 FROM certificado_disponibilidad a
-                INNER JOIN contrato b ON b.id = a.contrato_fk
-                INNER JOIN proyecto c ON c.id = b.no_proyecto_fk";
+                LEFT JOIN contrato b ON b.id = a.contrato_fk
+                LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+                ORDER BY a.id ASC";
             
+            $query = $query." LIMIT $por_pagina OFFSET $desde";
             $result = pg_query($query);
             while($line=pg_fetch_assoc($result)){
         ?>
@@ -112,7 +105,7 @@ if( !isset($_SESSION['user'])){
                     <a href="edit_certificado.php?id=<?php echo $line['id_certificado']?>" class="btn btn-secondary mb-1">
                         Editar
                     </a>                    
-                    <a href="../controllers/certificado/delete.php?id=<?php echo $line['id_certificado']?>" class="btn btn-danger">
+                    <a href="../controllers/certificado/delete.php?id=<?php echo $line['id_certificado']?>" class="btn-danger">
                         Eliminar
                     </a>
                 </td>
@@ -122,6 +115,20 @@ if( !isset($_SESSION['user'])){
         </div>
     </div>
     </div>
+    <div class="container">
+    <nav class="pagination">
+        <ul>
+            <?php
+                for ($i=1; $i <= $total_paginas ; $i++) { 
+                $prev = $i-1;
+            ?>
+                <li><a href="?pagina=<?=$i?>&frame=list_certificado.php" class="m-2"><?=$i?></a></li>
+            <?php
+                }
+            ?>
+        </ul>
+    </nav>
+</div>
 </div>
     <!-- <script>
         $(function(){
@@ -130,25 +137,8 @@ if( !isset($_SESSION['user'])){
             });
         });
     </script> -->
+
 </div>
 </tbody>
-<!-- Paginador -->
-<!-- <div class="container">
-    <div class="row">
-        <?php
-            for ($i=1; $i <= $total_paginas ; $i++) { 
-                if ($i==$pagina) {
-                    echo '<div class="col-1">
-                    <a href="?pagina='.$i.'" class="list-group-item list-group-item-action active">'.$i.'</a>
-                    </div>';
-                }
-                else{
-                    echo '<div class="col-1">
-                    <a href="?pagina='.$i.'" class="list-group-item list-group-item-action">'.$i.'</a>
-                    </div>';
-                }
-            }
-        ?>
-    </div>
-</div> -->
+
 <?php include('footer.php');?>

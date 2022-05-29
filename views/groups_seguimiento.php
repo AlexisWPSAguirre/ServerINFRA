@@ -13,7 +13,7 @@ if( !isset($_SESSION['user'])){
     <!-- ################################################################################################ -->
     <ul class="nospace clear">
           <div class="sectiontitle">
-              <h6 class="heading">Matriz Seguimiento</h6>
+              <h6 class="heading">Grupos de Seguimiento</h6>
           </div>
       </li>
     </ul>

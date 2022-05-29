@@ -1,12 +1,7 @@
 <?php
-    include("../config/db.php"); 
-    include("includes/header.php");
-    include('includes/styles.php');
-    include_once '../config/user_session.php';
-    $userSession = new UserSession();
-    if( !isset($_SESSION['user'])){
-        header("Location: login.php");
-    }
+    include_once("../config/db.php"); 
+    include_once('includes/styles.php');
+    include_once "full-width.php";
     if(isset($_POST['create'])){
         date_default_timezone_set("America/Bogota");
         $group_entrada = date('m');
@@ -17,17 +12,27 @@
         supervision_interventoria, direccion, tel_cel, correo, group_entrada, anio) VALUES ('".$_POST['no_proyecto']."','".$_POST['objeto']."','"
         .$_POST['proceso']."','".$_POST['contratista_fk']."','".$_POST['fecha_iniciacion']."','".$_POST['fecha_terminacion']."','".$_POST['fecha_liquidacion']."','"
         .$_POST['supervision_interventoria']."','".$_POST['direccion']."','".$_POST['tel_cel']."','".$_POST['correo']."','$group_entrada','$anio')";
-        print($query);
         $result = pg_query($query);
-        if(!$result)
-        {
-            die("Query Failed.");
-        }
-        header('Location:list_proyectos.php');
+        header('Location:../views/full-width.php?frame=list_proyectos.php');
     }
 ?>
-<div class="container mt-3">
-    <div class="row">
+<div class="wrapper row1">
+  <section id="ctdetails" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <ul class="nospace clear">
+          <div class="sectiontitle">
+              <h6 class="heading">Crear Proyecto</h6>
+          </div>
+      </li>
+    </ul>
+    <!-- ################################################################################################ -->
+  </section>
+</div>
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <div class="content">
+        <div class="scrollable">
+        <div class="row">
         <div class="col">
             <form action="crear_proyecto.php" method="POST">
                     <div class="mb-3">
@@ -81,7 +86,7 @@
                         <div class="mb-3">
                             <label for="" class="form-label">Contratista</label>
                             <select name="contratista_fk" class="form-select">
-                                <option selected>Seleccionar</option>
+                                <option value=1 selected>Seleccionar</option>
                             <?php
                                 $query = "SELECT * FROM contratista";
                                 $result = pg_query($query);
@@ -95,12 +100,14 @@
                             
                         </div>
                         <div class="mb-1 abs-center">
-                            <a href="list_proyectos.php" class="btn btn-danger">
+                            <a href="../views/full-width.php?frame=list_proyectos.php" class="btn-danger">
                                 CANCELAR
                             </a>
                         </div>
+            </div>
             </div>
             </form>
         </div>
     </div>
 </div>
+<?php include('footer.php');?>

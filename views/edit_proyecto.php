@@ -1,13 +1,6 @@
 <?php 
 include("../config/db.php"); 
-include("includes/header.php");
 include('includes/styles.php');
-include_once 'full-width.php';
-/* include_once '../config/user_session.php';
-$userSession = new UserSession();
-if( !isset($_SESSION['user'])){
-    header("Location: login.php");
-} */
 if(isset($_POST['update'])){
         $id = $_GET["id"];
         $query = "UPDATE proyecto SET no_proyecto='".$_POST['no_proyecto']."', objeto='".$_POST['objeto']."', proceso='".$_POST['proceso']."',
@@ -16,11 +9,7 @@ if(isset($_POST['update'])){
         , direccion='".$_POST['direccion']."', tel_cel='".$_POST['tel_cel']."', correo='".$_POST['correo']."', contratista_fk='".$_POST['contratista_fk']."'
         WHERE id=$id";
         $result = pg_query($query);
-        if(!$result)
-        {
-            die("Query Failed.");
-        }
-        header('Location:list_proyectos.php');
+        header('Location:../views/full-width.php?frame=list_proyectos.php');
     }
 if(isset($_GET['id'])) {
     $id = $_GET['id'];
@@ -33,6 +22,7 @@ if(isset($_GET['id'])) {
     if(!$result) {
         die("Query Failed.");
     }
+    include_once 'full-width.php';
     while ($line = pg_fetch_assoc($result))
     {
 ?>
@@ -124,7 +114,7 @@ if(isset($_GET['id'])) {
                             <input type="text" name="correo" class="form-control" autofocus value="<?php echo $line['correo'];?>">
                         </div>
                         <div class="mb-1 abs-center">
-                            <a href="list_proyectos.php" class="btn btn-danger">
+                            <a href="../views/full-width.php?frame=list_proyectos.php" class="btn btn-danger">
                                 CANCELAR
                             </a>
                         </div>

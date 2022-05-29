@@ -8,7 +8,7 @@
       if(!$result) {
         die("Query Failed.");
       } 
-      header('Location: ../../views/crear_list_contratistas.php');
+      header('Location: ../../views/full-width.php?frame=crear_list_contratistas.php');
       }
       
 ?>

@@ -1,7 +1,7 @@
 <?php 
 header("Pragma: public");
 header("Expires: 0");
-$filename = "nombreArchivoQueDescarga.xls";
+$filename = "MATRIZ SEGUIMIENTO OBRA 2021.xls";
 header("Content-type: application/x-msdownload");
 header("Content-Disposition: attachment; filename=$filename");
 header("Pragma: no-cache");

@@ -20,8 +20,8 @@
         }
     }
     $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-    /* $inputFileName = 'CONTRATOS 2007 a 2021/INF GRAL CONTR 2021.xlsx';  */
-    $inputFileName = 'MATRIZ2021/MATRIZ SEGUIMIENTO OBRAS 2021.xlsx'; 
+    /* $inputFileName = 'CONTRATOS 2007 a 2021/INF GRAL CONTR 2021.xlsx'; */
+    $inputFileName = 'MATRIZ2021/MATRIZ SEGUIMIENTO OBRAS 2021.xlsx';  
     /**  Identify the type of $inputFileName  **/
     $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
     /**  Create a new Reader of the type that has been identified  **/
@@ -38,14 +38,14 @@
 
 <?php
     /*
-    import_contratos();
-    import_proyectos(); 
-    import_contratistas();
-    import_rubros();
     import_hitos();
+    import_contratistas();
+    import_proyectos(); 
+    import_contratos();
+    import_rubros();
     import_coordenadas();
-    import_seguimiento();
     */
+    import_seguimiento();
 ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <?php

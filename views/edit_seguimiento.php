@@ -1,12 +1,7 @@
 <?php 
 include("../config/db.php"); 
-include("includes/header.php");
 include('includes/styles.php');
-include_once '../config/user_session.php';
-$userSession = new UserSession();
-if( !isset($_SESSION['user'])){
-    header("Location: login.php");
-}
+include_once "full-width.php";
 if(isset($_POST['editar'])){
     #No habia visto que el post se almacenará con el name del button D:
         $id = $_GET["id"];
@@ -31,7 +26,7 @@ if(isset($_POST['editar'])){
         {
             die("Query Failed.");
         }
-        header("Location:list_seguimiento.php?group=".$_SESSION['group_seguimiento']);
+        header("Location:../views/full-width.php?frame=list_hitos.php&group=".$_SESSION['group_seguimiento']);
     }
 if(isset($_GET['id'])) {
     $id = $_GET['id'];
@@ -49,8 +44,23 @@ if(isset($_GET['id'])) {
     while ($line = pg_fetch_assoc($result))
     {
 ?>
-<div class="container p-4">
-    <div class="card card-body">
+<div class="wrapper row1">
+  <section id="ctdetails" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <ul class="nospace clear">
+          <div class="sectiontitle">
+              <h6 class="heading">Editar Seguimiento</h6>
+          </div>
+      </li>
+    </ul>
+    <!-- ################################################################################################ -->
+  </section>
+</div>
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <div class="content">
+        <div class="scrollable">
+
         <div class="row">
             <div class="col">
                 <form action="" method="POST">
@@ -194,7 +204,7 @@ if(isset($_GET['id'])) {
                         <input type="text" name="valor_final" class="form-control" value="<?= $line['valor_final'] ?>">
                     </div>
                     <div class="mb-1 abs-center">
-                        <a href="list_seguimiento.php?group=<?= $_SESSION['group_seguimiento']?>" type="submit" class="btn btn-danger">
+                        <a href="../views/full-width.php?frame=list_seguimiento.php&group=<?= $_SESSION['group_seguimiento']?>" type="submit" class="btn btn-danger">
                             CANCELAR
                         </a>
                     </div>
@@ -203,7 +213,8 @@ if(isset($_GET['id'])) {
         </div>
     </div>
 </div>
+</div>
 <?php
     }}
 ?>
-<?php include('includes/footer.php');?>
+<?php include('footer.php');?>

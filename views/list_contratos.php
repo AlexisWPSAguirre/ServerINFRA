@@ -2,18 +2,13 @@
 include('../config/db.php');
 include('includes/jquery.php');
 include('includes/scripts.php');
-/* include_once '../config/user_session.php';
-$userSession = new UserSession();
-if( !isset($_SESSION['user'])){
-    header("Location: login.php");
-} */
 ?>
 <div class="wrapper row1">
   <section id="ctdetails" class="hoc clear"> 
     <!-- ################################################################################################ -->
     <ul class="nospace clear">
           <div class="sectiontitle">
-              <h6 class="heading">Información Contratos</h6>
+              <h6 class="heading">Matriz Contratos</h6>
           </div>
       </li>
     </ul>
@@ -27,15 +22,17 @@ if( !isset($_SESSION['user'])){
         <div class="row mb-3">
             <div class="col-3">
                 <form action="buscar.php" method="GET">
-                    <input type="text" placeholder="Búsqueda" class="form-control" id="busqueda" name="busqueda">
-                    </div>
-                    <div class="col">
-                        <button type="submit" class="btn btn-primary">BUSCAR</button>
-                    </div>
-                </form>
-                <div class="col">
+                    <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
+                    <button type="submit" class="btn btn-primary">BUSCAR</button>
+                    <?php
+                        if(!isset($_GET['group'])){
+                    ?>
                     <a href="crear_contratos.php" class="btn btn-secondary">CREAR</a>
-                </div>
+                    <?php
+                        }
+                    ?>
+                    </div>                                
+                </form>
         </div>
     </div>
     <div class="row">
@@ -63,7 +60,7 @@ if( !isset($_SESSION['user'])){
             $sql_register = pg_query("SELECT COUNT(*) as total_registros FROM contrato");
             $result_register = pg_fetch_assoc($sql_register);
             $total_register = $result_register['total_registros'];
-            $por_pagina = 20;
+            $por_pagina = 10;
             if(empty($_GET['pagina']))
             {
                 $pagina = 1;
@@ -90,7 +87,7 @@ if( !isset($_SESSION['user'])){
             fecha_certificado,
             no_certificado           
             FROM contrato a 
-            INNER JOIN proyecto b ON b.id = a.no_proyecto_fk
+            LEFT JOIN proyecto b ON b.id = a.no_proyecto_fk
             ORDER BY a.id ASC';
             $query = $query." LIMIT $por_pagina OFFSET $desde";
             $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error());
@@ -132,7 +129,7 @@ if( !isset($_SESSION['user'])){
                         if(isset($_GET['group'])){
                     ?>
                     <a href="crear_hito.php?id=<?php echo $line['id']?>&pro_id=<?php echo $line['proyecto_id']?>" class="btn btn-secondary mb-1">
-                        <i class="bi bi-pen"></i>
+                        Seleccionar 
                     </a>
                     <?php
                         }else{
@@ -157,22 +154,18 @@ if( !isset($_SESSION['user'])){
 </tbody>
 <!-- Paginador -->
 <div class="container">
-    <div class="row">
-        <?php
-            for ($i=1; $i <= $total_paginas ; $i++) { 
-                if ($i==$pagina) {
-                    echo '<div class="col-1">
-                    <a href="?pagina='.$i.'" class="list-group-item list-group-item-action active">'.$i.'</a>
-                    </div>';
+    <nav class="pagination">
+        <ul>
+            <?php
+                for ($i=1; $i <= $total_paginas ; $i++) { 
+                $prev = $i-1;
+            ?>
+                <li><a href="?pagina=<?=$i?>&frame=list_contratos.php" class="m-2"><?=$i?></a></li>
+            <?php
                 }
-                else{
-                    echo '<div class="col-1">
-                    <a href="?pagina='.$i.'" class="list-group-item list-group-item-action">'.$i.'</a>
-                    </div>';
-                }
-            }
-        ?>
-    </div>
+            ?>
+        </ul>
+    </nav>
 </div>
 </div>
 <?php include('footer.php');?>

@@ -13,7 +13,7 @@ if( !isset($_SESSION['user'])){
     <!-- ################################################################################################ -->
     <ul class="nospace clear">
           <div class="sectiontitle">
-              <h6 class="heading">Matriz Coordenadas</h6>
+              <h6 class="heading">Grupos de Coordenadas</h6>
           </div>
       </li>
     </ul>

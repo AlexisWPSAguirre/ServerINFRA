@@ -1,12 +1,9 @@
 <?php
     include("../config/db.php"); 
-    include("includes/header.php");
     include('includes/styles.php');
     include_once '../config/user_session.php';
-    $userSession = new UserSession();
-    if( !isset($_SESSION['user'])){
-        header("Location: login.php");
-    }
+    include_once "full-width.php";
+
     if(isset($_POST['create'])){
         $query="
         SELECT 
@@ -29,7 +26,21 @@
         header('Location: list_coordenadas.php?group='.$_SESSION['group_coordenadas']);
     }
 ?>
-<div class="container mt-3">
+<div class="wrapper row1">
+  <section id="ctdetails" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <ul class="nospace clear">
+          <div class="sectiontitle">
+              <h6 class="heading">Crear Coordenadas</h6>
+          </div>
+      </li>
+    </ul>
+    <!-- ################################################################################################ -->
+  </section>
+</div>
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <div class="content">
     <div class="row">
         <div class="col">
             <form action="crear_coordenadas.php" method="POST">
@@ -90,3 +101,4 @@
         </div>
     </div>
 </div>
+<?php include('footer.php');?>

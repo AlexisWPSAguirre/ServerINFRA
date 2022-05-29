@@ -7,6 +7,6 @@
     if(!$result) {
     die("Query Failed.");
     } 
-    header('Location: ../../views/list_certificado.php');
+    header('Location: ../../views/full-width.php?frame=list_certificado.php');
     }      
 ?>

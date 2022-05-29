@@ -7,6 +7,6 @@
       if(!$result) {
         die("Query Failed.");
       } 
-      header('Location: ../../views/list_seguimiento.php?group='.$_SESSION['group_seguimiento']);
+      header('Location: ../../views/full-width.php?frame=list_seguimiento.php&group='.$_SESSION['group_seguimiento']);
       }
 ?>

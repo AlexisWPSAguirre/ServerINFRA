@@ -8,7 +8,7 @@
       if(!$result) {
         die("Query Failed.");
       } 
-      header('Location: ../../views/list_coordenadas.php?group='.$_SESSION['group_coordenadas']);
+      header('Location: ../../views/full-width.php?frame=list_coordenadas.php&group='.$_SESSION['group_coordenadas']);
       }
       
 ?>

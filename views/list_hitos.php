@@ -1,29 +1,31 @@
 <?php
 include('../config/db.php');
-include('includes/header.php');
-include('includes/styles.php');
-include('includes/jquery.php');
-include('includes/scripts.php');
-include_once '../config/user_session.php';
-$userSession = new UserSession();
-if( !isset($_SESSION['user'])){
-    header("Location: login.php");
-}
+include_once "full-width.php";
 ?>
-<div class="container mt-3">
-    <div class="car car-body">   
+    <div class="wrapper row1">
+    <section id="ctdetails" class="hoc clear"> 
+        <!-- ################################################################################################ -->
+        <ul class="nospace clear">
+            <div class="sectiontitle">
+                <h6 class="heading">Matriz Hitos</h6>
+            </div>
+        </li>
+        </ul>
+        <!-- ################################################################################################ -->
+    </section>
+    </div>
+    <div class="wrapper row3">
+    <main class="hoc container clear"> 
+        <div class="content">
+            <div class="scrollable">
         <div class="row mb-3">
             <div class="col-3">
                 <form action="buscar.php" method="GET">
-                    <input type="text" placeholder="Búsqueda" class="form-control" id="busqueda" name="busqueda">
-                    </div>
-                    <div class="col">
-                        <button type="submit" class="btn btn-primary"><i class="bi bi-search-heart"></i></button>
+                    <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                    <a href="../views/full-width.php?frame=list_contratos.php&group=<?php echo $_GET['group']?>" class="btn btn-secondary">AÑADIR</a>
                     </div>
                 </form>
-                <div class="col">
-                    <a href="list_contratos.php?group=<?php echo $_GET['group']?>" class="btn btn-secondary">AÑADIR</a>
-                </div>
         </div>
     </div>
     <div class="row">
@@ -46,10 +48,14 @@ if( !isset($_SESSION['user'])){
         <tbody>
         <?php 
             //Paginador
-            /* $sql_register = pg_query("SELECT COUNT(*) as total_registros FROM proyecto");
+            $sql_register = pg_query("
+            SELECT COUNT(*) as total_registros FROM hitos a
+            LEFT JOIN contrato b ON b.id = a.contrato_fk
+            LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+            WHERE c.group_hito ='".$_GET['group']."'");
             $result_register = pg_fetch_assoc($sql_register);
             $total_register = $result_register['total_registros'];
-            $por_pagina = 5;
+            $por_pagina = 10;
             if(empty($_GET['pagina']))
             {
                 $pagina = 1;
@@ -59,8 +65,9 @@ if( !isset($_SESSION['user'])){
                 $pagina = $_GET['pagina'];
                 $desde = ($pagina-1) * $por_pagina;
             }
-            $total_paginas = ceil($total_register/$por_pagina); */
-            if($_GET['group'] != null){
+            $total_paginas = ceil($total_register/$por_pagina);
+
+            if(!is_null($_GET['group'])){
                 $query ="
                 SELECT 
                 a.id as id_hito,
@@ -75,10 +82,12 @@ if( !isset($_SESSION['user'])){
                 FROM hitos a
                 INNER JOIN contrato b ON b.id = a.contrato_fk
                 INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-                WHERE c.group_hito ='".$_GET['group']."'";
+                WHERE c.group_hito ='".$_GET['group']."'
+                ORDER BY a.id ASC";
             }
             else
             {
+            
                 $query ="
                 SELECT 
                 a.id as id_hito,
@@ -93,9 +102,11 @@ if( !isset($_SESSION['user'])){
                 FROM hitos a
                 INNER JOIN contrato b ON b.id = a.contrato_fk
                 INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-                WHERE c.group_hito is null";
+                WHERE c.group_hito is null
+                ORDER BY a.id ASC";
             }
             
+            $query = $query." LIMIT $por_pagina OFFSET $desde";
             $result = pg_query($query);
             while($line=pg_fetch_assoc($result)){
         ?>
@@ -136,10 +147,10 @@ if( !isset($_SESSION['user'])){
                         $_SESSION['group_hito'] = $_GET['group'] ;
                     ?>
                     <a href="edit_hito.php?id=<?php echo $line['id_hito']?>" class="btn btn-secondary mb-1">
-                        <i class="bi bi-pen"></i>
+                        Editar
                     </a>                    
-                    <a href="../controllers/hitos/delete.php?id=<?php echo $line['id_hito']?>" class="btn btn-danger">
-                    <i class="bi bi-trash"></i>
+                    <a href="../controllers/hitos/delete.php?id=<?php echo $line['id_hito']?>" class="btn-danger">
+                        Eliminar
                     </a>
                 </td>
             </tr>
@@ -155,25 +166,23 @@ if( !isset($_SESSION['user'])){
             });
         });
     </script> -->
+    
+<div class="container">
+    <nav class="pagination">
+        <ul>
+            <?php
+                for ($i=1; $i <= $total_paginas ; $i++) { 
+                $prev = $i-1;
+            ?>
+                <li><a href="?pagina=<?=$i?>&group=<?= $_SESSION['group_hito']?>" class="m-2"><?=$i?></a></li>
+            <?php
+                }
+            ?>
+        </ul>
+    </nav>
 </div>
+
+</div>
+
 </tbody>
-<!-- Paginador -->
-<!-- <div class="container">
-    <div class="row">
-        <?php
-            for ($i=1; $i <= $total_paginas ; $i++) { 
-                if ($i==$pagina) {
-                    echo '<div class="col-1">
-                    <a href="?pagina='.$i.'" class="list-group-item list-group-item-action active">'.$i.'</a>
-                    </div>';
-                }
-                else{
-                    echo '<div class="col-1">
-                    <a href="?pagina='.$i.'" class="list-group-item list-group-item-action">'.$i.'</a>
-                    </div>';
-                }
-            }
-        ?>
-    </div>
-</div> -->
-<?php include('includes/footer.php');?>
+<?php include('footer.php');?>

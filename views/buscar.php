@@ -1,9 +1,9 @@
 <?php
 include('../config/db.php');
-include('../views/includes/header.php');
 include('../views/includes/styles.php');
 include('../views/includes/jquery.php');
 include('../views/includes/scripts.php');
+include('../views/full-width.php');
 ?>
 <div class="container mt-3">
     <?php
@@ -131,24 +131,20 @@ include('../views/includes/scripts.php');
             });
         });
     </script> -->
+    <div class="container">
+    <nav class="pagination">
+        <ul>
+            <?php
+                for ($i=1; $i <= $total_paginas ; $i++) { 
+                $prev = $i-1;
+            ?>
+                <li><a href="?pagina=<?=$i?>&frame=list_proyectos.php" class="m-2"><?=$i?></a></li>
+            <?php
+                }
+            ?>
+        </ul>
+    </nav>
+</div>
 </div>
 </tbody>
-<div class="container">
-    <div class="row">
-        <?php
-            for ($i=1; $i <= $total_paginas ; $i++) { 
-                if ($i==$pagina) {
-                    echo '<div class="col-1">
-                    <a href="?pagina='.$i.'" class="list-group-item list-group-item-action active">'.$i.'</a>
-                    </div>';
-                }
-                else{
-                    echo '<div class="col-1">
-                    <a href="?pagina='.$i.'" class="list-group-item list-group-item-action">'.$i.'</a>
-                    </div>';
-                }
-            }
-        ?>
-    </div>
-</div>
-<?php include('../views/includes/footer.php');?>
+<?php include('../views/footer.php');?>

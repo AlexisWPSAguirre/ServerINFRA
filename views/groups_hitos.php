@@ -2,18 +2,13 @@
 include('../config/db.php');
 include('includes/jquery.php');
 include('includes/scripts.php');
-/* include_once '../config/user_session.php';
-$userSession = new UserSession();
-if( !isset($_SESSION['user'])){
-    header("Location: login.php");
-} */
 ?>
 <div class="wrapper row1">
   <section id="ctdetails" class="hoc clear"> 
     <!-- ################################################################################################ -->
     <ul class="nospace clear">
           <div class="sectiontitle">
-              <h6 class="heading">Matriz Hitos</h6>
+              <h6 class="heading">Grupos de Hitos</h6>
           </div>
       </li>
     </ul>
@@ -61,7 +56,6 @@ if( !isset($_SESSION['user'])){
             ORDER BY c.group_hito ASC';
             /* $query = $query." LIMIT $por_pagina OFFSET $desde"; */
             $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error());
-            $index = 1;
             while ($line = pg_fetch_assoc($result)) {
         ?>
             <tr>

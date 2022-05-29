@@ -1,12 +1,6 @@
 <?php 
 include("../config/db.php"); 
-include("includes/header.php");
 include('includes/styles.php');
-/* include_once '../config/user_session.php';
-$userSession = new UserSession();
-if( !isset($_SESSION['user'])){
-    header("Location: login.php");
-} */
 include_once "full-width.php";
 if(isset($_POST['update'])){
         $id = $_GET["id"];
@@ -20,7 +14,7 @@ if(isset($_POST['update'])){
         {
             die("Query Failed.");
         }
-        header('Location:list_contratos.php');
+        header('Location:../views/full-width.php?frame=list_contratos.php');
     }
 if(isset($_GET['id'])) {
     $id = $_GET['id'];
@@ -112,7 +106,7 @@ if(isset($_GET['id'])) {
                             <input type="date" name="f_aprob_polizas" class="form-control" autofocus value="<?php echo $line['f_aprob_polizas'];?>">
                         </div>
                         <div class="mb-1 abs-center">
-                            <a href="list_contratos.php" class="btn btn-danger">
+                            <a href="../views/full-width.php?frame=list_contratos.php" class="btn btn-danger">
                                 CANCELAR
                             </a>
                         </div>

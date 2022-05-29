@@ -1,23 +1,14 @@
 <?php 
-include("../config/db.php"); 
-include("includes/header.php");
-include('includes/styles.php');
-include_once '../config/user_session.php';
-$userSession = new UserSession();
-if( !isset($_SESSION['user'])){
-    header("Location: login.php");
-}
+include_once("../config/db.php"); 
+include_once('includes/styles.php');
+include_once "full-width.php";
 if(isset($_POST['update'])){
         $id = $_GET["id"];
         $query = "UPDATE contratista SET nombre='".$_POST['nombre']."', nit='".$_POST['nit']."'
         WHERE id=$id";
         $result = pg_query($query);
-        if(!$result)
-        {
-            die("Query Failed.");
-        }
-        header('Location:crear_list_contratistas.php');
-    }
+        header('Location:../views/full-width.php?frame=crear_list_contratistas.php');
+}
 if(isset($_GET['id'])) {
     $id = $_GET['id'];
     $query = "
@@ -31,8 +22,22 @@ if(isset($_GET['id'])) {
     while ($line = pg_fetch_assoc($result))
     {
 ?>
-<div class="container p-4">
-    <div class="card card-body">
+<div class="wrapper row1">
+  <section id="ctdetails" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <ul class="nospace clear">
+          <div class="sectiontitle">
+              <h6 class="heading">Editar Contratista</h6>
+          </div>
+      </li>
+    </ul>
+    <!-- ################################################################################################ -->
+  </section>
+</div>
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <div class="content">
+        <div class="scrollable">
         <div class="row">
             <div class="col">
                 <form action="edit_contratista.php?id=<?php echo $_GET['id'];?>" method="POST">
@@ -52,7 +57,7 @@ if(isset($_GET['id'])) {
                             <input type="text" name="nit" class="form-control" autofocus value="<?php echo $line['nit'];?>">
                         </div>
                         <div class="mb-1 abs-center">
-                            <a href="crear_list_contratistas.php" class="btn btn-danger">
+                            <a href="../views/full-width.php?frame=crear_list_contratistas.php" class="btn btn-danger">
                                 CANCELAR
                             </a>
                         </div>
@@ -65,4 +70,4 @@ if(isset($_GET['id'])) {
 <?php
     }}
 ?>
-<?php include('includes/footer.php');?>
+<?php include('footer.php');?>

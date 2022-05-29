@@ -2,18 +2,13 @@
 include('../config/db.php');
 include('includes/jquery.php');
 include('includes/scripts.php');
-/* include_once '../config/user_session.php';
-$userSession = new UserSession();
-if( !isset($_SESSION['user'])){
-    header("Location: login.php");
-} */
 ?>
     <div class="wrapper row1">
     <section id="ctdetails" class="hoc clear"> 
         <!-- ################################################################################################ -->
         <ul class="nospace clear">
             <div class="sectiontitle">
-                <h6 class="heading">Información Proyectos</h6>
+                <h6 class="heading">Matriz Proyectos</h6>
             </div>
         </li>
         </ul>
@@ -25,7 +20,17 @@ if( !isset($_SESSION['user'])){
     <main class="hoc container clear"> 
         <div class="content">
             <div class="scrollable">
-            
+            <div class="row mb-3">
+            <div class="col-3">
+                <form action="list_proyectos.php" method="GET">
+                    <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
+                    <button type="submit" class="btn btn-primary">BUSCAR</button>
+                    <a href="crear_proyecto.php" class="btn btn-secondary">CREAR</a>
+                    <a href="../spreadsheet.php" class="btn btn-secondary">Importar</a>
+                    </div>                                
+                </form>
+            </div>
+            </div>
             <div class="row">
                 <div class="col">
                 <table class="table table-hover">
@@ -54,7 +59,7 @@ if( !isset($_SESSION['user'])){
                     $sql_register = pg_query("SELECT COUNT(*) as total_registros FROM proyecto");
                     $result_register = pg_fetch_assoc($sql_register);
                     $total_register = $result_register['total_registros'];
-                    $por_pagina = 20;
+                    $por_pagina = 10;
                     if(empty($_GET['pagina']))
                     {
                         $pagina = 1;
@@ -65,10 +70,6 @@ if( !isset($_SESSION['user'])){
                         $desde = ($pagina-1) * $por_pagina;
                     }
                     $total_paginas = ceil($total_register/$por_pagina);
-                    /* 
-                    b.nombre,
-                    b.nit
-                    INNER JOIN contratista b ON b.id = a.contratista_fk */
                     $query = 'SELECT
                     a.id,
                     a.no_proyecto,
@@ -84,7 +85,7 @@ if( !isset($_SESSION['user'])){
                     a.tel_cel,
                     a.correo           
                     FROM proyecto a 
-                    INNER JOIN contratista b ON a.contratista_fk = b.id
+                    LEFT JOIN contratista b ON a.contratista_fk = b.id
                     ORDER BY a.id ASC';
                     $query = $query." LIMIT $por_pagina OFFSET $desde";
                     $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error());
@@ -147,6 +148,19 @@ if( !isset($_SESSION['user'])){
                 </div>
             </div>
     </div>
+    <div class="container">
+    <nav class="pagination">
+        <ul>
+            <?php
+                for ($i=1; $i <= $total_paginas ; $i++) { 
+            ?>
+                <li><a href="?pagina=<?=$i?>&frame=list_proyectos.php" class="m-2"><?=$i?></a></li>
+            <?php
+                }
+            ?>
+        </ul>
+    </nav>
+</div>
 </div>
     <!-- <script>
         $(function(){
@@ -155,31 +169,11 @@ if( !isset($_SESSION['user'])){
             });
         });
     </script> -->
+
+<!-- Paginador -->
+
 </div>
 </tbody>
-<!-- Paginador -->
-<div class="container">
-    <div class="row">
-        <?php
-            for ($i=1; $i <= $total_paginas ; $i++) { 
-                if ($i==$pagina) {
-                    echo '<div class="col-1">
-                    <a href="?pagina='.$i.'" class="list-group-item list-group-item-action active">'.$i.'</a>
-                    </div>';
-                }
-                else{
-                    echo '<div class="col-1">
-                    <a href="?pagina='.$i.'" class="list-group-item list-group-item-action">'.$i.'</a>
-                    </div>';
-                }
-            }
-        ?>
-    </div>
-</div>
 <?php 
-    
-    /* $cadena = "COMUNICADO DE ACEPTACIÃ“N No. 632/2021";
-    $str = stristr($cadena,"No.");
-    print(substr($str,4)); */
     include('footer.php');
 ?>

@@ -8,7 +8,7 @@
       if(!$result) {
         die("Query Failed.");
       } 
-      header('Location: ../../views/list_hitos.php?group='.$_SESSION['group_hito']);
+      header('Location: ../../views/full-width.php?frame=list_hitos.php&group='.$_SESSION['group_hito']);
       }
       
 ?>
