@@ -29,9 +29,9 @@ ID_BPIN|NOMBRE_PROYECTO|UNIDAD_FUNCIONAL_ACUERDO_OBRA |NUM_CONTRATO |LATITUD|LON
             a.longitud_inicial,
             a.longitud_final
             FROM coordenadas a
-            INNER JOIN contrato b ON b.id = a.coo_contrato_fk
-            INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-            WHERE c.group_coordenadas ='".$_GET['group']."'";
+            LEFT JOIN contrato b ON b.id = a.coo_contrato_fk
+            LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+            WHERE c.group_coordenadas_fk ='".$_GET['group']."'";
         }
         else{
             $query ="
@@ -47,9 +47,9 @@ ID_BPIN|NOMBRE_PROYECTO|UNIDAD_FUNCIONAL_ACUERDO_OBRA |NUM_CONTRATO |LATITUD|LON
             a.longitud_inicial,
             a.longitud_final
             FROM coordenadas a
-            INNER JOIN contrato b ON b.id = a.coo_contrato_fk
-            INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-            WHERE c.group_coordenadas is null";
+            LEFT JOIN contrato b ON b.id = a.coo_contrato_fk
+            LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+            WHERE c.group_coordenadas_fk is null";
         }
         $result = pg_query($query);
         while($line=pg_fetch_row($result)){

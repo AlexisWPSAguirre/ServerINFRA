@@ -23,8 +23,8 @@ if(isset($_GET['id'])) {
     SELECT 
     *
     FROM hitos a
-    INNER JOIN contrato b ON b.id = a.contrato_fk
-    INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
+    LEFT JOIN contrato b ON b.id = a.contrato_fk
+    LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
     WHERE a.id = $id";
     $result = pg_query($query);
     if(!$result) {

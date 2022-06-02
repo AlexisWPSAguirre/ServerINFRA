@@ -19,6 +19,11 @@ include('includes/scripts.php');
   <main class="hoc container clear"> 
     <div class="content">
         <div class="scrollable">
+        <div class="row mb-3">
+            <div class="col-3">
+                <a href="../views/full-width.php?frame=list_contratos.php&select=hito" class="btn btn-secondary">AÑADIR</a>   
+            </div>
+        </div>
     <div class="row">
         <div class="col">
         <table class="table">
@@ -47,35 +52,48 @@ include('includes/scripts.php');
                 $desde = ($pagina-1) * $por_pagina;
             }
             $total_paginas = ceil($total_register/$por_pagina); */
-            $query = '
-            SELECT count(*),c.group_hito
+            $query = "SELECT count(*),c.group_hito_fk, string_agg(d.descripcion,', ') AS descripcion
             FROM hitos a
-            INNER JOIN contrato b ON b.id = a.contrato_fk
-            INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-            GROUP BY c.group_hito
-            ORDER BY c.group_hito ASC';
+            LEFT JOIN contrato b ON b.id = a.contrato_fk
+            LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+            LEFT JOIN groups d ON d.cod = c.group_hito_fk
+            GROUP BY c.group_hito_fk 
+            ORDER BY c.group_hito_fk ASC";
             /* $query = $query." LIMIT $por_pagina OFFSET $desde"; */
             $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error());
             while ($line = pg_fetch_assoc($result)) {
         ?>
             <tr>
+                <td> 
+                    <a href="list_hitos.php?group=<?php echo $line['group_hito_fk'] ?>"><?= $line['count']?></a>
+                </td>
                 <td>
-                    <a href="list_hitos.php?group=<?php echo $line['group_hito'] ?>">
                     <?php
-                        echo $line['count'];
+                        if(!is_null($line['group_hito_fk'])){
+                            echo $line['group_hito_fk'];
+                        }
+                        else
+                        {
+                            echo "No definido";
+                        }
+                    ?>  
+                </td>
+            
+                <td>
+                    <?php
+                        $line['descripcion']=stristr($line['descripcion'],",",true);
+                        echo $line['descripcion']
                     ?>
+                </td>
+                <td>
+                    <a href="excel_hitos.php?group=<?php echo $line['group_hito_fk']?>" class="btn">
+                    <i class="fas fa-file-excel"></i>
                     </a>
-                </td>
-                <td>
-                    <?php echo $line['group_hito'] ?>
-                </td>
-                </td>
-                <td>
-                    
-                </td>
-                <td>
-                    <a href="excel_hitos.php?group=<?php echo $line['group_hito']?>" class="btn btn-dark mb-1">
-                    Exportar
+                    <a href="edit_group.php?group=<?php echo $line['group_hito_fk']?>" class="btn btn-dark">
+                    Editar
+                    </a>
+                    <a href="../controllers/groups/delete_group.php?cod=<?php echo $line['group_hito_fk']?>" class="btn-danger">
+                    Eliminar
                     </a>
                     <!-- 
                     <a href="form_edit.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">

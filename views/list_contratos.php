@@ -22,8 +22,8 @@ include('includes/scripts.php');
         <div class="row mb-3">
             <div class="col-3">
                 <form action="buscar.php" method="GET">
-                    <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
-                    <button type="submit" class="btn btn-primary">BUSCAR</button>
+                    <!-- <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
+                    <button type="submit" class="btn btn-primary">BUSCAR</button> -->
                     <?php
                         if(!isset($_GET['group'])){
                     ?>
@@ -126,22 +126,43 @@ include('includes/scripts.php');
                 </td>
                 <td>
                     <?php
+                    if(isset($_GET['select'])){
+                        switch ($_GET['select']) {
+                            case 'hito':
+                                echo '<a href="crear_hito.php?id='.$line['id'].'&pro_id='.$line['proyecto_id'].'&gr_new=TRUE" class="btn">
+                                Seleccionar 
+                                </a>';
+                                break;
+                            case 'coordenada':
+                                echo '<a href="crear_coordenadas.php?id= '.$line['id'].'&pro_id='.$line['proyecto_id'].'&gr_new=TRUE" class="btn btn-secondary mb-1">
+                                Seleccionar 
+                                </a>';
+                                break;
+                            case 'seguimiento':
+                                echo '<a href="crear_seguimiento.php?id= '.$line['id'].'&pro_id='.$line['proyecto_id'].'&gr_new=TRUE" class="btn btn-secondary mb-1">
+                                Seleccionar 
+                                </a>';
+                                break;
+                            }
+                    }
+                    else {
                         if(isset($_GET['group'])){
                     ?>
-                    <a href="crear_hito.php?id=<?php echo $line['id']?>&pro_id=<?php echo $line['proyecto_id']?>" class="btn btn-secondary mb-1">
-                        Seleccionar 
-                    </a>
+                            <a href="crear_hito.php?id=<?php echo $line['id']?>&pro_id=<?php echo $line['proyecto_id']?>" class="btn btn-secondary mb-1">
+                                Seleccionar 
+                            </a>
                     <?php
-                        }else{
+                            }else{
                     ?>
-                    <a href="edit_contratos.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">
-                        Editar
-                    </a>
-                    <a href="../controllers/contratos/delete.php?id=<?php echo $line['id']?>" class="btn-danger">
-                        Eliminar
-                    </a>
-                    <?php
+                            <a href="edit_contratos.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">
+                                Editar
+                            </a>
+                            <a href="../controllers/contratos/delete.php?id=<?php echo $line['id']?>" class="btn-danger">
+                                Eliminar
+                            </a>
+                    <?php                               
                         }
+                    }
                     ?>
                     </td>
             </tr>
@@ -159,9 +180,28 @@ include('includes/scripts.php');
             <?php
                 for ($i=1; $i <= $total_paginas ; $i++) { 
                 $prev = $i-1;
+                if(isset($_GET['select'])){
+                    switch ($_GET['select']) {
+                        case 'hito':
+                            echo '<li><a href="?pagina='.$i.'&select=hito&frame=list_contratos.php" class="m-2">'.$i.'                            
+                            </a></li>';
+                            break;
+                        case 'coordenada':
+                            echo '<li><a href="?pagina='.$i.'&select=coordenada&frame=list_contratos.php" class="m-2">'.$i.'                            
+                            </a></li>';
+                            break;
+                        case 'seguimiento':
+                            echo '<li><a href="?pagina='.$i.'&select=seguimiento&frame=list_contratos.php" class="m-2">'.$i.'                            
+                            </a></li>';
+                            break;
+                        }
+                }
+                else
+                {
             ?>
                 <li><a href="?pagina=<?=$i?>&frame=list_contratos.php" class="m-2"><?=$i?></a></li>
             <?php
+                }
                 }
             ?>
         </ul>

@@ -34,8 +34,8 @@ if(isset($_GET['id'])) {
     SELECT 
     *
     FROM obras a
-    INNER JOIN contrato b ON b.id = a.obra_contrato_fk
-    INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
+    LEFT JOIN contrato b ON b.id = a.obra_contrato_fk
+    LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
     WHERE a.id = $id";
     $result = pg_query($query);
     if(!$result) {
@@ -66,11 +66,11 @@ if(isset($_GET['id'])) {
                 <form action="" method="POST">
                     <div class="mb-3">
                         <label for="" class="form-label">No. Proyecto:</label>
-                        <input type="text" name="no_proyecto" class="form-control" value="<?= $line['no_proyecto'] ?>">
+                        <input type="text" name="no_proyecto" class="form-control" value="<?= $line['no_proyecto']  ?>" disabled>
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">No. Contrato:</label>
-                        <input type="text" name="no_contrato"class="form-control" value="<?= $line['no_contrato'] ?>">
+                        <input type="text" name="no_contrato"class="form-control" value="<?= $line['no_contrato'] ?>" disabled>
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Sector</label>

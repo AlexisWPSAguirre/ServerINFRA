@@ -1,12 +1,8 @@
 <?php
     include("../config/db.php"); 
-    include("includes/header.php");
     include('includes/styles.php');
     include_once '../config/user_session.php';
-    $userSession = new UserSession();
-    if( !isset($_SESSION['user'])){
-        header("Location: login.php");
-    }
+    include_once "full-width.php";
     
     if(isset($_POST['create'])){
         if($_POST['codigo_divipola_municipio']==''){
@@ -20,34 +16,97 @@
         WHERE a.id = ".$_POST['no_contrato']." LIMIT 1";
         $result = pg_query($query);
         $pro_id = $line=pg_fetch_assoc($result);
-        $query="INSERT INTO obras 
-        (obra_contrato_fk,sector,municipio_obra,departamento_obra,codigo_divipola_municipio,unidad_funcional_acuerdo_obra,avance_fisico_ejecutado,
-        cantidad_suspensiones,cantidad_prorrogas,tiempo_suspensiones,tiempo_prorrogas,cantidad_adiciones,valor_total_adiciones,origen_recursos,valor_comprometido,valor_obligado,valor_pagado,
-        valor_anticipo,latitud_inicial,latitud_final,longitud_final,estado,cesion,nuevo_contratista,observaciones,link_secop,fecha_inicio,fecha_inicial_terminacion,fecha_final_terminacion,
-        valor_inicial,valor_final)
-        VALUES ('".$_POST['no_contrato']."','".$_POST['sector']."','".$_POST['municipio_obra']."','".$_POST['departamento_obra']."','".$_POST['codigo_divipola_municipio']."','"
-        .$_POST['unidad_funcional_acuerdo_obra']."','".$_POST['avance_fisico_ejecutado']."','".$_POST['cantidad_suspensiones'].
-        "','".$_POST['cantidad_prorrogas']."','".$_POST['tiempo_suspensiones']."','".$_POST['tiempo_prorrogas'].
-        "','".$_POST['cantidad_adiciones']."','".$_POST['valor_total_adiciones']."','".$_POST['origen_recursos'].
-        "','".$_POST['valor_comprometido']."','".$_POST['valor_obligado']."','".$_POST['valor_pagado'].
-        "','".$_POST['valor_anticipo']."','".$_POST['latitud_inicial']."','".$_POST['latitud_final'].
-        "','".$_POST['longitud_final']."','".$_POST['estado']."','".$_POST['cesion']."','".$_POST['nuevo_contratista'].
-        "','".$_POST['observaciones']."','".$_POST['link_secop']."','".$_POST['fecha_inicio']."','".$_POST['fecha_inicial_terminacion'].
-        "','".$_POST['fecha_final_terminacion']."','".$_POST['valor_inicial']."','".$_POST['valor_final'].
-        "');
-        UPDATE proyecto SET group_seguimiento = '".$_SESSION['group_seguimiento']."' WHERE id =".$pro_id['pro_id'];
-        $result = pg_query($query);
-        if(!$result)
+
+        if(isset($_GET['gr_new'])){
+            $query="INSERT INTO obras 
+            (obra_contrato_fk,sector,municipio_obra,departamento_obra,codigo_divipola_municipio,unidad_funcional_acuerdo_obra,avance_fisico_ejecutado,
+            cantidad_suspensiones,cantidad_prorrogas,tiempo_suspensiones,tiempo_prorrogas,cantidad_adiciones,valor_total_adiciones,origen_recursos,valor_comprometido,valor_obligado,valor_pagado,
+            valor_anticipo,latitud_inicial,latitud_final,longitud_final,estado,cesion,nuevo_contratista,observaciones,link_secop,fecha_inicio,fecha_inicial_terminacion,fecha_final_terminacion,
+            valor_inicial,valor_final)
+            VALUES ('".$_POST['no_contrato']."','".$_POST['sector']."','".$_POST['municipio_obra']."','".$_POST['departamento_obra']."','".$_POST['codigo_divipola_municipio']."','"
+            .$_POST['unidad_funcional_acuerdo_obra']."','".$_POST['avance_fisico_ejecutado']."','".$_POST['cantidad_suspensiones'].
+            "','".$_POST['cantidad_prorrogas']."','".$_POST['tiempo_suspensiones']."','".$_POST['tiempo_prorrogas'].
+            "','".$_POST['cantidad_adiciones']."','".$_POST['valor_total_adiciones']."','".$_POST['origen_recursos'].
+            "','".$_POST['valor_comprometido']."','".$_POST['valor_obligado']."','".$_POST['valor_pagado'].
+            "','".$_POST['valor_anticipo']."','".$_POST['latitud_inicial']."','".$_POST['latitud_final'].
+            "','".$_POST['longitud_final']."','".$_POST['estado']."','".$_POST['cesion']."','".$_POST['nuevo_contratista'].
+            "','".$_POST['observaciones']."','".$_POST['link_secop']."','".$_POST['fecha_inicio']."','".$_POST['fecha_inicial_terminacion'].
+            "','".$_POST['fecha_final_terminacion']."','".$_POST['valor_inicial']."','".$_POST['valor_final'].
+            "');
+            INSERT INTO groups (cod,descripcion) VALUES('".$_POST['cod']."','".$_POST['descripcion']."');
+            UPDATE proyecto SET group_seguimiento_fk = '".$_POST['cod']."' WHERE id =".$pro_id['pro_id'];
+            $result = pg_query($query);
+            if(!$result)
+            {
+                die("Query Failed.");
+            } 
+            header('Location: list_seguimiento.php?group='.$_POST['cod']);
+        }
+        else
         {
-            die("Query Failed.");
-        } 
-        header('Location: groups_seguimiento.php?group='.$_SESSION['group_seguimiento']);
+            $query="INSERT INTO obras 
+            (obra_contrato_fk,sector,municipio_obra,departamento_obra,codigo_divipola_municipio,unidad_funcional_acuerdo_obra,avance_fisico_ejecutado,
+            cantidad_suspensiones,cantidad_prorrogas,tiempo_suspensiones,tiempo_prorrogas,cantidad_adiciones,valor_total_adiciones,origen_recursos,valor_comprometido,valor_obligado,valor_pagado,
+            valor_anticipo,latitud_inicial,latitud_final,longitud_final,estado,cesion,nuevo_contratista,observaciones,link_secop,fecha_inicio,fecha_inicial_terminacion,fecha_final_terminacion,
+            valor_inicial,valor_final)
+            VALUES ('".$_POST['no_contrato']."','".$_POST['sector']."','".$_POST['municipio_obra']."','".$_POST['departamento_obra']."','".$_POST['codigo_divipola_municipio']."','"
+            .$_POST['unidad_funcional_acuerdo_obra']."','".$_POST['avance_fisico_ejecutado']."','".$_POST['cantidad_suspensiones'].
+            "','".$_POST['cantidad_prorrogas']."','".$_POST['tiempo_suspensiones']."','".$_POST['tiempo_prorrogas'].
+            "','".$_POST['cantidad_adiciones']."','".$_POST['valor_total_adiciones']."','".$_POST['origen_recursos'].
+            "','".$_POST['valor_comprometido']."','".$_POST['valor_obligado']."','".$_POST['valor_pagado'].
+            "','".$_POST['valor_anticipo']."','".$_POST['latitud_inicial']."','".$_POST['latitud_final'].
+            "','".$_POST['longitud_final']."','".$_POST['estado']."','".$_POST['cesion']."','".$_POST['nuevo_contratista'].
+            "','".$_POST['observaciones']."','".$_POST['link_secop']."','".$_POST['fecha_inicio']."','".$_POST['fecha_inicial_terminacion'].
+            "','".$_POST['fecha_final_terminacion']."','".$_POST['valor_inicial']."','".$_POST['valor_final'].
+            "');
+            UPDATE proyecto SET group_seguimiento = '".$_SESSION['group_seguimiento']."' WHERE id =".$pro_id['pro_id'];
+            $result = pg_query($query);
+            if(!$result)
+            {
+                die("Query Failed.");
+            } 
+            header('Location: groups_seguimiento.php?group='.$_SESSION['group_seguimiento']);
+        }
+        
     }
 ?>
-<div class="container mt-3">
+<div class="wrapper row1">
+  <section id="ctdetails" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <ul class="nospace clear">
+          <div class="sectiontitle">
+              <h6 class="heading">Crear Seguimiento</h6>
+          </div>
+      </li>
+    </ul>
+    <!-- ################################################################################################ -->
+  </section>
+</div>
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <div class="content">
     <div class="row">
         <div class="col-5">
-            <form action="crear_seguimiento.php" method="POST">
+                    <?php
+                        if(isset($_GET['gr_new']))
+                        {
+                    ?>
+                    <form action="crear_seguimiento.php?gr_new='TRUE'" method="POST">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Código:</label>
+                            <input type="text" name="cod" class="form-control" value="S">
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">Descripción de Grupo:</label>
+                        <input type="text" name="descripcion" class="form-control">
+                    </div>
+                    <?php
+                        }else{
+                    ?>
+                    <form action="crear_coordenadas.php" method="POST">
+                    <?php
+                        }
+                    ?>
                     <div class="mb-3">
                         <label for="" class="form-label">No. Contrato:</label>
                         <select name="no_contrato" id="" class="form-select">
@@ -115,6 +174,13 @@
                         <label for="" class="form-label">Origen Recursos</label>
                         <input type="text" name="origen_recursos" class="form-control">
                     </div>
+                        <div class="mb-1 abs-center">
+                            <button type="submit" class="btn btn-secondary" name="create">
+                                GUARDAR
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col">
                     <div class="mb-3">  
                         <label for="" class="form-label">Valor Comprometido</label>
                         <input type="text" name="valor_comprometido" class="form-control">
@@ -185,10 +251,7 @@
                     </div>
 
                     <div class="mb-1 abs-center">
-                        <button type="submit" class="btn btn-secondary" name="create">
-                            GUARDAR
-                        </button>
-                        <a href="list_seguimiento.php?group=<?= $_SESSION['group_seguimiento']?>" type="submit" class="btn btn-danger">
+                        <a href="list_seguimiento.php?group=<?= $_SESSION['group_seguimiento']?>" type="submit" class="btn-danger">
                             CANCELAR
                         </a>
                     </div>
@@ -197,4 +260,5 @@
         </div>
     </div>
 </div>
+<?php include('footer.php');?>
     

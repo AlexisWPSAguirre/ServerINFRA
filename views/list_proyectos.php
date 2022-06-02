@@ -23,8 +23,8 @@ include('includes/scripts.php');
             <div class="row mb-3">
             <div class="col-3">
                 <form action="list_proyectos.php" method="GET">
-                    <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
-                    <button type="submit" class="btn btn-primary">BUSCAR</button>
+                    <!-- <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
+                    <button type="submit" class="btn btn-primary">BUSCAR</button> -->
                     <a href="crear_proyecto.php" class="btn btn-secondary">CREAR</a>
                     <a href="../spreadsheet.php" class="btn btn-secondary">Importar</a>
                     </div>                                

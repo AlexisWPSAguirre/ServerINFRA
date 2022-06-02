@@ -21,8 +21,8 @@ include_once "full-width.php";
         <div class="row mb-3">
             <div class="col-3">
                 <form action="buscar.php" method="GET">
-                    <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
-                    <button type="submit" class="btn btn-primary">Buscar</button>
+                    <!-- <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
+                    <button type="submit" class="btn btn-primary">Buscar</button> -->
                     <a href="../views/full-width.php?frame=list_contratos.php&group=<?php echo $_GET['group']?>" class="btn btn-secondary">AÑADIR</a>
                     </div>
                 </form>
@@ -48,11 +48,21 @@ include_once "full-width.php";
         <tbody>
         <?php 
             //Paginador
-            $sql_register = pg_query("
-            SELECT COUNT(*) as total_registros FROM hitos a
-            LEFT JOIN contrato b ON b.id = a.contrato_fk
-            LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
-            WHERE c.group_hito ='".$_GET['group']."'");
+            if($_GET['group']!=''){
+                $sql_register = pg_query("
+                SELECT COUNT(*) as total_registros FROM hitos a
+                LEFT JOIN contrato b ON b.id = a.contrato_fk
+                LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+                WHERE c.group_hito_fk ='".$_GET['group']."'");
+            }
+            else
+            {
+                $sql_register = pg_query("
+                SELECT COUNT(*) as total_registros FROM hitos a
+                LEFT JOIN contrato b ON b.id = a.contrato_fk
+                LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+                WHERE c.group_hito_fk is null");
+            }
             $result_register = pg_fetch_assoc($sql_register);
             $total_register = $result_register['total_registros'];
             $por_pagina = 10;
@@ -67,7 +77,7 @@ include_once "full-width.php";
             }
             $total_paginas = ceil($total_register/$por_pagina);
 
-            if(!is_null($_GET['group'])){
+            if(($_GET['group'])!=''){
                 $query ="
                 SELECT 
                 a.id as id_hito,
@@ -80,14 +90,14 @@ include_once "full-width.php";
                 a.valor_adiciones_hito,
                 a.dias_hito
                 FROM hitos a
-                INNER JOIN contrato b ON b.id = a.contrato_fk
-                INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-                WHERE c.group_hito ='".$_GET['group']."'
+                LEFT JOIN contrato b ON b.id = a.contrato_fk
+                LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+                LEFT JOIN groups d ON d.cod = c.group_hito_fk
+                WHERE c.group_hito_fk ='".$_GET['group']."'
                 ORDER BY a.id ASC";
             }
             else
             {
-            
                 $query ="
                 SELECT 
                 a.id as id_hito,
@@ -100,9 +110,10 @@ include_once "full-width.php";
                 a.valor_adiciones_hito,
                 a.dias_hito
                 FROM hitos a
-                INNER JOIN contrato b ON b.id = a.contrato_fk
-                INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-                WHERE c.group_hito is null
+                LEFT JOIN contrato b ON b.id = a.contrato_fk
+                LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+                LEFT JOIN groups d ON d.cod = c.group_hito_fk
+                WHERE c.group_hito_fk is null
                 ORDER BY a.id ASC";
             }
             

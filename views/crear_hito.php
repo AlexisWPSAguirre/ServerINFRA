@@ -4,18 +4,33 @@ include('includes/styles.php');
 include_once "full-width.php";
 
 if(isset($_POST['crear'])){
-    #No habia visto que el post se almacenará con el name del button D:
-        $id = $_GET["id"];
+    $id = $_GET["id"];
+    if(isset($_GET['gr_new'])){
         $query = "INSERT INTO hitos(hito,detalle_hito,valor_adiciones_hito,dias_hito,contrato_fk,fecha_hito)
         VALUES('".$_POST['hito']."','".$_POST['detalle_hito']."','".$_POST['valor_adiciones_hito']."',
         '".$_POST['dias_hito']."',".$id.",'".$_POST['fecha_hito']."');
-        UPDATE proyecto SET group_hito = '".$_GET['group']."' WHERE id =".$_GET['pro_id'];
+        INSERT INTO groups (cod,descripcion) VALUES('".$_POST['cod']."','".$_POST['descripcion']."');
+        UPDATE proyecto SET group_hito_fk = '".$_POST['cod']."' WHERE id =".$_GET['pro_id'];
+        $result = pg_query($query);
+        if(!$result)
+        {
+            die("Query Failed.");
+        } 
+        header('Location: list_hitos.php?group='.$_POST['cod']);
+    }
+    else{
+        $query = "INSERT INTO hitos(hito,detalle_hito,valor_adiciones_hito,dias_hito,contrato_fk,fecha_hito)
+        VALUES('".$_POST['hito']."','".$_POST['detalle_hito']."','".$_POST['valor_adiciones_hito']."',
+        '".$_POST['dias_hito']."',".$id.",'".$_POST['fecha_hito']."');
+        UPDATE proyecto SET group_hito_fk = '".$_SESSION['group_hito']."' WHERE id =".$_GET['pro_id'];
         $result = pg_query($query);
         if(!$result)
         {
             die("Query Failed.");
         } 
         header('Location: list_hitos.php?group='.$_SESSION['group_hito']);
+    }
+        
     }
 if(isset($_GET['id'])) {
     $id = $_GET['id'];
@@ -50,7 +65,27 @@ if(isset($_GET['id'])) {
     <div class="content">
         <div class="row">
             <div class="col">
-                <form action="crear_hito.php?id=<?php echo $_GET['id'];?>&group=<?= $_SESSION['group_hito']?>&pro_id=<?php echo $_GET['pro_id']?>" method="POST">
+                
+                    <?php
+                        if(isset($_GET['gr_new']))
+                        {
+                    ?>
+                    <form action="crear_hito.php?id=<?php echo $_GET['id'];?>&pro_id=<?php echo $_GET['pro_id']?>&gr_new='TRUE'" method="POST">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Código:</label>
+                            <input type="text" name="cod" class="form-control" value="H">
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">Descripción de Grupo:</label>
+                        <input type="text" name="descripcion" class="form-control">
+                    </div>
+                    <?php
+                        }else{
+                    ?>
+                    <form action="crear_hito.php?id=<?php echo $_GET['id'];?>&pro_id=<?php echo $_GET['pro_id']?>" method="POST">
+                    <?php
+                        }
+                    ?>
                     <div class="mb-3">
                         <label for="" class="form-label">No. Proyecto:</label>
                         <input type="text" name="no_proyecto" class="form-control" value="<?php echo $line['no_proyecto'];?>" disabled>

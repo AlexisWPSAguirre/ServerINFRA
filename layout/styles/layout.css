@@ -127,7 +127,7 @@ File: Layout CSS
 
 /* Footer
 --------------------------------------------------------------------------------------------------------------- */
-#footer{padding:80px 0;}
+#footer{padding:50px 0;}
 
 #footer .heading{margin-bottom:50px; font-size:1.2rem;}
 #footer p + .faico{margin-top:30px;}

@@ -21,8 +21,8 @@ include_once "full-width.php";
         <div class="row mb-3">
             <div class="col-3">
                 <form action="buscar.php" method="GET">
-                    <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
-                    <button type="submit" class="btn btn-primary">Búsqueda</button>
+                    <!-- <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
+                    <button type="submit" class="btn btn-primary">Búsqueda</button> -->
                     <a href="crear_coordenadas.php" class="btn btn-secondary">AÑADIR</a>
                     </div>
                 </form>
@@ -50,10 +50,23 @@ include_once "full-width.php";
         <tbody>
         <?php 
             //Paginador
-            $sql_register = pg_query("SELECT COUNT(*) as total_registros FROM coordenadas");
+            if($_GET['group']!=''){
+                $sql_register = pg_query("SELECT COUNT(*) as total_registros 
+                FROM coordenadas a
+                LEFT JOIN contrato b ON b.id = a.coo_contrato_fk
+                LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+                WHERE c.group_coordenadas_fk = '".$_GET['group']."'");
+            }
+            else{
+                $sql_register = pg_query("SELECT COUNT(*) as total_registros 
+                FROM coordenadas a
+                LEFT JOIN contrato b ON b.id = a.coo_contrato_fk
+                LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+                WHERE c.group_coordenadas_fk is null");
+            }
             $result_register = pg_fetch_assoc($sql_register);
             $total_register = $result_register['total_registros'];
-            $por_pagina = 5;
+            $por_pagina = 10;
             if(empty($_GET['pagina']))
             {
                 $pagina = 1;
@@ -64,7 +77,7 @@ include_once "full-width.php";
                 $desde = ($pagina-1) * $por_pagina;
             }
             $total_paginas = ceil($total_register/$por_pagina);
-            if(!empty($_GET['group'])){
+            if(($_GET['group'])!=''){
                 $query ="
                 SELECT 
                 a.id,
@@ -79,9 +92,11 @@ include_once "full-width.php";
                 a.longitud_inicial,
                 a.longitud_final
                 FROM coordenadas a
-                INNER JOIN contrato b ON b.id = a.coo_contrato_fk
-                INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-                WHERE c.group_coordenadas ='".$_GET['group']."'";
+                LEFT JOIN contrato b ON b.id = a.coo_contrato_fk
+                LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+                LEFT JOIN groups d ON d.cod = c.group_coordenadas_fk
+                WHERE c.group_coordenadas_fk ='".$_GET['group']."'
+                ORDER BY a.id ASC";
             }
             else 
             {
@@ -99,9 +114,11 @@ include_once "full-width.php";
                 a.longitud_inicial,
                 a.longitud_final
                 FROM coordenadas a
-                INNER JOIN contrato b ON b.id = a.coo_contrato_fk
-                INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-                WHERE c.group_coordenadas is null";
+                LEFT JOIN contrato b ON b.id = a.coo_contrato_fk
+                LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+                LEFT JOIN groups d ON d.cod = c.group_coordenadas_fk
+                WHERE c.group_coordenadas_fk is null
+                ORDER BY a.id ASC";
             }
             
             $query = $query." LIMIT $por_pagina OFFSET $desde";

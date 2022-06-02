@@ -15,7 +15,7 @@ header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 <tr>
     <?php
         include('../config/db.php');
-        if(!empty($_GET['group'])){
+        if(($_GET['group'])!=''){
         $query ="
         SELECT 
         b.no_contrato,
@@ -27,9 +27,9 @@ header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
         a.valor_adiciones_hito,
         a.dias_hito
         FROM hitos a
-        INNER JOIN contrato b ON b.id = a.contrato_fk
-        INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-        WHERE c.group_hito ='".$_GET['group']."'";
+        LEFT JOIN contrato b ON b.id = a.contrato_fk
+        LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+        WHERE c.group_hito_fk ='".$_GET['group']."'";
         }else{
         $query ="
         SELECT 
@@ -42,9 +42,9 @@ header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
         a.valor_adiciones_hito,
         a.dias_hito
         FROM hitos a
-        INNER JOIN contrato b ON b.id = a.contrato_fk
-        INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-        WHERE c.group_hito is null";
+        LEFT JOIN contrato b ON b.id = a.contrato_fk
+        LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+        WHERE c.group_hito_fk is null";
         }
         $result = pg_query($query);
         while($line=pg_fetch_row($result)){

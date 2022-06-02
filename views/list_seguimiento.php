@@ -22,8 +22,8 @@ include_once "full-width.php";
         <div class="row mb-3">
             <div class="col-3">
                 <form action="buscar.php" method="GET">
-                    <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
-                    <button type="submit" class="btn btn-primary">Buscar</button>
+                    <!-- <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
+                    <button type="submit" class="btn btn-primary">Buscar</button> -->
                     <a href="crear_seguimiento.php" class="btn btn-secondary">AÑADIR</a>
                     </div>
                 </form>
@@ -83,10 +83,28 @@ include_once "full-width.php";
         <tbody>
         <?php 
             //Paginador
-            $sql_register = pg_query("SELECT COUNT(*) as total_registros FROM obras");
+            if($_GET['group']!=''){
+                $sql_register = pg_query("
+                SELECT COUNT(*) as total_registros 
+                FROM obras a
+                LEFT JOIN contrato b ON b.id = a.obra_contrato_fk
+                LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+                LEFT JOIN contratista d ON d.id = c.contratista_fk
+                LEFT JOIN coordenadas e ON e.id = a.se_coordenada_fk
+                WHERE c.group_seguimiento_fk ='".$_GET['group']."'");
+            }else{
+                $sql_register = pg_query("
+                SELECT COUNT(*) as total_registros 
+                FROM obras a
+                LEFT JOIN contrato b ON b.id = a.obra_contrato_fk
+                LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+                LEFT JOIN contratista d ON d.id = c.contratista_fk
+                LEFT JOIN coordenadas e ON e.id = a.se_coordenada_fk
+                WHERE c.group_seguimiento_fk is null");
+            }
             $result_register = pg_fetch_assoc($sql_register);
             $total_register = $result_register['total_registros'];
-            $por_pagina = 5;
+            $por_pagina = 10;
             if(empty($_GET['pagina']))
             {
                 $pagina = 1;
@@ -97,7 +115,7 @@ include_once "full-width.php";
                 $desde = ($pagina-1) * $por_pagina;
             }
             $total_paginas = ceil($total_register/$por_pagina);
-            if($_GET['group'] != null){
+            if(($_GET['group'])!=''){
                 $query ="
                 SELECT
                 a.id,
@@ -144,11 +162,12 @@ include_once "full-width.php";
                 a.observaciones,
                 a.link_secop
                 FROM obras a
-                INNER JOIN contrato b ON b.id = a.obra_contrato_fk
-                INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-                INNER JOIN contratista d ON d.id = c.contratista_fk
-                INNER JOIN coordenadas e ON e.id = a.se_coordenada_fk
-                WHERE c.group_seguimiento ='".$_GET['group']."'";
+                LEFT JOIN contrato b ON b.id = a.obra_contrato_fk
+                LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+                LEFT JOIN contratista d ON d.id = c.contratista_fk
+                LEFT JOIN coordenadas e ON e.id = a.se_coordenada_fk
+                WHERE c.group_seguimiento_fk ='".$_GET['group']."'
+                ORDER BY a.id ASC";
             }
             else
             {
@@ -198,11 +217,12 @@ include_once "full-width.php";
                 a.observaciones,
                 a.link_secop
                 FROM obras a
-                INNER JOIN contrato b ON b.id = a.obra_contrato_fk
-                INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
-                INNER JOIN contratista d ON d.id = c.contratista_fk
-                INNER JOIN coordenadas e ON e.id = a.se_coordenada_fk
-                WHERE c.group_seguimiento is null";
+                LEFT JOIN contrato b ON b.id = a.obra_contrato_fk
+                LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+                LEFT JOIN contratista d ON d.id = c.contratista_fk
+                LEFT JOIN coordenadas e ON e.id = a.se_coordenada_fk
+                WHERE c.group_seguimiento_fk is null
+                ORDER BY a.id ASC";
             }
             
             $query = $query." LIMIT $por_pagina OFFSET $desde";
@@ -222,7 +242,7 @@ include_once "full-width.php";
                     <a href="edit_seguimiento.php?id=<?php echo $line[0]?>" class="btn btn-secondary mb-1">
                         Editar
                     </a>                    
-                    <a href="../controllers/seguimiento/delete.php?id=<?php echo $line[0]?>" class="btn btn-danger">
+                    <a href="../controllers/seguimiento/delete.php?id=<?php echo $line[0]?>" class="btn-danger">
                         Eliminar
                     </a>
                 </td>

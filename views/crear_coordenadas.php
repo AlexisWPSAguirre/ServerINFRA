@@ -13,17 +13,31 @@
         WHERE a.id = ".$_POST['coo_contrato_fk']." LIMIT 1";
         $result = pg_query($query);
         $pro_id = $line=pg_fetch_assoc($result);
-
-        $query="INSERT INTO coordenadas 
-        (coo_contrato_fk, latitud, longitud, latitud_inicial, latitud_final, longitud_inicial, longitud_final) VALUES (".$_POST['coo_contrato_fk'].",'".$_POST['latitud']."','"
-        .$_POST['longitud']."','".$_POST['latitud_inicial']."','".$_POST['latitud_final']."','".$_POST['longitud_inicial']."','".$_POST['longitud_final']."');
-        UPDATE proyecto SET group_coordenadas = '".$_SESSION['group_coordenadas']."' WHERE id =".$pro_id['pro_id'];
-        $result = pg_query($query);
-        if(!$result)
-        {
-            die("Query Failed.");
-        } 
-        header('Location: list_coordenadas.php?group='.$_SESSION['group_coordenadas']);
+        
+        if(isset($_GET['gr_new'])){
+            $query="INSERT INTO coordenadas 
+            (coo_contrato_fk, latitud, longitud, latitud_inicial, latitud_final, longitud_inicial, longitud_final) VALUES (".$_POST['coo_contrato_fk'].",'".$_POST['latitud']."','"
+            .$_POST['longitud']."','".$_POST['latitud_inicial']."','".$_POST['latitud_final']."','".$_POST['longitud_inicial']."','".$_POST['longitud_final']."');
+            INSERT INTO groups (cod,descripcion) VALUES('".$_POST['cod']."','".$_POST['descripcion']."');
+            UPDATE proyecto SET group_coordenadas_fk = '".$_POST['cod']."' WHERE id =".$pro_id['pro_id'];
+            $result = pg_query($query);
+            if(!$result)
+            {
+                die("Query Failed.");
+            } 
+            header('Location: list_coordenadas.php?group='.$_POST['cod']);
+        }else{
+            $query="INSERT INTO coordenadas 
+            (coo_contrato_fk, latitud, longitud, latitud_inicial, latitud_final, longitud_inicial, longitud_final) VALUES (".$_POST['coo_contrato_fk'].",'".$_POST['latitud']."','"
+            .$_POST['longitud']."','".$_POST['latitud_inicial']."','".$_POST['latitud_final']."','".$_POST['longitud_inicial']."','".$_POST['longitud_final']."');
+            UPDATE proyecto SET group_coordenadas_fk = '".$_SESSION['group_coordenadas']."' WHERE id =".$pro_id['pro_id'];
+            $result = pg_query($query);
+            if(!$result)
+            {
+                die("Query Failed.");
+            } 
+            header('Location: list_coordenadas.php?group='.$_SESSION['group_coordenadas']);
+        }
     }
 ?>
 <div class="wrapper row1">
@@ -43,7 +57,26 @@
     <div class="content">
     <div class="row">
         <div class="col">
-            <form action="crear_coordenadas.php" method="POST">
+                    <?php
+                        if(isset($_GET['gr_new']))
+                        {
+                    ?>
+                    <form action="crear_coordenadas.php?gr_new='TRUE'" method="POST">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Código:</label>
+                            <input type="text" name="cod" class="form-control" value="C">
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">Descripción de Grupo:</label>
+                        <input type="text" name="descripcion" class="form-control">
+                    </div>
+                    <?php
+                        }else{
+                    ?>
+                    <form action="crear_coordenadas.php" method="POST">
+                    <?php
+                        }
+                    ?>
                     <div class="mb-3">
                         <label for="" class="form-label">No. Contrato:</label>
                         <select name="coo_contrato_fk" id="" class="form-select">
