@@ -91,7 +91,7 @@
                             </select>
                         </div>
                         <div class="mb-1 abs-center">
-                            <a href="../views/full-width.php?frame=list_contratos.php" class="btn btn-danger">
+                            <a href="../views/full-width.php?frame=list_contratos.php" class="btn-danger">
                                 CANCELAR
                             </a>
                         </div>

@@ -84,7 +84,7 @@ if( !isset($_SESSION['user'])){
                         }
                         else
                         {
-                            echo "No definido";
+                            echo "No fueron relacionados con un Proyecto";
                         }
                     ?>
                 </td>
@@ -99,10 +99,10 @@ if( !isset($_SESSION['user'])){
                     <a href="excel_coordenadas.php?group=<?php echo $line['group_coordenadas_fk']?>" class="btn btn-dark mb-1">
                         <i class="fas fa-file-excel"></i>
                     </a>
-                    <a href="excel_coordenadas.php?group=<?php echo $line['group_coordenadas_fk']?>" class="btn btn-dark">
+                    <a href="edit_group.php?group=<?php echo $line['group_coordenadas_fk']?>" class="btn btn-dark">
                     Editar
                     </a>
-                    <a href="excel_coordenadas.php?group=<?php echo $line['group_coordenadas_fk']?>" class="btn-danger">
+                    <a href="../controllers/groups/delete_group.php?cod=<?php echo $line['group_coordenadas_fk']?>&gr_sel=coordenada" class="btn-danger">
                     Eliminar
                     </a>
                     <!-- 

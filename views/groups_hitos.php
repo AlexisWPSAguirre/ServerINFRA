@@ -74,7 +74,7 @@ include('includes/scripts.php');
                         }
                         else
                         {
-                            echo "No definido";
+                            echo "No fueron relacionados con un Proyecto";
                         }
                     ?>  
                 </td>
@@ -92,7 +92,7 @@ include('includes/scripts.php');
                     <a href="edit_group.php?group=<?php echo $line['group_hito_fk']?>" class="btn btn-dark">
                     Editar
                     </a>
-                    <a href="../controllers/groups/delete_group.php?cod=<?php echo $line['group_hito_fk']?>" class="btn-danger">
+                    <a href="../controllers/groups/delete_group.php?cod=<?php echo $line['group_hito_fk']?>&gr_sel=hito" class="btn-danger">
                     Eliminar
                     </a>
                     <!-- 

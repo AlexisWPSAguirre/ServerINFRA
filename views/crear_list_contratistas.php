@@ -85,7 +85,7 @@
                     <td><?= $line['nit'] ?></td>
                     <td>
                         <a class="btn btn-primary mb-1" href="edit_contratista.php?id=<?= $line['id']?>">EDITAR</a>
-                        <a class="btn-dark" href="../controllers/contratista/delete.php?id=<?= $line['id']?>">ELIMINAR</a>
+                        <a class="btn-danger" href="../controllers/contratista/delete.php?id=<?= $line['id']?>">ELIMINAR</a>
                     </td>
                     <?php
                         }

@@ -23,7 +23,7 @@ include_once "full-width.php";
                 <form action="buscar.php" method="GET">
                     <!-- <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
                     <button type="submit" class="btn btn-primary">Búsqueda</button> -->
-                    <a href="crear_coordenadas.php" class="btn btn-secondary">AÑADIR</a>
+                    <a href="../views/full-width.php?frame=list_contratos.php&gr_sel=coordenada" class="btn btn-secondary">AÑADIR</a>
                     </div>
                 </form>
         </div>
@@ -171,7 +171,7 @@ include_once "full-width.php";
                     <a href="edit_coordenadas.php?id=<?php echo $line['id']?>" class="btn btn-secondary mb-1">
                         Editar
                     </a>                   
-                    <a href="../controllers/coordenadas/delete.php?id=<?php echo $line['id']?>" class="btn btn-danger">
+                    <a href="../controllers/coordenadas/delete.php?id=<?php echo $line['id']?>" class="btn-danger">
                         Eliminar
                     </a>
                 </td>

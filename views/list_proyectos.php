@@ -1,7 +1,6 @@
 <?php
 include('../config/db.php');
 include('includes/jquery.php');
-include('includes/scripts.php');
 ?>
     <div class="wrapper row1">
     <section id="ctdetails" class="hoc clear"> 
@@ -16,6 +15,38 @@ include('includes/scripts.php');
     </section>
     </div>
 
+    <div class="wrapper row2">
+        <div class="row">
+            <select name="" id="search_anio" class="form-select" style="margin-left:50%">
+                <?php
+                    $query="SELECT count(*), anio FROM proyecto GROUP BY anio ORDER BY anio DESC";
+                    $result = pg_query($query);
+                    
+                    if(isset($_GET['anio'])){
+                        while($anios=pg_fetch_assoc($result)){
+                            if($_GET['anio']==$anios['anio']){
+                ?>
+                    <option value="<?= $anios['anio']?>" selected><?=$anios['anio']?></option>
+                <?php
+                        }else{
+                ?>
+                    <option value="<?= $anios['anio']?>"><?=$anios['anio']?></option>
+                <?php
+                        }
+                    }
+                    }else{
+                    ?>
+                    <option value="" selected>Seleccionar</option>
+                    <?php
+                        while($anios=pg_fetch_assoc($result)){
+                ?>
+                    <option value="<?= $anios['anio']?>"><?=$anios['anio']?></option>
+                <?php
+                    }}
+                ?>
+            </select>
+        </div>
+    </div>
     <div class="wrapper row3">
     <main class="hoc container clear"> 
         <div class="content">
@@ -26,7 +57,6 @@ include('includes/scripts.php');
                     <!-- <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
                     <button type="submit" class="btn btn-primary">BUSCAR</button> -->
                     <a href="crear_proyecto.php" class="btn btn-secondary">CREAR</a>
-                    <a href="../spreadsheet.php" class="btn btn-secondary">Importar</a>
                     </div>                                
                 </form>
             </div>
@@ -56,6 +86,44 @@ include('includes/scripts.php');
                 <tbody>
                 <?php 
                     //Paginador
+                    if(isset($_GET['anio'])){
+                        $sql_register = pg_query("SELECT COUNT(*) as total_registros FROM proyecto WHERE anio = ".$_GET['anio']);
+                        $result_register = pg_fetch_assoc($sql_register);
+                        $total_register = $result_register['total_registros'];
+                        $por_pagina = 10;
+                        if(empty($_GET['pagina']))
+                        {
+                            $pagina = 1;
+                            $desde = 0;
+                        }else
+                        {
+                            $pagina = $_GET['pagina'];
+                            $desde = ($pagina-1) * $por_pagina;
+                        }
+                        $total_paginas = ceil($total_register/$por_pagina);
+                        $query = 'SELECT
+                        a.id,
+                        a.no_proyecto,
+                        a.objeto,
+                        a.proceso,
+                        b.nombre,
+                        b.nit,
+                        a.fecha_iniciacion,
+                        a.fecha_terminacion,
+                        a.fecha_liquidacion,
+                        a.supervision_interventoria,
+                        a.direccion,
+                        a.tel_cel,
+                        a.correo           
+                        FROM proyecto a 
+                        LEFT JOIN contratista b ON a.contratista_fk = b.id
+                        WHERE a.anio = '.$_GET['anio'].'
+                        ORDER BY a.id ASC';
+                        $query = $query." LIMIT $por_pagina OFFSET $desde";
+                        $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error());
+                        
+                }
+                else{
                     $sql_register = pg_query("SELECT COUNT(*) as total_registros FROM proyecto");
                     $result_register = pg_fetch_assoc($sql_register);
                     $total_register = $result_register['total_registros'];
@@ -89,8 +157,9 @@ include('includes/scripts.php');
                     ORDER BY a.id ASC';
                     $query = $query." LIMIT $por_pagina OFFSET $desde";
                     $result = pg_query($query) or die ('La consulta fallo: '. preg_last_error());
-                    $index = 1;
-                    while ($line = pg_fetch_assoc($result)) {
+                    
+                }
+                while ($line = pg_fetch_assoc($result)) {
                 ?>
                     <tr>
                         <td>
@@ -152,11 +221,20 @@ include('includes/scripts.php');
     <nav class="pagination">
         <ul>
             <?php
+            if(isset($_GET['anio'])){
+                for ($i=1; $i <= $total_paginas ; $i++) { 
+            ?>
+                <li><a href="?pagina=<?=$i?>&frame=list_proyectos.php&anio=<?=$_GET['anio']?>" class="m-2"><?=$i?></a></li>
+            <?php
+                }
+            }else
+            {
                 for ($i=1; $i <= $total_paginas ; $i++) { 
             ?>
                 <li><a href="?pagina=<?=$i?>&frame=list_proyectos.php" class="m-2"><?=$i?></a></li>
             <?php
                 }
+            }
             ?>
         </ul>
     </nav>
@@ -174,6 +252,7 @@ include('includes/scripts.php');
 
 </div>
 </tbody>
+<script type="text/javascript" src="../functions.js"></script>
 <?php 
     include('footer.php');
 ?>

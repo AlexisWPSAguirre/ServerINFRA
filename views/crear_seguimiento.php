@@ -8,14 +8,6 @@
         if($_POST['codigo_divipola_municipio']==''){
             $_POST['codigo_divipola_municipio']=0;
         }
-        $query="
-        SELECT 
-        b.id as pro_id,
-        * FROM contrato a
-        INNER JOIN proyecto b ON a.no_proyecto_fk = b.id
-        WHERE a.id = ".$_POST['no_contrato']." LIMIT 1";
-        $result = pg_query($query);
-        $pro_id = $line=pg_fetch_assoc($result);
 
         if(isset($_GET['gr_new'])){
             $query="INSERT INTO obras 
@@ -23,7 +15,7 @@
             cantidad_suspensiones,cantidad_prorrogas,tiempo_suspensiones,tiempo_prorrogas,cantidad_adiciones,valor_total_adiciones,origen_recursos,valor_comprometido,valor_obligado,valor_pagado,
             valor_anticipo,latitud_inicial,latitud_final,longitud_final,estado,cesion,nuevo_contratista,observaciones,link_secop,fecha_inicio,fecha_inicial_terminacion,fecha_final_terminacion,
             valor_inicial,valor_final)
-            VALUES ('".$_POST['no_contrato']."','".$_POST['sector']."','".$_POST['municipio_obra']."','".$_POST['departamento_obra']."','".$_POST['codigo_divipola_municipio']."','"
+            VALUES ('".$_GET['id']."','".$_POST['sector']."','".$_POST['municipio_obra']."','".$_POST['departamento_obra']."','".$_POST['codigo_divipola_municipio']."','"
             .$_POST['unidad_funcional_acuerdo_obra']."','".$_POST['avance_fisico_ejecutado']."','".$_POST['cantidad_suspensiones'].
             "','".$_POST['cantidad_prorrogas']."','".$_POST['tiempo_suspensiones']."','".$_POST['tiempo_prorrogas'].
             "','".$_POST['cantidad_adiciones']."','".$_POST['valor_total_adiciones']."','".$_POST['origen_recursos'].
@@ -34,7 +26,7 @@
             "','".$_POST['fecha_final_terminacion']."','".$_POST['valor_inicial']."','".$_POST['valor_final'].
             "');
             INSERT INTO groups (cod,descripcion) VALUES('".$_POST['cod']."','".$_POST['descripcion']."');
-            UPDATE proyecto SET group_seguimiento_fk = '".$_POST['cod']."' WHERE id =".$pro_id['pro_id'];
+            UPDATE proyecto SET group_seguimiento_fk = '".$_POST['cod']."' WHERE id =".$_GET['pro_id'];
             $result = pg_query($query);
             if(!$result)
             {
@@ -49,7 +41,7 @@
             cantidad_suspensiones,cantidad_prorrogas,tiempo_suspensiones,tiempo_prorrogas,cantidad_adiciones,valor_total_adiciones,origen_recursos,valor_comprometido,valor_obligado,valor_pagado,
             valor_anticipo,latitud_inicial,latitud_final,longitud_final,estado,cesion,nuevo_contratista,observaciones,link_secop,fecha_inicio,fecha_inicial_terminacion,fecha_final_terminacion,
             valor_inicial,valor_final)
-            VALUES ('".$_POST['no_contrato']."','".$_POST['sector']."','".$_POST['municipio_obra']."','".$_POST['departamento_obra']."','".$_POST['codigo_divipola_municipio']."','"
+            VALUES ('".$_GET['id']."','".$_POST['sector']."','".$_POST['municipio_obra']."','".$_POST['departamento_obra']."','".$_POST['codigo_divipola_municipio']."','"
             .$_POST['unidad_funcional_acuerdo_obra']."','".$_POST['avance_fisico_ejecutado']."','".$_POST['cantidad_suspensiones'].
             "','".$_POST['cantidad_prorrogas']."','".$_POST['tiempo_suspensiones']."','".$_POST['tiempo_prorrogas'].
             "','".$_POST['cantidad_adiciones']."','".$_POST['valor_total_adiciones']."','".$_POST['origen_recursos'].
@@ -59,17 +51,32 @@
             "','".$_POST['observaciones']."','".$_POST['link_secop']."','".$_POST['fecha_inicio']."','".$_POST['fecha_inicial_terminacion'].
             "','".$_POST['fecha_final_terminacion']."','".$_POST['valor_inicial']."','".$_POST['valor_final'].
             "');
-            UPDATE proyecto SET group_seguimiento = '".$_SESSION['group_seguimiento']."' WHERE id =".$pro_id['pro_id'];
+            UPDATE proyecto SET group_seguimiento_fk = '".$_SESSION['group_seguimiento']."' WHERE id =".$_GET['pro_id'];
             $result = pg_query($query);
             if(!$result)
             {
                 die("Query Failed.");
             } 
-            header('Location: groups_seguimiento.php?group='.$_SESSION['group_seguimiento']);
+            header('Location: list_seguimiento.php?group='.$_SESSION['group_seguimiento']);
         }
         
     }
+    if(isset($_GET['id'])) {
+        $id = $_GET['id'];
+        $query = "
+        SELECT 
+        *
+        FROM contrato a
+        INNER JOIN proyecto b ON b.id = a.no_proyecto_fk
+        WHERE a.id = $id";
+        $result = pg_query($query);
+        if(!$result) {
+            die("Query Failed.");
+        }
+        while ($line = pg_fetch_assoc($result))
+        {
 ?>
+
 <div class="wrapper row1">
   <section id="ctdetails" class="hoc clear"> 
     <!-- ################################################################################################ -->
@@ -91,7 +98,7 @@
                         if(isset($_GET['gr_new']))
                         {
                     ?>
-                    <form action="crear_seguimiento.php?gr_new='TRUE'" method="POST">
+                    <form action="crear_seguimiento.php?id=<?php echo $_GET['id'];?>&pro_id=<?php echo $_GET['pro_id']?>&gr_new='TRUE'" method="POST">
                     <div class="mb-3">
                         <label for="" class="form-label">Código:</label>
                             <input type="text" name="cod" class="form-control" value="S">
@@ -103,20 +110,17 @@
                     <?php
                         }else{
                     ?>
-                    <form action="crear_coordenadas.php" method="POST">
+                    <form action="crear_seguimiento.php?id=<?php echo $_GET['id'];?>&pro_id=<?php echo $_GET['pro_id']?>" method="POST">
                     <?php
                         }
                     ?>
                     <div class="mb-3">
-                        <label for="" class="form-label">No. Contrato:</label>
-                        <select name="no_contrato" id="" class="form-select">
-                            <?php
-                                $query = "SELECT id,no_contrato from contrato";
-                                $result = pg_query($query);
-                                while ($line = pg_fetch_assoc($result)) {
-                                echo "<option value='".$line["id"]."'>".$line["no_contrato"]."</option>";}
-                            ?>
-                        </select>
+                        <label for="" class="form-label">No. Proyecto:</label>
+                        <input type="text" name="no_proyecto" class="form-control" value="<?php echo $line['no_proyecto'];?>" disabled>
+                    </div>
+                    <div class="mb-3">  
+                        <label for="" class="form-label">No. contrato</label>
+                        <input type="text" name="no_contrato" class="form-control" value="<?php echo $line["no_contrato"];?>" disabled>
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Sector</label>
@@ -256,9 +260,10 @@
                         </a>
                     </div>
                 
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-<?php include('footer.php');?>
+                    </div>
+    <?php }} include('footer.php');?>
     

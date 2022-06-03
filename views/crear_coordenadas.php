@@ -4,22 +4,13 @@
     include_once '../config/user_session.php';
     include_once "full-width.php";
 
-    if(isset($_POST['create'])){
-        $query="
-        SELECT 
-        b.id as pro_id,
-        * FROM contrato a
-        INNER JOIN proyecto b ON a.no_proyecto_fk = b.id
-        WHERE a.id = ".$_POST['coo_contrato_fk']." LIMIT 1";
-        $result = pg_query($query);
-        $pro_id = $line=pg_fetch_assoc($result);
-        
+    if(isset($_POST['create'])){        
         if(isset($_GET['gr_new'])){
             $query="INSERT INTO coordenadas 
-            (coo_contrato_fk, latitud, longitud, latitud_inicial, latitud_final, longitud_inicial, longitud_final) VALUES (".$_POST['coo_contrato_fk'].",'".$_POST['latitud']."','"
+            (coo_contrato_fk, latitud, longitud, latitud_inicial, latitud_final, longitud_inicial, longitud_final) VALUES (".$_GET['id'].",'".$_POST['latitud']."','"
             .$_POST['longitud']."','".$_POST['latitud_inicial']."','".$_POST['latitud_final']."','".$_POST['longitud_inicial']."','".$_POST['longitud_final']."');
             INSERT INTO groups (cod,descripcion) VALUES('".$_POST['cod']."','".$_POST['descripcion']."');
-            UPDATE proyecto SET group_coordenadas_fk = '".$_POST['cod']."' WHERE id =".$pro_id['pro_id'];
+            UPDATE proyecto SET group_coordenadas_fk = '".$_POST['cod']."' WHERE id =".$_GET['pro_id'];
             $result = pg_query($query);
             if(!$result)
             {
@@ -28,9 +19,9 @@
             header('Location: list_coordenadas.php?group='.$_POST['cod']);
         }else{
             $query="INSERT INTO coordenadas 
-            (coo_contrato_fk, latitud, longitud, latitud_inicial, latitud_final, longitud_inicial, longitud_final) VALUES (".$_POST['coo_contrato_fk'].",'".$_POST['latitud']."','"
+            (coo_contrato_fk, latitud, longitud, latitud_inicial, latitud_final, longitud_inicial, longitud_final) VALUES (".$_GET['id'].",'".$_POST['latitud']."','"
             .$_POST['longitud']."','".$_POST['latitud_inicial']."','".$_POST['latitud_final']."','".$_POST['longitud_inicial']."','".$_POST['longitud_final']."');
-            UPDATE proyecto SET group_coordenadas_fk = '".$_SESSION['group_coordenadas']."' WHERE id =".$pro_id['pro_id'];
+            UPDATE proyecto SET group_coordenadas_fk = '".$_SESSION['group_coordenadas']."' WHERE id =".$_GET['pro_id'];
             $result = pg_query($query);
             if(!$result)
             {
@@ -39,6 +30,20 @@
             header('Location: list_coordenadas.php?group='.$_SESSION['group_coordenadas']);
         }
     }
+    if(isset($_GET['id'])) {
+        $id = $_GET['id'];
+        $query = "
+        SELECT 
+        *
+        FROM contrato a
+        INNER JOIN proyecto b ON b.id = a.no_proyecto_fk
+        WHERE a.id = $id";
+        $result = pg_query($query);
+        if(!$result) {
+            die("Query Failed.");
+        }
+        while ($line = pg_fetch_assoc($result))
+        {
 ?>
 <div class="wrapper row1">
   <section id="ctdetails" class="hoc clear"> 
@@ -61,7 +66,7 @@
                         if(isset($_GET['gr_new']))
                         {
                     ?>
-                    <form action="crear_coordenadas.php?gr_new='TRUE'" method="POST">
+                    <form action="crear_coordenadas.php?id=<?php echo $_GET['id'];?>&pro_id=<?php echo $_GET['pro_id']?>&gr_new='TRUE'" method="POST">
                     <div class="mb-3">
                         <label for="" class="form-label">Código:</label>
                             <input type="text" name="cod" class="form-control" value="C">
@@ -73,24 +78,17 @@
                     <?php
                         }else{
                     ?>
-                    <form action="crear_coordenadas.php" method="POST">
+                    <form action="crear_coordenadas.php?id=<?php echo $_GET['id'];?>&pro_id=<?php echo $_GET['pro_id']?>" method="POST">
                     <?php
                         }
                     ?>
                     <div class="mb-3">
-                        <label for="" class="form-label">No. Contrato:</label>
-                        <select name="coo_contrato_fk" id="" class="form-select">
-                            <?php
-                                $query = "SELECT * FROM contrato";
-                                $result = pg_query($query);
-                                while($line=pg_fetch_assoc($result))
-                                {
-                            ?>
-                            <option value="<?= $line['id']?>"><?= $line['no_contrato'] ?></option>
-                            <?php
-                                }
-                            ?>
-                        </select>
+                        <label for="" class="form-label">No. Proyecto:</label>
+                        <input type="text" name="no_proyecto" class="form-control" value="<?php echo $line['no_proyecto'];?>" disabled>
+                    </div>
+                    <div class="mb-3">  
+                        <label for="" class="form-label">No. contrato</label>
+                        <input type="text" name="no_contrato" class="form-control" value="<?php echo $line["no_contrato"];?>" disabled>
                     </div>
                     <div class="mb-3">  
                         <label for="" class="form-label">Latitud</label>
@@ -125,7 +123,7 @@
                             <input type="text" name="longitud_final" class="form-control">
                         </div>
                         <div class="mb-1 abs-center">
-                            <a href="list_proyectos.php" class="btn btn-danger">
+                            <a href="list_proyectos.php" class="btn-danger">
                                 CANCELAR
                             </a>
                         </div>
@@ -134,4 +132,4 @@
         </div>
     </div>
 </div>
-<?php include('footer.php');?>
+<?php }}include('footer.php');?>

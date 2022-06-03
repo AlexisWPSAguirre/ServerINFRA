@@ -24,7 +24,7 @@ include_once "full-width.php";
                 <form action="buscar.php" method="GET">
                     <!-- <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
                     <button type="submit" class="btn btn-primary">Buscar</button> -->
-                    <a href="crear_seguimiento.php" class="btn btn-secondary">AÑADIR</a>
+                    <a href="../views/full-width.php?frame=list_contratos.php&gr_sel=seguimiento" class="btn btn-secondary">AÑADIR</a>
                     </div>
                 </form>
         </div>
