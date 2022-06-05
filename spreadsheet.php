@@ -20,10 +20,10 @@
         }
     }
     $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-    /* $inputFileName = 'CONTRATOS 2007 a 2021/INF GRAL CONTR 2021.xlsx'; */
+    $inputFileName = 'CONTRATOS 2007 a 2021/INF GRAL CONTR 2009.xlsx'; 
     /* $inputFileName = 'MATRIZ2021/MATRIZ COORDENADAS OBRAS 2021.xlsx';  */  
     /* $inputFileName = 'MATRIZ2021/MATRIZ HITOS OBRA 2021.xlsx';      */
-    $inputFileName = 'MATRIZ2021/MATRIZ SEGUIMIENTO OBRAS 2021.xlsx';  
+    /* $inputFileName = 'MATRIZ2021/MATRIZ SEGUIMIENTO OBRAS 2021.xlsx';   */
     /**  Identify the type of $inputFileName  **/
     $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
     /**  Create a new Reader of the type that has been identified  **/
@@ -39,12 +39,12 @@
 <body>
 
 <?php
-    /*
-    import_hitos();
-    import_proyectos(); 
     import_contratos();
-    import_rubros();
+    /*
+    import_proyectos(); 
     import_contratistas();
+    import_hitos();
+    import_rubros();
     import_coordenadas();
     import_seguimiento();
     */
@@ -56,7 +56,6 @@
         global $cantidad;
         /* Las columnas de la relación 2021: 
 	    0 - no_contrato
-        19 - valor_contrato
 	    subconsulta(no_proyecto_fk) 1 - no_proyecto
 	    7 - no_certificado
 	    11 - registro_presupuestal
@@ -64,11 +63,69 @@
 	    10 - fecha_firma
 	    16 - f_aprob_polizas
 	    8 - fecha_certificado
+
+        /* Relacion 2007: 
+	    0 - no_contrato
+	    5 - no_certificado
+	    6 - fecha_certificado
+	    8 - fecha_firma
+	    9 - no_presupuestal
+	    10 - fecha_presupuestal
+	    12 - f_aprob_polizas
+	    Nullo - no_proyecto subconsulta(no_proyecto_fk) 
+        $columns = array('0','5','6','8','9','10','12');
+        $index_fechas= array(6,8,10,12);
+        $query = 'INSERT INTO contrato(no_contrato,no_certificado,fecha_certificado,fecha_firma,no_presupuestal,
+                    fecha_presupuestal,f_aprob_polizas) VALUES(';
+
+        /* Relacion 2008: 
+	    1 - no_contrato
+	    6 - no_certificado
+	    7 - fecha_certificado
+	    9 - fecha_firma
+	    10 - no_presupuestal
+	    11 - fecha_presupuestal
+	    13 - f_aprob_polizas
+	    Nullo - no_proyecto subconsulta(no_proyecto_fk) 
+        $columns = array('1','6','7','9','10','11','13');
+        $index_fechas= array(7,9,10,11);
+        $query = 'INSERT INTO contrato(no_contrato,no_certificado,fecha_certificado,fecha_firma,no_presupuestal,
+                    fecha_presupuestal,f_aprob_polizas) VALUES(';
+
+        /* Relacion 2009: 
+	    1 - no_contrato
+	    6 - no_certificado
+	    7 - fecha_certificado
+	    9 - fecha_firma
+	    10 - no_presupuestal
+	    11 - fecha_presupuestal
+	    13 - f_aprob_polizas
+	    Nullo - no_proyecto subconsulta(no_proyecto_fk) 
+        $columns = array('1','6','7','9','10','11','13');
+        $index_fechas= array(7,9,10,11);
+        $query = 'INSERT INTO contrato(no_contrato,no_certificado,fecha_certificado,fecha_firma,no_presupuestal,
+                    fecha_presupuestal,f_aprob_polizas) VALUES(';
+
+        /* Relacion 2010: 
+	    1 - no_contrato
+	    6 - no_certificado
+	    7 - fecha_certificado
+	    9 - fecha_firma
+	    10 - no_presupuestal
+	    11 - fecha_presupuestal
+	    13 - f_aprob_polizas
+	    Nullo - no_proyecto subconsulta(no_proyecto_fk) 
+        $columns = array('1','6','7','9','10','11','13');
+        $index_fechas= array(7,9,10,11);
+        $query = 'INSERT INTO contrato(no_contrato,no_certificado,fecha_certificado,fecha_firma,no_presupuestal,
+                    fecha_presupuestal,f_aprob_polizas) VALUES(';
+        
 	    */
-        $columns = array('0','7','8','10','11','14','16','1');
+        $anio = '2009';
+        $columns = array('1','6','7','9','10','11','13');
         /* Carga los registros a la BD SQL */
-        $index_fechas= array(14,10,16,8);
-        for ($i=5; $i < count($cantidad) ; $i++) {
+        $index_fechas= array(7,9,10,11);
+        for ($i=8; $i < count($cantidad) ; $i++) {
             foreach ($columns as $key) {
                 if($cantidad[$i][$key]!=''){
                     $query = 'INSERT INTO contrato(no_contrato,no_certificado,fecha_certificado,fecha_firma,no_presupuestal,
@@ -80,26 +137,27 @@
                             }   
                         }
                     }
-
-                    $cantidad[$i][1] = str_nit($cantidad[$i][1]);
-                    $cantidad[$i][1] = str_replace("-","",$cantidad[$i][1]);
+                    /* $cantidad[$i][1] = str_nit($cantidad[$i][1]);
+                    $cantidad[$i][1] = str_replace("-","",$cantidad[$i][1]);  */
 
                     foreach($columns as $ki){
                         $count = 0;
-                        if($ki=='16'){
-                            if($cantidad[$i][1]==''){
+                        if($ki=='13'){
+                            /* if($cantidad[$i][1]==''){
                                 do {
                                     $count += 1;
                                 } while ($cantidad[($i-$count)][1]=='');
                                 $cantidad[$i][1]=$cantidad[($i-$count)][1];
                             }
+                            */
                         
-                            $query = $query."'".$cantidad[$i][$ki]."',(SELECT id FROM proyecto WHERE no_proyecto ='".$cantidad[$i][1]."' AND objeto = '".$cantidad[$i][2]."' LIMIT 1))";
+                            $query = $query."'".$cantidad[$i][$ki]."',(SELECT id FROM proyecto WHERE no_proyecto ='".$cantidad[$i][1]."' OR objeto = '".$cantidad[$i][2]."' AND anio =".$anio." LIMIT 1))"; 
+                            /* $query = $query."'".$cantidad[$i][$ki]."')";  */
                             break;
                         }
-                        print($query);
                         $query = $query."'".$cantidad[$i][$ki]."',";
                     }
+                    echo $query."<hr>";
                     $result = pg_query($query); 
                     break;
                 }
@@ -108,7 +166,6 @@
     }
 
     function import_contratistas(){
-        $anio = 2021;
         global $cantidad;
         /* 
         RELACION 2021,2020,2019,2018,2017,2016,2015,2014,2013,2010,2009,2008
@@ -118,8 +175,10 @@
         3 -> NOMBRE 
         4 -> NIT
         */
+        $anio = 2021;
         $j=4;
-        for ($i=4; $i < count($cantidad) ; $i++) {
+        /* El ciclo for indica desde que casilla empieza a importar */
+        for ($i=5; $i < count($cantidad) ; $i++) {
                 if(val_empty($i,$j)==1 OR val_empty($i,($j+1))==1)
                 {   
                     $cantidad[$i][($j+1)] = str_nit($cantidad[$i][($j+1)]);
@@ -127,6 +186,7 @@
                     $result = pg_query($query);
                     if(!$line=pg_fetch_assoc($result)){
                         $query = "INSERT INTO contratista(nombre,nit,anio) VALUES('".$cantidad[$i][$j]."','".$cantidad[$i][($j+1)]."',$anio)";
+                        echo $query."<hr>";
                         pg_query($query);
                     }
                 }
@@ -135,9 +195,8 @@
 
     function import_proyectos(){
         global $cantidad;
-        $columns = array('1','3','17','25','26','28','52','53','54','2');
-        $anio = '2021';
-        /* Las columnas de la relación 2021: 
+        
+        /* RELACION 2021: 
         1 - No_proyecto
         3 - proceso
         17 - fecha_iniciacion
@@ -150,13 +209,182 @@
         2 - objeto
         k - anio
         subconsulta - 5 - contratista_fk
+        $columns = array('1','3','17','25','26','28','52','53','54','2');
+        $query = 'INSERT INTO proyecto(no_proyecto,proceso,fecha_iniciacion,fecha_terminacion,fecha_liquidacion,
+        supervision_interventoria,direccion,tel_cel,correo,objeto,anio,contratista_fk) VALUES(';
+                    
+
+        RELACION 2007,  
+        Nullo - No-proyecto,
+        Nullo - proceso,
+        13 - fecha_iniciacion,
+        19 - fecha_terminacion,
+        20 - fecha_liquidacion,
+        27 - supervision_interventoria,
+        Nullo - direccion,
+        Nullo - tel_cel,
+        Nullo - correo,
+        1 - objeto
+        k - anio
+        k - gh
+        k - gc
+        k - gs
+        subconsulta - 4 - contratista_fk
+        $columns = array('13','19','20','27','1');
+        $query = 'INSERT INTO proyecto(fecha_iniciacion,fecha_terminacion,fecha_liquidacion,
+        supervision_interventoria,objeto,anio,group_hito_fk,group_coordenadas_fk,group_seguimiento_fk,contratista_fk) VALUES(';
+        
+        RELACION 2009,  
+        Nullo - No-proyecto,
+        Nullo - proceso,
+        14 - fecha_iniciacion,
+        24 - fecha_terminacion,
+        25 - fecha_liquidacion,
+        35 - supervision_interventoria,
+        38 - direccion,
+        39 - tel_cel,
+        Nullo - correo,
+        2 - objeto
+        k - anio
+        k - gh
+        k - gc
+        k - gs
+        subconsulta - 5 - contratista_fk
+        $columns = array('14','24','25','35','38','39','2');
+        $query = 'INSERT INTO proyecto(fecha_iniciacion,fecha_terminacion,fecha_liquidacion,
+        supervision_interventoria,direccion,tel_cel,objeto,anio,group_hito_fk,group_coordenadas_fk,group_seguimiento_fk,contratista_fk) VALUES(';
+        
+        RELACION 2010,  
+        Nullo - No-proyecto,
+        Nullo - proceso,
+        14 - fecha_iniciacion,
+        24 - fecha_terminacion,
+        25 - fecha_liquidacion,
+        35 - supervision_interventoria,
+        38 - direccion,
+        39 - tel_cel,
+        Nullo - correo,
+        2 - objeto
+        k - anio
+        k - gh
+        k - gc
+        k - gs
+        subconsulta - 5 - contratista_fk
+        $columns = array('14','24','25','35','38','39','2');
+        $query = 'INSERT INTO proyecto(fecha_iniciacion,fecha_terminacion,fecha_liquidacion,
+        supervision_interventoria,direccion,tel_cel,objeto,anio,group_hito_fk,group_coordenadas_fk,group_seguimiento_fk,contratista_fk) VALUES(';
+
+        RELACION 2011,  
+        Nullo - No-proyecto,
+        Nullo - proceso,
+        13 - fecha_iniciacion,
+        20 - fecha_terminacion,
+        21 - fecha_liquidacion,
+        23 - supervision_interventoria,
+        Nullo - direccion,
+        Nullo - tel_cel,
+        Nullo - correo,
+        1 - objeto
+        k - anio
+        k - gh
+        k - gc
+        k - gs
+        subconsulta - 4 - contratista_fk
+        $columns = array('13','20','21','23','2');
+        $query = 'INSERT INTO proyecto(fecha_iniciacion,fecha_terminacion,fecha_liquidacion,
+        supervision_interventoria,objeto,anio,group_hito_fk,group_coordenadas_fk,group_seguimiento_fk,contratista_fk) VALUES(';
+        
+        RELACION 2012,  
+        Nullo - No-proyecto,
+        2 - proceso,
+        13 - fecha_iniciacion,
+        19 - fecha_terminacion,
+        20 - fecha_liquidacion,
+        22 - supervision_interventoria,
+        Nullo - direccion,
+        Nullo - tel_cel,
+        Nullo - correo,
+        1 - objeto
+        k - anio
+        k - gh
+        k - gc
+        k - gs
+        subconsulta - 4 - contratista_fk
+        $columns = array('2','13','19','20','22','1');
+        $query = 'INSERT INTO proyecto(proceso,fecha_iniciacion,fecha_terminacion,fecha_liquidacion,
+        supervision_interventoria,objeto,anio,group_hito_fk,group_coordenadas_fk,group_seguimiento_fk,contratista_fk) VALUES(';
+        
+        RELACION 2013,  
+        1 - no_proyecto,
+        3 - proceso,
+        15 - fecha_iniciacion,
+        22 - fecha_terminacion,
+        23 - fecha_liquidacion,
+        25 - supervision_interventoria,
+        Nullo - direccion,
+        Nullo - tel_cel,
+        Nullo - correo,
+        2 - objeto
+        k - anio
+        k - gh
+        k - gc
+        k - gs
+        subconsulta - 5 - contratista_fk
+        $columns = array('1','3','15','22','23','25','2');
+        $query = 'INSERT INTO proyecto(no_proyecto,proceso,fecha_iniciacion,fecha_terminacion,fecha_liquidacion,
+        supervision_interventoria,objeto,anio,group_hito_fk,group_coordenadas_fk,group_seguimiento_fk,contratista_fk) VALUES(';
+
+        RELACION 2015,  
+        1 - no_proyecto,
+        3 - proceso,
+        17 - fecha_iniciacion,
+        25 - fecha_terminacion,
+        26 - fecha_liquidacion,
+        28 - supervision_interventoria,
+        Nullo - direccion,
+        Nullo - tel_cel,
+        Nullo - correo,
+        2 - objeto
+        k - anio
+        k - gh
+        k - gc
+        k - gs
+        subconsulta - 5 - contratista_fk
+        $columns = array('1','3','17','25','26','28','2');
+        $query = 'INSERT INTO proyecto(no_proyecto,proceso,fecha_iniciacion,fecha_terminacion,fecha_liquidacion,
+        supervision_interventoria,objeto,anio,group_hito_fk,group_coordenadas_fk,group_seguimiento_fk,contratista_fk) VALUES(';
+
+        RELACION 2016,2017,2018,2019,2020,2021
+        1 - no_proyecto,
+        3 - proceso,
+        17 - fecha_iniciacion,
+        25 - fecha_terminacion,
+        26 - fecha_liquidacion,
+        28 - supervision_interventoria,
+        52 - direccion,
+        53 - tel_cel,
+        54 - correo,
+        2 - objeto
+        k - anio
+        k - gh
+        k - gc
+        k - gs
+        subconsulta - 5 - contratista_fk
+        $columns = array('1','3','17','25','26','28','52','53','54','2');
+        $query = 'INSERT INTO proyecto(no_proyecto,proceso,fecha_iniciacion,fecha_terminacion,fecha_liquidacion,
+        supervision_interventoria,direccion,tel_cel,correo,objeto,anio,group_hito_fk,group_coordenadas_fk,group_seguimiento_fk,contratista_fk) VALUES(';
         */
         /* Carga los registros a la BD SQL */
-        for ($i=4; $i < count($cantidad) ; $i++) {
+        $anio = '2021';
+        $gh = 'H2021';
+        $gc = 'C2021';
+        $gs = 'S2021';
+        $columns = array('1','3','17','25','26','28','52','53','54','2');
+        for ($i=5; $i < count($cantidad) ; $i++) {
             foreach ($columns as $key) {
                 if($cantidad[$i][$key]!=''){
                     $query = 'INSERT INTO proyecto(no_proyecto,proceso,fecha_iniciacion,fecha_terminacion,fecha_liquidacion,
-                    supervision_interventoria,direccion,tel_cel,correo,objeto,anio,contratista_fk) VALUES(';
+        supervision_interventoria,direccion,tel_cel,correo,objeto,anio,group_hito_fk,group_coordenadas_fk,group_seguimiento_fk,contratista_fk) VALUES(';
                     if(!strrpos($cantidad[$i][17],'-') AND $cantidad[$i][17]!=""){
                         if(date("Y-m-d",strtotime($cantidad[$i][17]))!="1970-01-01"){
                             $cantidad[$i][17] = date("Y-m-d",strtotime($cantidad[$i][17]));
@@ -178,14 +406,15 @@
                         {   
                             $cantidad[$i][$ki] = str_nit($cantidad[$i][$ki]);
                             $cantidad[$i][$ki] = str_replace("-","",$cantidad[$i][$ki]);
-                        }
+                        } 
                         if($ki=='2'){
                             $cantidad[$i][5] = str_nit($cantidad[$i][5]);
-                            $query = $query."'".$cantidad[$i][$ki]."',$anio,(SELECT id FROM contratista WHERE nit ='".$cantidad[$i][5]."' LIMIT 1))";
+                            $query = $query."'".$cantidad[$i][$ki]."',$anio,'$gh','$gc','$gs',(SELECT id FROM contratista WHERE nit ='".$cantidad[$i][5]."' LIMIT 1))";
                             break;
                         }
                         $query = $query."'".$cantidad[$i][$ki]."',";
                     }
+                    echo $query."<hr>";
                     $result = pg_query($query); 
                     break;
                 }
@@ -208,7 +437,6 @@
             foreach ($columns as $key) {
                 $cantidad[$i][6] = str_nit($cantidad[$i][6]);
                 $cantidad[$i][6] = str_replace("-","",$cantidad[$i][6]);
-
                 if($cantidad[$i][$key]!=''){
                     $query = 'INSERT INTO certificado_disponibilidad(rubro,valor,fuente_recursos,anticipo,contrato_fk) VALUES(';
                     foreach($columns as $ki){

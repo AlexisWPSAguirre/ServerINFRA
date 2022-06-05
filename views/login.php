@@ -63,7 +63,7 @@
                     <button name="login" type="submit" class="form-control btn btn-primary submit px-3">Entrar</button>
                 </div>
                 </form>
-                <p class="w-100 text-center"><a href="">Registrar Usuario</a></p>
+                <p class="w-100 text-center"><a href="crear_usuario.php">Registrar Usuario</a></p>
             </div>
         </div>
     </section>

@@ -6,7 +6,7 @@
     <!-- ################################################################################################ -->
     <div class="one_quarter first">
       <h6 class="heading">Información</h6>
-      <p>La actual página web fue creada por un estudiante del Instituto Tecnológico del Putumayo,   Alexis Aguirre durante el transcurso de la pasantia en la Alcaldia Municipal Orito, con el fin de aportar una herramienta tecnológica a la oficina de Infraestructura</p>
+      <p>La actual página web fue creada por el estudiante Alexis Aguirre del Instituto Tecnológico del Putumayo, durante el transcurso de la pasantia en la Alcaldia Municipal Orito 2022, con el fin de aportar una herramienta tecnológica a la oficina de Infraestructura</p>
     </div>
     <div class="one_quarter last">
       <h6 class="heading">Contactanos:</h6>

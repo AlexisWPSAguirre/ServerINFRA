@@ -26,7 +26,7 @@ if( !isset($_SESSION['user'])){
         <div class="scrollable">
     <div class="row mb-3">
         <div class="col-3">
-            <a href="../views/full-width.php?frame=list_contratos.php&select=seguimiento" class="btn btn-secondary">AÑADIR</a>   
+            <a href="../views/full-width.php?frame=list_contratos_anio.php&select=seguimiento" class="btn btn-secondary">AÑADIR</a>   
         </div>
     </div>
     <div class="row">

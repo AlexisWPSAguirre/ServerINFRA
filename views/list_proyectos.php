@@ -17,7 +17,7 @@ include('includes/jquery.php');
 
     <div class="wrapper row2">
         <div class="row">
-            <select name="" id="search_anio" class="form-select" style="margin-left:50%">
+            <select name="" id="search_anio_proyecto" class="form-select" style="margin-left:50%">
                 <?php
                     $query="SELECT count(*), anio FROM proyecto GROUP BY anio ORDER BY anio DESC";
                     $result = pg_query($query);
@@ -57,6 +57,7 @@ include('includes/jquery.php');
                     <!-- <input type="text" placeholder="Búsqueda" class="busqueda" id="busqueda" name="busqueda">
                     <button type="submit" class="btn btn-primary">BUSCAR</button> -->
                     <a href="crear_proyecto.php" class="btn btn-secondary">CREAR</a>
+                    <a href="../spreadsheet.php" class="btn btn-secondary">IMPORTAR</a>
                     </div>                                
                 </form>
             </div>

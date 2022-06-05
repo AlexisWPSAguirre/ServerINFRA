@@ -16,7 +16,46 @@ include('includes/jquery.php');
 </div>
 <div class="wrapper row2">
         <div class="row">
-            <select name="" id="search_anio_contrato" class="form-select" style="margin-left:50%">
+            <?php
+            if(isset($_GET['select']))
+            {
+                switch($_GET['select']){
+                    case 'hito':
+            ?>
+            <select name="" id="h_contrato_select" class="form-select" style="margin-left:50%">
+            <?php
+                    break;
+                    case 'coordenada':
+            ?>
+            <select name="" id="c_contrato_select" class="form-select" style="margin-left:50%">
+            <?php
+                    break;
+                    case 'seguimiento':
+            ?>
+            <select name="" id="s_contrato_select" class="form-select" style="margin-left:50%">
+            <?php
+                    break;
+                }
+            }else{
+                switch($_GET['gr_sel']){
+                    case 'hito':
+            ?>
+                <select name="" id="h_contrato_gr_sel" class="form-select" style="margin-left:50%">
+                <?php
+                        break;
+                        case 'coordenada':
+                ?>
+                <select name="" id="c_contrato_gr_sel" class="form-select" style="margin-left:50%">
+                <?php
+                        break;
+                        case 'seguimiento':
+                ?>
+                <select name="" id="s_contrato_gr_sel" class="form-select" style="margin-left:50%">
+                <?php
+                        break;
+                }
+            }
+            ?>
                 <?php
                     $query="SELECT count(*), b.anio FROM contrato a 
                     INNER JOIN proyecto b ON b.id = a.no_proyecto_fk
@@ -213,9 +252,7 @@ include('includes/jquery.php');
                                 </a>';
                                 break;
                             }
-                    }
-                    else {
-                        
+                    }else {                        
                         if(isset($_GET['gr_sel'])){
                             switch($_GET['gr_sel']){
                                 case 'hito':
@@ -270,51 +307,79 @@ include('includes/jquery.php');
         <ul>
             <?php
             if(isset($_GET['anio'])){
-                for ($i=1; $i <= $total_paginas ; $i++) {
+                for ($i=1; $i <= $total_paginas ; $i++) { 
                 if(isset($_GET['select'])){
                     switch ($_GET['select']) {
                         case 'hito':
-                            echo '<li><a href="?pagina='.$i.'&select=hito&frame=list_contratos.php&anio='.$_GET['anio'].' class="m-2">'.$i.'                            
+                            echo "<li><a href='?pagina=".$i."&select=hito&frame=list_contratos_anio.php&anio=".$_GET['anio']."' class='m-2'>".$i.'                            
                             </a></li>';
                             break;
                         case 'coordenada':
-                            echo '<li><a href="?pagina='.$i.'&select=coordenada&frame=list_contratos.php&anio='.$_GET['anio'].'" class="m-2">'.$i.'                            
+                            echo '<li><a href="?pagina='.$i.'&select=coordenada&frame=list_contratos_anio.php&anio='.$_GET['anio'].'" class="m-2">'.$i.'                            
                             </a></li>';
                             break;
                         case 'seguimiento':
-                            echo '<li><a href="?pagina='.$i.'&select=seguimiento&frame=list_contratos.php&anio='.$_GET['anio'].'" class="m-2">'.$i.'                            
+                            echo '<li><a href="?pagina='.$i.'&select=seguimiento&frame=list_contratos_anio.php&anio='.$_GET['anio'].'" class="m-2">'.$i.'                            
                             </a></li>';
                             break;
                         }
                 }
-                else
+                if(isset($_GET['gr_sel']))
                 {
+                    switch ($_GET['gr_sel']) {
+                        case 'hito':
+                            echo '<li><a href="?pagina='.$i.'&gr_sel=hito&frame=list_contratos_anio.php&anio='.$_GET['anio'].'" class="m-2">'.$i.'                            
+                            </a></li>';
+                            break;
+                        case 'coordenada':
+                            echo '<li><a href="?pagina='.$i.'&gr_sel=coordenada&frame=list_contratos_anio.php&anio='.$_GET['anio'].'" class="m-2">'.$i.'                            
+                            </a></li>';
+                            break;
+                        case 'seguimiento':
+                            echo '<li><a href="?pagina='.$i.'&gr_sel=seguimiento&frame=list_contratos_anio.php&anio='.$_GET['anio'].'" class="m-2">'.$i.'                            
+                            </a></li>';
+                            break;
+                        }
             ?>
-                <li><a href="?pagina=<?=$i?>&frame=list_contratos.php&anio=<?=$_GET['anio']?>" class="m-2"><?=$i?></a></li>
             <?php
                 }
                 }
             }else{
                 for ($i=1; $i <= $total_paginas ; $i++) { 
+                    $prev = $i-1;
                     if(isset($_GET['select'])){
                         switch ($_GET['select']) {
                             case 'hito':
-                                echo '<li><a href="?pagina='.$i.'&select=hito&frame=list_contratos.php" class="m-2">'.$i.'                            
+                                echo '<li><a href="?pagina='.$i.'&select=hito&frame=list_contratos_anio.php" class="m-2">'.$i.'                            
                                 </a></li>';
                                 break;
                             case 'coordenada':
-                                echo '<li><a href="?pagina='.$i.'&select=coordenada&frame=list_contratos.php" class="m-2">'.$i.'                            
+                                echo '<li><a href="?pagina='.$i.'&select=coordenada&frame=list_contratos_anio.php" class="m-2">'.$i.'                            
                                 </a></li>';
                                 break;
                             case 'seguimiento':
-                                echo '<li><a href="?pagina='.$i.'&select=seguimiento&frame=list_contratos.php" class="m-2">'.$i.'                            
+                                echo '<li><a href="?pagina='.$i.'&select=seguimiento&frame=list_contratos_anio.php" class="m-2">'.$i.'                            
                                 </a></li>';
                                 break;
                             }
                     }
-                    else{
+                    if(isset($_GET['gr_sel'])){
+                        switch ($_GET['gr_sel']) {
+                            case 'hito':
+                                echo '<li><a href="?pagina='.$i.'&gr_sel=hito&frame=list_contratos_anio.php" class="m-2">'.$i.'                            
+                                </a></li>';
+                                break;
+                            case 'coordenada':
+                                echo '<li><a href="?pagina='.$i.'&gr_sel=coordenada&frame=list_contratos_anio.php" class="m-2">'.$i.'                            
+                                </a></li>';
+                                break;
+                            case 'seguimiento':
+                                echo '<li><a href="?pagina='.$i.'&gr_sel=seguimiento&frame=list_contratos_anio.php" class="m-2">'.$i.'                            
+                                </a></li>';
+                                break;
+                            }
                 ?>
-                    <li><a href="?pagina=<?=$i?>&frame=list_contratos.php" class="m-2"><?=$i?></a></li>
+                    
                 <?php
                     }
                     }
