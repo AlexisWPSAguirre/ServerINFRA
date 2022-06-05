@@ -20,10 +20,10 @@
         }
     }
     $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-    $inputFileName = 'CONTRATOS 2007 a 2021/INF GRAL CONTR 2009.xlsx'; 
-    /* $inputFileName = 'MATRIZ2021/MATRIZ COORDENADAS OBRAS 2021.xlsx';  */  
+    /* $inputFileName = 'CONTRATOS 2007 a 2021/INF GRAL CONTR 2021.xlsx';  */
+    /* $inputFileName = 'MATRIZ2021/MATRIZ COORDENADAS OBRAS 2021.xlsx';   */
     /* $inputFileName = 'MATRIZ2021/MATRIZ HITOS OBRA 2021.xlsx';      */
-    /* $inputFileName = 'MATRIZ2021/MATRIZ SEGUIMIENTO OBRAS 2021.xlsx';   */
+    /* $inputFileName = 'MATRIZ2021/MATRIZ SEGUIMIENTO OBRAS 2021.xlsx';  */
     /**  Identify the type of $inputFileName  **/
     $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
     /**  Create a new Reader of the type that has been identified  **/
@@ -39,15 +39,15 @@
 <body>
 
 <?php
-    import_contratos();
     /*
-    import_proyectos(); 
-    import_contratistas();
     import_hitos();
+    import_contratos();
+    import_contratistas();
+    import_proyectos(); 
     import_rubros();
     import_coordenadas();
-    import_seguimiento();
     */
+    import_seguimiento();
 ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <?php
@@ -90,7 +90,7 @@
         $columns = array('1','6','7','9','10','11','13');
         $index_fechas= array(7,9,10,11);
         $query = 'INSERT INTO contrato(no_contrato,no_certificado,fecha_certificado,fecha_firma,no_presupuestal,
-                    fecha_presupuestal,f_aprob_polizas) VALUES(';
+                    fecha_presupuestal,f_aprob_polizas,no_proyecto_fk) VALUES(';
 
         /* Relacion 2009: 
 	    1 - no_contrato
@@ -104,7 +104,7 @@
         $columns = array('1','6','7','9','10','11','13');
         $index_fechas= array(7,9,10,11);
         $query = 'INSERT INTO contrato(no_contrato,no_certificado,fecha_certificado,fecha_firma,no_presupuestal,
-                    fecha_presupuestal,f_aprob_polizas) VALUES(';
+                    fecha_presupuestal,f_aprob_polizas,no_proyecto_fk) VALUES(';
 
         /* Relacion 2010: 
 	    1 - no_contrato
@@ -118,14 +118,42 @@
         $columns = array('1','6','7','9','10','11','13');
         $index_fechas= array(7,9,10,11);
         $query = 'INSERT INTO contrato(no_contrato,no_certificado,fecha_certificado,fecha_firma,no_presupuestal,
-                    fecha_presupuestal,f_aprob_polizas) VALUES(';
+                    fecha_presupuestal,f_aprob_polizas,no_proyecto_fk) VALUES(';
+    
+        /* Relacion 2011,2012
+	    0 - no_contrato
+	    5 - no_certificado
+	    6 - fecha_certificado
+	    8 - fecha_firma
+	    9 - no_presupuestal
+	    10 - fecha_presupuestal
+	    12 - f_aprob_polizas
+	    Nullo - no_proyecto subconsulta(no_proyecto_fk) 
+        $columns = array('0','5','6','8','9','10','12');
+        $index_fechas= array(6,8,10,12);
+        $query = 'INSERT INTO contrato(no_contrato,no_certificado,fecha_certificado,fecha_firma,no_presupuestal,
+                    fecha_presupuestal,f_aprob_polizas,no_proyecto_fk) VALUES(';
+    
+         /* Relacion 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
+	    0 - no_contrato
+	    7 - no_certificado
+	    8 - fecha_certificado
+	    10 - fecha_firma
+	    11 - no_presupuestal
+	    14 - fecha_presupuestal
+	    16 - f_aprob_polizas
+	    1 - no_proyecto subconsulta(no_proyecto_fk) 
+        $columns = array('0','7','8','10','11','14','16');
+        $index_fechas= array(8,10,14,16);
+        $query = 'INSERT INTO contrato(no_contrato,no_certificado,fecha_certificado,fecha_firma,no_presupuestal,
+                    fecha_presupuestal,f_aprob_polizas,no_proyecto_fk) VALUES(';
         
 	    */
-        $anio = '2009';
-        $columns = array('1','6','7','9','10','11','13');
+        $anio = '2021';
+        $columns = array('0','7','8','10','11','14','16');
         /* Carga los registros a la BD SQL */
-        $index_fechas= array(7,9,10,11);
-        for ($i=8; $i < count($cantidad) ; $i++) {
+        $index_fechas= array(8,10,14,16);
+        for ($i=3; $i < count($cantidad) ; $i++) {
             foreach ($columns as $key) {
                 if($cantidad[$i][$key]!=''){
                     $query = 'INSERT INTO contrato(no_contrato,no_certificado,fecha_certificado,fecha_firma,no_presupuestal,
@@ -137,22 +165,19 @@
                             }   
                         }
                     }
-                    /* $cantidad[$i][1] = str_nit($cantidad[$i][1]);
-                    $cantidad[$i][1] = str_replace("-","",$cantidad[$i][1]);  */
-
+                    $cantidad[$i][1] = str_nit($cantidad[$i][1]);
+                    $cantidad[$i][1] = str_replace("-","",$cantidad[$i][1]);
                     foreach($columns as $ki){
                         $count = 0;
-                        if($ki=='13'){
-                            /* if($cantidad[$i][1]==''){
+                        if($ki=='16'){
+                            if($cantidad[$i][1]==''){
                                 do {
                                     $count += 1;
                                 } while ($cantidad[($i-$count)][1]=='');
                                 $cantidad[$i][1]=$cantidad[($i-$count)][1];
-                            }
-                            */
-                        
-                            $query = $query."'".$cantidad[$i][$ki]."',(SELECT id FROM proyecto WHERE no_proyecto ='".$cantidad[$i][1]."' OR objeto = '".$cantidad[$i][2]."' AND anio =".$anio." LIMIT 1))"; 
-                            /* $query = $query."'".$cantidad[$i][$ki]."')";  */
+                            }                            
+                            $query = $query."'".$cantidad[$i][$ki]."',(SELECT id FROM proyecto WHERE (no_proyecto ='".$cantidad[$i][1]."' OR objeto = '".$cantidad[$i][2]."') AND anio =".$anio." LIMIT 1))"; 
+                            /* $query = $query."'".$cantidad[$i][$ki]."')"; */ 
                             break;
                         }
                         $query = $query."'".$cantidad[$i][$ki]."',";
@@ -430,10 +455,18 @@
         13 - fuentes
         29 - anticipo
         subconsulta(contrato_fk)  0 - contrato
+
+        /* Las columnas de la relación 2014: 
+	    6 - rubro
+        9 - valor
+        13 - fuentes
+        29 - anticipo
+        subconsulta(contrato_fk)  0 - contrato
 	    */
+        $anio = 2021;
         $columns = array('6','9','13','29','0'); 
         /* Carga los registros a la BD SQL */
-        for ($i=5; $i < count($cantidad) ; $i++) {
+        for ($i=4; $i < count($cantidad) ; $i++) {
             foreach ($columns as $key) {
                 $cantidad[$i][6] = str_nit($cantidad[$i][6]);
                 $cantidad[$i][6] = str_replace("-","",$cantidad[$i][6]);
@@ -448,11 +481,17 @@
                                 } while ($cantidad[($i-$count)][$ki]=='');
                                 $cantidad[$i][$ki]=$cantidad[($i-$count)][$ki];
                             }
-                            $query = $query."(SELECT id FROM contrato WHERE no_contrato ='".$cantidad[$i][$ki]."' LIMIT 1))";
+                            $query = $query."(
+                            SELECT 
+                            a.id FROM contrato a
+                            INNER JOIN proyecto b ON b.id = a.no_proyecto_fk
+                            WHERE a.no_contrato ='".$cantidad[$i][$ki]."' AND b.anio = $anio
+                            LIMIT 1))";
                             break;
                         }
                         $query = $query."'".$cantidad[$i][$ki]."',";
                     }
+                    echo $query."<hr>";
                     $result = pg_query($query); 
                     break;
                 }
@@ -485,6 +524,10 @@
                     contrato_fk) VALUES(';
                     foreach($columns as $ki){
                         if($ki=='7'){
+                            if($cantidad[$i][$ki]=='')
+                            {
+                                $cantidad[$i][$ki] = 0;
+                            }
                             $cantidad[$i][0] = str_replace("-","/",$cantidad[$i][0]);
                             $query = $query."'".$cantidad[$i][$ki]."',(SELECT a.id FROM contrato a INNER JOIN proyecto b ON a.no_proyecto_fk = b.id
                             WHERE a.no_contrato LIKE '%".$cantidad[$i][0]."%' AND b.no_proyecto = '".$cantidad[$i][1]."' LIMIT 1))";
@@ -493,6 +536,7 @@
                         $query = $query."'".$cantidad[$i][$ki]."',";
                     }
                 }
+                echo $query."<hr>";
                 $result = pg_query($query);
                 break;
             }
@@ -529,6 +573,7 @@
                             }
                             $query = $query."'".$cantidad[$i][$ki]."',";
                         }
+                        echo $query."<hr>";
                         $result = pg_query($query);
                         break;
                     }

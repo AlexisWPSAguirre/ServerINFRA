@@ -23,6 +23,12 @@ $(document).ready(function(){
         var sistema = getUrl();
         location.href = sistema+'full-width.php?frame=list_contratos.php&anio='+$(this).val(); 
     });
+    $('#search_anio_certificado').change(function(e)
+    {
+        e.preventDefault();
+        var sistema = getUrl();
+        location.href = sistema+'full-width.php?frame=list_certificado.php&anio='+$(this).val(); 
+    });
     $('#h_contrato_select').change(function(e)
     {
         e.preventDefault();

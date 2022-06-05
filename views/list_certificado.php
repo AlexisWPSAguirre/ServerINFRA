@@ -15,6 +15,42 @@ include('includes/scripts.php');
         <!-- ################################################################################################ -->
     </section>
     </div>
+    <div class="wrapper row2">
+        <div class="row">
+            <select name="" id="search_anio_certificado" class="form-select" style="margin-left:50%">
+                <?php
+                    $query="SELECT count(*), c.anio 
+                    FROM certificado_disponibilidad a 
+                    INNER JOIN contrato b ON b.id = a.contrato_fk
+                    INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
+                    GROUP BY c.anio ORDER BY c.anio DESC";
+                    $result = pg_query($query);
+                    
+                    if(isset($_GET['anio'])){
+                        while($anios=pg_fetch_assoc($result)){
+                            if($_GET['anio']==$anios['anio']){
+                ?>
+                    <option value="<?= $anios['anio']?>" selected><?=$anios['anio']?></option>
+                <?php
+                        }else{
+                ?>
+                    <option value="<?= $anios['anio']?>"><?=$anios['anio']?></option>
+                <?php
+                        }
+                    }
+                    }else{
+                    ?>
+                    <option value="" selected>Seleccionar</option>
+                    <?php
+                        while($anios=pg_fetch_assoc($result)){
+                ?>
+                    <option value="<?= $anios['anio']?>"><?=$anios['anio']?></option>
+                <?php
+                    }}
+                ?>
+            </select>
+        </div>
+    </div>
     <div class="wrapper row3">
     <main class="hoc container clear"> 
     <div class="content">
@@ -47,31 +83,64 @@ include('includes/scripts.php');
         <tbody>
         <?php 
             //Paginador
-            $sql_register = pg_query("SELECT COUNT(*) as total_registros FROM certificado_disponibilidad");
-            $result_register = pg_fetch_assoc($sql_register);
-            $total_register = $result_register['total_registros'];
-            $por_pagina = 10;
-            if(empty($_GET['pagina']))
-            {
-                $pagina = 1;
-                $desde = 0;
-            }else
-            {
-                $pagina = $_GET['pagina'];
-                $desde = ($pagina-1) * $por_pagina;
+            if(isset($_GET['anio'])){
+                $sql_register = pg_query("
+                SELECT COUNT(*) as total_registros 
+                FROM certificado_disponibilidad a 
+                INNER JOIN contrato b ON b.id = a.contrato_fk
+                INNER JOIN proyecto c ON c.id = b.no_proyecto_fk
+                WHERE c.anio = ".$_GET['anio']);
+                $result_register = pg_fetch_assoc($sql_register);
+                $total_register = $result_register['total_registros'];
+                $por_pagina = 10;
+                if(empty($_GET['pagina']))
+                {
+                    $pagina = 1;
+                    $desde = 0;
+                }else
+                {
+                    $pagina = $_GET['pagina'];
+                    $desde = ($pagina-1) * $por_pagina;
+                }
+                $total_paginas = ceil($total_register/$por_pagina);
+                
+                    $query ="
+                    SELECT 
+                    a.id AS id_certificado,
+                    *
+                    FROM certificado_disponibilidad a
+                    LEFT JOIN contrato b ON b.id = a.contrato_fk
+                    LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+                    WHERE c.anio = ".$_GET['anio']."
+                    ORDER BY a.id ASC";
+                $query = $query." LIMIT $por_pagina OFFSET $desde";
+            }else{
+                $sql_register = pg_query("SELECT COUNT(*) as total_registros FROM certificado_disponibilidad");
+                $result_register = pg_fetch_assoc($sql_register);
+                $total_register = $result_register['total_registros'];
+                $por_pagina = 10;
+                if(empty($_GET['pagina']))
+                {
+                    $pagina = 1;
+                    $desde = 0;
+                }else
+                {
+                    $pagina = $_GET['pagina'];
+                    $desde = ($pagina-1) * $por_pagina;
+                }
+                $total_paginas = ceil($total_register/$por_pagina);
+                
+                    $query ="
+                    SELECT 
+                    a.id AS id_certificado,
+                    *
+                    FROM certificado_disponibilidad a
+                    LEFT JOIN contrato b ON b.id = a.contrato_fk
+                    LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
+                    ORDER BY a.id ASC";
+                
+                $query = $query." LIMIT $por_pagina OFFSET $desde";
             }
-            $total_paginas = ceil($total_register/$por_pagina);
-            
-                $query ="
-                SELECT 
-                a.id AS id_certificado,
-                *
-                FROM certificado_disponibilidad a
-                LEFT JOIN contrato b ON b.id = a.contrato_fk
-                LEFT JOIN proyecto c ON c.id = b.no_proyecto_fk
-                ORDER BY a.id ASC";
-            
-            $query = $query." LIMIT $por_pagina OFFSET $desde";
             $result = pg_query($query);
             while($line=pg_fetch_assoc($result)){
         ?>
@@ -119,12 +188,19 @@ include('includes/scripts.php');
     <nav class="pagination">
         <ul>
             <?php
+            if(isset($_GET['anio'])){
                 for ($i=1; $i <= $total_paginas ; $i++) { 
-                $prev = $i-1;
+            ?>
+                <li><a href="?pagina=<?=$i?>&frame=list_certificado.php$anio=<?=$_GET['anio']?>" class="m-2"><?=$i?></a></li>
+            <?php
+                }
+            }else{
+                for ($i=1; $i <= $total_paginas ; $i++) { 
             ?>
                 <li><a href="?pagina=<?=$i?>&frame=list_certificado.php" class="m-2"><?=$i?></a></li>
             <?php
                 }
+            }
             ?>
         </ul>
     </nav>
@@ -141,4 +217,5 @@ include('includes/scripts.php');
 </div>
 </tbody>
 
+<script type="text/javascript" src="../functions.js"></script>
 <?php include('footer.php');?>
