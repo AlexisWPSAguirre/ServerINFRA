@@ -307,83 +307,61 @@ include('includes/jquery.php');
         <ul>
             <?php
             if(isset($_GET['anio'])){
-                for ($i=1; $i <= $total_paginas ; $i++) { 
                 if(isset($_GET['select'])){
                     switch ($_GET['select']) {
                         case 'hito':
-                            echo "<li><a href='?pagina=".$i."&select=hito&frame=list_contratos_anio.php&anio=".$_GET['anio']."' class='m-2'>".$i.'                            
-                            </a></li>';
+                            pag_case_anio('select','hito');
                             break;
                         case 'coordenada':
-                            echo '<li><a href="?pagina='.$i.'&select=coordenada&frame=list_contratos_anio.php&anio='.$_GET['anio'].'" class="m-2">'.$i.'                            
-                            </a></li>';
+                            pag_case_anio('select','coordenada');
                             break;
                         case 'seguimiento':
-                            echo '<li><a href="?pagina='.$i.'&select=seguimiento&frame=list_contratos_anio.php&anio='.$_GET['anio'].'" class="m-2">'.$i.'                            
-                            </a></li>';
+                            pag_case_anio('select','seguimiento');
                             break;
                         }
-                }
+                    }
                 if(isset($_GET['gr_sel']))
                 {
                     switch ($_GET['gr_sel']) {
                         case 'hito':
-                            echo '<li><a href="?pagina='.$i.'&gr_sel=hito&frame=list_contratos_anio.php&anio='.$_GET['anio'].'" class="m-2">'.$i.'                            
-                            </a></li>';
+                            pag_case_anio('gr_sel','hito');
                             break;
                         case 'coordenada':
-                            echo '<li><a href="?pagina='.$i.'&gr_sel=coordenada&frame=list_contratos_anio.php&anio='.$_GET['anio'].'" class="m-2">'.$i.'                            
-                            </a></li>';
+                            pag_case_anio('gr_sel','coordenada');
                             break;
                         case 'seguimiento':
-                            echo '<li><a href="?pagina='.$i.'&gr_sel=seguimiento&frame=list_contratos_anio.php&anio='.$_GET['anio'].'" class="m-2">'.$i.'                            
-                            </a></li>';
+                            pag_case_anio('gr_sel','seguimiento');
                             break;
                         }
-            ?>
-            <?php
-                }
                 }
             }else{
-                for ($i=1; $i <= $total_paginas ; $i++) { 
-                    $prev = $i-1;
                     if(isset($_GET['select'])){
                         switch ($_GET['select']) {
                             case 'hito':
-                                echo '<li><a href="?pagina='.$i.'&select=hito&frame=list_contratos_anio.php" class="m-2">'.$i.'                            
-                                </a></li>';
+                                pag_case('select','hito');
                                 break;
                             case 'coordenada':
-                                echo '<li><a href="?pagina='.$i.'&select=coordenada&frame=list_contratos_anio.php" class="m-2">'.$i.'                            
-                                </a></li>';
+                                pag_case('select','coordenada');
                                 break;
                             case 'seguimiento':
-                                echo '<li><a href="?pagina='.$i.'&select=seguimiento&frame=list_contratos_anio.php" class="m-2">'.$i.'                            
-                                </a></li>';
+                                pag_case('select','seguimiento');
                                 break;
                             }
-                    }
+                        }
                     if(isset($_GET['gr_sel'])){
                         switch ($_GET['gr_sel']) {
                             case 'hito':
-                                echo '<li><a href="?pagina='.$i.'&gr_sel=hito&frame=list_contratos_anio.php" class="m-2">'.$i.'                            
-                                </a></li>';
+                                pag_case('gr_sel','hito');
                                 break;
                             case 'coordenada':
-                                echo '<li><a href="?pagina='.$i.'&gr_sel=coordenada&frame=list_contratos_anio.php" class="m-2">'.$i.'                            
-                                </a></li>';
+                                pag_case('gr_sel','coordenada');
                                 break;
                             case 'seguimiento':
-                                echo '<li><a href="?pagina='.$i.'&gr_sel=seguimiento&frame=list_contratos_anio.php" class="m-2">'.$i.'                            
-                                </a></li>';
+                                pag_case('gr_sel','seguimiento');
                                 break;
                             }
-                ?>
-                    
-                <?php
                     }
                     }
-            }
             ?>
         </ul>
     </nav>
@@ -391,3 +369,101 @@ include('includes/jquery.php');
 </div>
 <script type="text/javascript" src="../functions.js"></script>
 <?php include('footer.php');?>
+
+<?php
+    function pag_case($tipo,$case){
+        global $total_paginas;
+        if(!isset($_GET['pagina'])){
+            ?>
+                <li class="page-item"><a class="page-link not-active" href="?pagina=<?=$prev?>&<?=$tipo?>=<?=$case?>&frame=list_contratos_anio.php" >Anterior</a></li>
+                <li class="current"><strong>1</strong></li>
+                <li class="page-item"><a class="page-link not-active" href="#" disabled>...</a></li>
+            <?php
+                for ($i=2; $i <= 10 ; $i++) { 
+            ?>
+                <li class="page-item"><a class="page-link" href="?pagina=<?=$i?>&<?=$tipo?>=<?=$case?>&frame=list_contratos_anio.php" ><?=$i?></a></li>    
+            <?php
+                }
+            ?>
+                <li class="page-item"><a class="page-link not-active" href="?pagina=<?=$total_paginas?>&<?=$tipo?>=<?=$case?>&frame=list_contratos_anio.php" >...</a></li>
+                <li class="page-item"><a class="page-link" href="?pagina=<?=$total_paginas?>&<?=$tipo?>=<?=$case?>&frame=list_contratos_anio.php" ><?=$total_paginas?></a></li>
+                <li class="page-item"><a class="page-link" href="?pagina=<?=2?>&<?=$tipo?>=<?=$case?>&frame=list_contratos_anio.php" >Siguiente</a></li>
+            <?php
+            }
+            else{
+                $pag = $_GET['pagina'];
+                if($pag!=1){
+                    echo '<li class="page-item"><a class="page-link" href="?pagina='.($pag-1).'&'.$tipo.'='.$case.'&frame=list_contratos_anio.php">Anterior</a></li>';
+                }
+                else{
+                    echo "<li class='page-item'><a class='page-link not-active' href='?pagina=$pag&'.$tipo.'='.$case.'&frame=list_contratos_anio.php'>Anterior</a></li>";
+                }
+                if($pag!=1)
+                {
+                    echo '<li class="page-item"><a class="page-link" href="?pagina=1&'.$tipo.'='.$case.'&frame=list_contratos_anio.php">1</a></li>';
+                    echo '<li class="page-item"><a class="page-link not-active" href="#" disabled>...</a></li>';
+                }
+                if($pag<=5 AND $pag>=2){
+                    $init = $pag-2;
+                }
+                else{
+                    $init = 4;
+                }
+                for ($i=$init;$i>=1;$i--) { 
+                    if($pag>=2)
+                    {
+                        echo '<li class="page-item"><a class="page-link" href="?pagina='.($pag-$i).'&'.$tipo.'='.$case.'&frame=list_contratos_anio.php" >'.($pag-$i).'</a></li>';
+                    }}
+
+                    echo '<li class="current"><strong>'.$pag.'</strong></li>';
+
+                if($pag>=($total_paginas-4) AND $pag<=($total_paginas-1)){
+                    $end = $pag+1;
+                    $end = $total_paginas - $end;
+                }
+                else{
+                    $end = 4;
+                }
+                for ($i=1; $i <= $end; $i++) { 
+                    if($pag<=($total_paginas-2))
+                    {
+                        echo '<li class="page-item"><a class="page-link" href="?pagina='.($pag+$i).'&'.$tipo.'='.$case.'&frame=list_contratos_anio.php" >'.($pag+$i).'</a></li>';           
+                    }
+                }
+                if($pag!=$total_paginas){
+                    echo '<li class="page-item"><a class="page-link not-active" href="?pagina='.$total_paginas.'&'.$tipo.'='.$case.'&frame=list_contratos_anio.php" >...</a></li>';
+                    echo '<li class="page-item"><a class="page-link" href="?pagina='.$total_paginas.'&'.$tipo.'='.$case.'&frame=list_contratos_anio.php" >'.$total_paginas.'</a></li>';
+                    echo '<li class="page-item"><a class="page-link" href="?pagina='.($pag+1).'&'.$tipo.'='.$case.'&frame=list_contratos_anio.php" >Siguiente</a></li>';
+                }else{
+                    echo '<li class="page-item"><a class="page-link not-active" href="?pagina='.($pag+1).'&'.$tipo.'='.$case.'&frame=list_contratos_anio.php">Siguiente</a></li>';     
+                }
+            }
+    }
+    
+    function pag_case_anio($tipo,$case){
+        global $total_paginas;
+        if(isset($_GET['pagina']))
+        {
+            for ($i=1; $i <= $total_paginas ; $i++){ 
+                if($_GET['pagina']==$i){
+                    echo "<li class='current'><strong>".$_GET['pagina']."</strong></li>";
+                }
+                else{
+                    echo "<li><a href='?pagina=".$i."&".$tipo."=".$case."&frame=list_contratos_anio.php&anio=".$_GET['anio']."' class='m-2'>".$i.'                            
+                    </a></li>';
+                }
+            }
+        }else{
+            for ($i=1; $i <= $total_paginas ; $i++){ 
+                if($i==1)
+                {
+                    echo '<li class="current"><strong>1</strong></li>';
+                }
+                else{
+                    echo "<li><a href='?pagina=".$i."&".$tipo."=".$case."&frame=list_contratos_anio.php&anio=".$_GET['anio']."' class='m-2'>".$i.'                            
+                    </a></li>';
+                }
+            }
+        }
+    }
+?>

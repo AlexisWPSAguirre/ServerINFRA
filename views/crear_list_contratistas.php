@@ -154,18 +154,92 @@
 <div class="container">
     <nav class="pagination">
         <ul>
-            <?php
+        <?php
             if(isset($_GET['anio'])){
                 for ($i=1; $i <= $total_paginas ; $i++) { 
+                    if(isset($_GET['pagina'])){
+                        if($_GET['pagina']==$i)
+                        {
+                            echo '<li class="current"><strong>'.$i.'</strong></li>';
+                        }
+                        else{
+                            echo "<li class='page-item'><a class='page-link' href='?pagina=$i&frame=crear_list_contratistas.php&anio=".$_GET['anio']."'>$i</a></li>";
+                        }
+                    }
+                    else{
+                        if($i==1){
+                            echo '<li class="current"><strong>1</strong></li>';
+                        }else{
+                            echo "<li class='page-item'><a class='page-link' href='?pagina=$i&frame=crear_list_contratistas.php&anio=".$_GET['anio']."' >$i</a></li>";
+                        }
+                }}
+            }else
+            {
+                if(!isset($_GET['pagina'])){
             ?>
-                <li><a href="?pagina=<?=$i?>&frame=crear_list_contratistas.php&anio=<?=$_GET['anio']?>" class="m-2"><?=$i?></a></li>
+                <li class="page-item"><a class="page-link not-active" href="?pagina=<?=$prev?>&frame=crear_list_contratistas.php" >Anterior</a></li>
+                <li class="current"><strong>1</strong></li>
+                <li class="page-item"><a class="page-link not-active" href="#" disabled>...</a></li>
             <?php
-                }}else{
-                    for ($i=1; $i <= $total_paginas ; $i++) { 
+                for ($i=2; $i <= 10 ; $i++) { 
             ?>
-                <li><a href="?pagina=<?=$i?>&frame=crear_list_contratistas.php" class="m-2"><?=$i?></a></li>
+                <li class="page-item"><a class="page-link" href="?pagina=<?=$i?>&frame=crear_list_contratistas.php" ><?=$i?></a></li>    
             <?php
+                }
+            ?>
+                <li class="page-item"><a class="page-link not-active" href="?pagina=<?=$total_paginas?>&frame=crear_list_contratistas.php" >...</a></li>
+                <li class="page-item"><a class="page-link" href="?pagina=<?=$total_paginas?>&frame=crear_list_contratistas.php" ><?=$total_paginas?></a></li>
+                <li class="page-item"><a class="page-link" href="?pagina=<?=2?>&frame=crear_list_contratistas.php" >Siguiente</a></li>
+            <?php
+            }else{
+                $pag = $_GET['pagina'];
+                if($pag!=1){
+                    echo '<li class="page-item"><a class="page-link" href="?pagina='.($pag-1).'&frame=crear_list_contratistas.php">Anterior</a></li>';
+                }
+                else{
+                    echo "<li class='page-item'><a class='page-link not-active' href='?pagina=$pag&frame=crear_list_contratistas.php'>Anterior</a></li>";
+                }
+                if($pag!=1)
+                {
+                    echo '<li class="page-item"><a class="page-link" href="?pagina=1&frame=crear_list_contratistas.php">1</a></li>';
+                    echo '<li class="page-item"><a class="page-link not-active" href="#" disabled>...</a></li>';
+                }
+                if($pag<=5 AND $pag>=2){
+                    $init = $pag-2;
+                }
+                else{
+                    $init = 4;
+                }
+                for ($i=$init;$i>=1;$i--) { 
+                    if($pag>=2)
+                    {
+                        echo '<li class="page-item"><a class="page-link" href="?pagina='.($pag-$i).'&frame=crear_list_contratistas.php" >'.($pag-$i).'</a></li>';
                     }}
+
+                    echo '<li class="current"><strong>'.$pag.'</strong></li>';
+
+                if($pag>=($total_paginas-4) AND $pag<=($total_paginas-1)){
+                    $end = $pag+1;
+                    $end = $total_paginas - $end;
+                }
+                else{
+                    $end = 4;
+                }
+                for ($i=1; $i <= $end; $i++) { 
+                    if($pag<=($total_paginas-2))
+                    {
+                        echo '<li class="page-item"><a class="page-link" href="?pagina='.($pag+$i).'&frame=crear_list_contratistas.php" >'.($pag+$i).'</a></li>';           
+                    }
+                }
+                if($pag!=$total_paginas){
+                    echo '<li class="page-item"><a class="page-link not-active" href="?pagina='.$total_paginas.'&frame=crear_list_contratistas.php" >...</a></li>';
+                    echo '<li class="page-item"><a class="page-link" href="?pagina='.$total_paginas.'&frame=crear_list_contratistas.php" >'.$total_paginas.'</a></li>';
+                    echo '<li class="page-item"><a class="page-link" href="?pagina='.($pag+1).'&frame=crear_list_contratistas.php" >Siguiente</a></li>';
+                }else{
+                    echo '<li class="page-item"><a class="page-link not-active" href="?pagina='.($pag+1).'&frame=crear_list_contratistas.php">Siguiente</a></li>';     
+                }
+            }
+            }
             ?>
         </ul>
     </nav>

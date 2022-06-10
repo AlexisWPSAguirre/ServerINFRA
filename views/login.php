@@ -24,7 +24,11 @@
             header('Location:../template.php');
         }
         else{
-            echo "<h1>No pasas cari</h1>";
+            ?>
+            <div class="alert alert-danger" role="alert">
+                Usuario y/o contraseña incorrectos, Intentalo de nuevo.
+            </div>
+            <?php
         }
     }
 ?>

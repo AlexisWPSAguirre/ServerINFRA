@@ -1,3 +1,10 @@
+<?php
+  include_once 'config/user_session.php';
+  $userSession = new UserSession();
+  if( !isset($_SESSION['user'])){
+    header("Location: views/login.php");
+  } 
+  ?>
 <!DOCTYPE html>
 <!--
 Template Name: Nekmit

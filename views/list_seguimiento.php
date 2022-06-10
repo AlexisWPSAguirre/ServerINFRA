@@ -264,12 +264,28 @@ include_once "full-width.php";
     <nav class="pagination">
         <ul>
             <?php
-                for ($i=1; $i <= $total_paginas ; $i++) { 
-                $prev = $i-1;
-            ?>
-                <li><a href="?pagina=<?=$i?>&group=<?= $_SESSION['group_seguimiento']?>" class="m-2"><?=$i?></a></li>
-            <?php
-                }
+                if(isset($_GET['pagina'])){
+                    for ($i=1; $i <= $total_paginas ; $i++) { 
+                        if($i==$_GET['pagina']){
+                            echo "<li class='current'><strong>".$i."</strong></li>";
+                        }
+                        else
+                        {
+                            echo "<li><a href='?pagina=$i&group=".$_SESSION["group_seguimiento"]."' class='m-2'>$i</a></li>";
+                        }
+                    }
+                }else
+                {
+                    for ($i=1; $i <= $total_paginas ; $i++) { 
+                        if($i==1){
+                            echo "<li class='current'><strong>".$i."</strong></li>";
+                        }
+                        else
+                        {
+                            echo "<li><a href='?pagina=$i&group=".$_SESSION["group_seguimiento"]."' class='m-2'>$i</a></li>";
+                        }
+                    }
+                }  
             ?>
         </ul>
     </nav>

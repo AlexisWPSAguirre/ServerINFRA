@@ -154,6 +154,11 @@ Delete this section if roundness is not wanted / required
 --------------------------------------------------------------------------------------------------------------- */
 .btn{border-radius:14px;}
 
+.not-active { 
+	pointer-events: none; 
+	cursor: default; 
+}
+
 .form-select {
     display: block;
     padding: 0.375rem 2.25rem 0.375rem 0.75rem;
