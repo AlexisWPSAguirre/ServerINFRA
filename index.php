@@ -9,7 +9,6 @@
 <body>
     <?php
         header('Location: views/login.php');
-    ?>
-    
+    ?> 
 </body>
 </html>
